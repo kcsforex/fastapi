@@ -20,10 +20,10 @@ def query_data():
     print(js.loads(query1_json))
     return js.loads(query1_json)
 
-import nest_asyncio
-import uvicorn
-if __name__ == "__main__":
-    nest_asyncio.apply()
-    uvicorn.run(query_server)
+#import nest_asyncio
+#import uvicorn
+#if __name__ == "__main__":
+#    nest_asyncio.apply()
+#    uvicorn.run(query_server)
 
 
