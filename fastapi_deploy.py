@@ -1,5 +1,5 @@
 
-# 2024.01.07  11.00
+# 2024.01.07  19.00
 import pandas as pd 
 import sqlite3
 import json as js
