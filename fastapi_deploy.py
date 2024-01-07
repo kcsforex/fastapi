@@ -7,13 +7,13 @@ import json as js
 sqlite_conn = sqlite3.connect('formula1.db',check_same_thread=False)
 
 from fastapi import FastAPI
-query_server = FastAPI()
+app = FastAPI()
 
-@query_server.get('/')
+@app.get('/')
 def default_route():
     return {"message":"serving data from races table"}
 
-@query_server.get('/query_data')
+@app.get('/query_data')
 def query_data():
     query1_data  = pd.read_sql("""SELECT * FROM races LIMIT 10""",sqlite_conn)
     query1_json = query1_data.to_json(orient ='records')
