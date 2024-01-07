@@ -1,4 +1,5 @@
 pandas
+fastapi
 sqlalchemy
 uvicorn
 gunicorn
