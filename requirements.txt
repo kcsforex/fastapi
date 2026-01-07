@@ -1,5 +1,5 @@
 pandas
 fastapi
-sqlalchemy
+ccxt
 uvicorn
 gunicorn
