@@ -31,3 +31,7 @@ def analyze_batch():
             results.append({"symbol": symbol, "error": str(e)})
             
     return results #Returns a list of dicts
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)
