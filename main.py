@@ -14,7 +14,7 @@ def analyze_batch():
         try:
             bars = exchange.fetch_ohlcv(symbol, timeframe='5m', limit=110)
             df = pd.DataFrame(bars, columns=['ts', 'o', 'h', 'l', 'c', 'v'])
-            df['sma100'] = df['close'].rolling(window=100).mean()
+            df['sma100'] = df['c'].rolling(window=100).mean()
             
             curr = df.iloc[-1]
             prev = df.iloc[-2]
