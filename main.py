@@ -9,7 +9,7 @@ from dash.dependencies import Input, Output
 import psycopg2
 
 # --- 1. CONFIGURATION ---
-DB_CONFIG = "postgresql://sql_admin:sql_pass@postgresql:5432/n8n"
+DB_CONFIG = "postgresql://sql_admin:sql_pass@fgsckkk0c0g84cokw0csk0kw:5432/n8n"
 SYMBOLS = ["BTC/USDT", "ETH/USDT", "SOL/USDT"]
 
 # --- 2. FASTAPI "BRAIN" ---
