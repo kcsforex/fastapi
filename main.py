@@ -56,6 +56,10 @@ def update_dashboard(n):
     # Query the pivot table n8n is writing to
     df = pd.read_sql("SELECT * FROM status_pivot_logs ORDER BY timestamp DESC LIMIT 20", conn)
     conn.close()
+
+    fig = px.line(df, x="timestamp", y="btc_price", color="symbol", 
+                  title="Crypto Price vs SMA100 (Last 24h)",
+                  labels={"current_price": "Price (USDT)", "created_at": "Time"})
     
     # Simple table for current status
     table = dash_table.DataTable(
@@ -64,7 +68,7 @@ def update_dashboard(n):
         style_header={'backgroundColor': 'rgb(30, 30, 30)', 'color': 'white'},
         style_cell={'backgroundColor': 'rgb(50, 50, 50)', 'color': 'white'}
     )
-    return table, {} # Add Plotly logic here as needed
+    return table, fig # {} Add Plotly logic here as needed
 
 # --- 4. THE MOUNTING ---
 # We wrap the Dash (Flask) server in WSGI and mount it to FastAPI
