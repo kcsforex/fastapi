@@ -58,7 +58,7 @@ def update_dashboard(n):
     df = pd.read_sql("SELECT * FROM status_pivot_logs ORDER BY timestamp DESC LIMIT 20", conn)
     conn.close()
 
-    fig = px.line(df, x="timestamp", y="btc_price", color="symbol", 
+    fig = px.line(df, x="timestamp", y="btc_price", 
                   title="Crypto Price vs SMA100 (Last 24h)",
                   labels={"current_price": "Price (USDT)", "created_at": "Time"})
     
