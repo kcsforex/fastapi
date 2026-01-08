@@ -6,6 +6,7 @@ from fastapi.middleware.wsgi import WSGIMiddleware
 from dash import Dash, dcc, html, dash_table
 import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output
+import plotly.express as px
 import psycopg2
 
 # --- 1. CONFIGURATION ---
