@@ -1,5 +1,7 @@
-pandas
 fastapi
-ccxt
 uvicorn
-gunicorn
+dash
+dash-bootstrap-components
+pandas
+ccxt
+psycopg2-binary
