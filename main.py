@@ -3,11 +3,16 @@ from dash import html, dcc
 import dash_bootstrap_components as dbc
 from fastapi import FastAPI
 from fastapi.middleware.wsgi import WSGIMiddleware
+#from app import app as dash_app # The Dash app with the sidebar
+#from pages.crypto import router as crypto_router # Import from the page!
 
 # Import your FastAPI Routers (Apps 2, 3, 4)
-from routers.crypto_api import router as crypto_router
-from routers.flight_api import router as flight_router
-from routers.ml_small_api import router as ml_small_router
+from pages.crypto import router as crypto_router
+#from pages.ml_large import router as ml_router
+# from pages.flights import router as flight_router
+#from routers.crypto_api import router as crypto_router
+#from routers.flight_api import router as flight_router
+#from routers.ml_small_api import router as ml_small_router
 
 # --- DASH INITIALIZATION ---
 app = dash.Dash(
@@ -70,12 +75,14 @@ app.layout = html.Div([
 ])
 
 # --- FASTAPI WRAPPER ---
-server = FastAPI()
+server = FastAPI(title="Dash Main App")
 
 # Mount the 3 local API routers
 server.include_router(crypto_router, prefix="/api/crypto")
-server.include_router(flight_router, prefix="/api/flights")
-server.include_router(ml_small_router, prefix="/api/ml-small")
+server.include_router(crypto_router, prefix="/api/crypto", tags=["Crypto"])
+#server.include_router(ml_router, prefix="/api/ml", tags=["Machine Learning"])
+#server.include_router(flight_router, prefix="/api/flights")
+#server.include_router(ml_small_router, prefix="/api/ml-small")
 
 # Mount Dash to FastAPI
 server.mount("/", WSGIMiddleware(app.server))
