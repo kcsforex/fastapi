@@ -58,12 +58,11 @@ sidebar = html.Div([
     ], className="mb-4"),
 
     html.Hr(style={"color": "rgba(255,255,255,0.1)"}),
-    html.P("MENU", className="text-muted small ms-2 mb-3", style={"letterSpacing": "1px"}),
 
     dbc.Nav([
         dbc.NavLink([
             html.Div([
-                html.I(className=f"fas {page.get('icon', 'fa-chart-line')} me-3"),
+                html.I(className=f"fas {page.get('icon', 'fa-chart-line')} me-2"),
                 html.Span(page["name"]),
             ], className="d-flex align-items-center")
         ], href=page["relative_path"], active="exact", className="mb-2 py-2 rounded-3 text-light")
