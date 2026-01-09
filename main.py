@@ -80,7 +80,6 @@ app.layout = html.Div([
 server = FastAPI(title="Dash Main App")
 
 # Mount the 3 local API routers
-server.include_router(crypto_router, prefix="/api/crypto")
 server.include_router(crypto_router, prefix="/api/crypto", tags=["Crypto"])
 #server.include_router(ml_router, prefix="/api/ml", tags=["Machine Learning"])
 #server.include_router(flight_router, prefix="/api/flights")
