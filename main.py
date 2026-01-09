@@ -4,19 +4,11 @@ import dash_bootstrap_components as dbc
 from fastapi import FastAPI
 from fastapi.middleware.wsgi import WSGIMiddleware
 
-# Must happen BEFORE Dash initialization to ensure registration)
-try:
-    from pages.crypto import router as crypto_router
-except ImportError:
-    from fastapi import APIRouter
-    crypto_router = APIRouter()
-from pages.crypto import router as crypto_router
-
 #from pages.ml_large import router as ml_router
 #from pages.flights import router as flight_router
 #from pages.ml_small_api import router as ml_small_router
 
-# --- DASH INITIALIZATION ---
+# ----- 1. DASH INITIALIZATION -----
 app = dash.Dash(
     __name__, 
     use_pages=True, 
@@ -26,7 +18,20 @@ app = dash.Dash(
     ]
 )
 
-# Sidebar styling (Your Modern Layout)
+# ----- 2. NOW IMPORT YOUR PAGES -----
+# By importing them here, 'app' already exists when dash.register_page is called
+from pages import crypto, home  # This triggers register_page correctly
+
+# ----- 3. FASTAPI WRAPPER -----
+server = FastAPI(title="Dash Main App")
+
+# ----- 4. Use the router directly from the imported module -----
+server.include_router(crypto.router, prefix="/api/crypto", tags=["Crypto"])
+#server.include_router(ml_router, prefix="/api/ml", tags=["Machine Learning"])
+#server.include_router(flight_router, prefix="/api/flights")
+#server.include_router(ml_small_router, prefix="/api/ml-small")
+
+# ----- 5. SIDEBAR & LAYOUT  (Your Modern Layout) -----
 SIDEBAR_STYLE = {
     "position": "fixed", "top": "20px", "left": "20px", "bottom": "20px",
     "width": "260px", "padding": "2rem 1rem",
@@ -76,16 +81,8 @@ app.layout = html.Div([
     })
 ])
 
-# --- FASTAPI WRAPPER ---
-server = FastAPI(title="Dash Main App")
 
-# Mount the 3 local API routers
-server.include_router(crypto_router, prefix="/api/crypto", tags=["Crypto"])
-#server.include_router(ml_router, prefix="/api/ml", tags=["Machine Learning"])
-#server.include_router(flight_router, prefix="/api/flights")
-#server.include_router(ml_small_router, prefix="/api/ml-small")
-
-# Mount Dash to FastAPI
+# ----- 6. Mount Dash to FastAPI -----
 server.mount("/", WSGIMiddleware(app.server))
 
 if __name__ == "__main__":
