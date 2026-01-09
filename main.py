@@ -35,7 +35,7 @@ server.include_router(crypto.router, prefix="/api/crypto", tags=["Crypto"])
 SIDEBAR_STYLE = {
     "position": "fixed", "top": "15px", "left": "15px", "bottom": "15px",
     "width": "220px", "padding": "2rem 1rem",
-    "background": "rgba(255, 255, 255, 0.05)",
+    "background": "rgba(255, 255, 255, 0.1)",
     "backdrop-filter": "blur(15px)",
     "border-radius": "20px",
     "border": "1px solid rgba(255, 255, 255, 0.1)",
