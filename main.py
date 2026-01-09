@@ -65,7 +65,7 @@ sidebar = html.Div([
                 html.I(className=f"fas {page.get('icon', 'fa-chart-line')} me-2"),
                 html.Span(page["name"]),
             ], className="d-flex align-items-center")
-        ], href=page["relative_path"], active="exact", className="mb-2 py-2 rounded-3 text-light")
+        ], href=page["relative_path"], active="exact", className="mb-2 py-2 ps-2 rounded-3 text-light")
         for page in dash.page_registry.values()
     ], vertical=True, pills=True),
 ], style=SIDEBAR_STYLE)
