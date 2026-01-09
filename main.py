@@ -72,7 +72,6 @@ sidebar = html.Div([
 ], style=SIDEBAR_STYLE)
 
 app.layout = html.Div([
-    html.Style(".nav-link.active { background-color: rgba(59, 130, 246, 0.5) !important; border: 1px solid rgba(255,255,255,0.2) !important; }"),
     sidebar,
     html.Div(dash_container := dash.page_container, style={
         "marginLeft": "300px", "padding": "2rem",
@@ -80,7 +79,6 @@ app.layout = html.Div([
         "minHeight": "100vh"
     })
 ])
-
 
 # ----- 6. Mount Dash to FastAPI -----
 server.mount("/", WSGIMiddleware(app.server))
