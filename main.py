@@ -3,16 +3,18 @@ from dash import html, dcc
 import dash_bootstrap_components as dbc
 from fastapi import FastAPI
 from fastapi.middleware.wsgi import WSGIMiddleware
-#from app import app as dash_app # The Dash app with the sidebar
-#from pages.crypto import router as crypto_router # Import from the page!
 
-# Import your FastAPI Routers (Apps 2, 3, 4)
+# Must happen BEFORE Dash initialization to ensure registration)
+try:
+    from pages.crypto import router as crypto_router
+except ImportError:
+    from fastapi import APIRouter
+    crypto_router = APIRouter()
 from pages.crypto import router as crypto_router
+
 #from pages.ml_large import router as ml_router
-# from pages.flights import router as flight_router
-#from routers.crypto_api import router as crypto_router
-#from routers.flight_api import router as flight_router
-#from routers.ml_small_api import router as ml_small_router
+#from pages.flights import router as flight_router
+#from pages.ml_small_api import router as ml_small_router
 
 # --- DASH INITIALIZATION ---
 app = dash.Dash(
