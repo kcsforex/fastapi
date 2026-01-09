@@ -57,7 +57,7 @@ sidebar = html.Div([
         ], className="d-flex align-items-center p-3", style={"background": "rgba(0,0,0,0.3)", "borderRadius": "15px"})
     ], className="mb-4"),
 
-    html.Hr(style={"color": "rgba(255,255,255,0.1)"}),
+    html.Hr(style={"color": "rgba(255,255,255,0.3)"}),
 
     dbc.Nav([
         dbc.NavLink([
