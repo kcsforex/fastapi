@@ -33,8 +33,8 @@ server.include_router(crypto.router, prefix="/api/crypto", tags=["Crypto"])
 
 # ----- 5. SIDEBAR & LAYOUT  (Your Modern Layout) -----
 SIDEBAR_STYLE = {
-    "position": "fixed", "top": "20px", "left": "20px", "bottom": "20px",
-    "width": "260px", "padding": "2rem 1rem",
+    "position": "fixed", "top": "15px", "left": "15px", "bottom": "15px",
+    "width": "220px", "padding": "2rem 1rem",
     "background": "rgba(255, 255, 255, 0.05)",
     "backdrop-filter": "blur(15px)",
     "border-radius": "20px",
@@ -44,15 +44,15 @@ SIDEBAR_STYLE = {
 }
 
 sidebar = html.Div([
-    html.H3("TRADING BOT", className="text-center mb-4", style={"letterSpacing": "2px", "color": "white"}),
+    html.H4("PETROSOFTEU CLOUD", className="text-center mb-4", style={"letterSpacing": "2px", "color": "ivory"}),
     
     # User Profile Box
     html.Div([
         html.Div([
             html.I(className="fas fa-user-circle fa-2x text-info"),
             html.Div([
-                html.P("Admin.Console", className="mb-0", style={"fontSize": "14px", "fontWeight": "bold"}),
-                html.P("8GB KVM-V2", className="text-muted small mb-0")
+                html.P("Admin Console", className="mb-0", style={"fontSize": "14px", "fontWeight": "bold"}),
+                html.P("8GB KVM2", className="text-muted small mb-0")
             ], className="ms-3")
         ], className="d-flex align-items-center p-3", style={"background": "rgba(0,0,0,0.3)", "borderRadius": "15px"})
     ], className="mb-4"),
@@ -74,7 +74,7 @@ sidebar = html.Div([
 app.layout = html.Div([
     sidebar,
     html.Div(dash_container := dash.page_container, style={
-        "marginLeft": "300px", "padding": "2rem",
+        "marginLeft": "250px", "padding": "2rem",
         "background": "linear-gradient(135deg, #0f0c29, #302b63, #24243e)",
         "minHeight": "100vh"
     })
