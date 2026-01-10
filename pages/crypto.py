@@ -118,8 +118,8 @@ def update_dashboard(n, selected_symbol):
                     options=[{'label': s.replace('/USDT', ''), 'value': s.split('/')[0].lower()} for s in SYMBOLS],
                     value=sym,
                     clearable=False,
-                    searchable=False,
-                    className="custom-dropdown" # You can style this in your CSS
+                    searchable=False
+                    #className="custom-dropdown" # You can style this in your CSS
                 )
             ]), width=3)
         ], align="center")
