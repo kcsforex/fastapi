@@ -103,19 +103,19 @@ def update_dashboard(n):
             ]), width=3),
             dbc.Col(html.Div([
                 html.Small("ETH/USDT", className="text-muted"),
-                html.H4(f"${latest['eth_price']:,.2f}", className="text-primary"),
+                html.H4(f"${latest['eth_price']:,.2f}", className="text-info"),
                 html.Small("SIGNAL", className="text-muted"),
                 html.H4(latest['eth_status'], className="text-success" if latest['eth_status'] == "ABOVE" else "text-danger")
             ]), width=3),
             dbc.Col(html.Div([
                 html.Small("SOL/USDT", className="text-muted"),
-                html.H4(f"${latest['sol_price']:,.2f}", className="text-primary"),
+                html.H4(f"${latest['sol_price']:,.2f}", className="text-info"),
                 html.Small("SIGNAL", className="text-muted"),
                 html.H4(latest['sol_status'], className="text-success" if latest['sol_status'] == "ABOVE" else "text-danger")
             ]), width=3),
             dbc.Col(html.Div([
                 html.Small("SUI/USDT", className="text-muted"),
-                html.H4(f"${latest['sui_price']:,.2f}", className="text-primary"),
+                html.H4(f"${latest['sui_price']:,.2f}", className="text-info"),
                 html.Small("SIGNAL", className="text-muted"),
                 html.H4(latest['sui_status'], className="text-success" if latest['sui_status'] == "ABOVE" else "text-danger")
             ]), width=3)
