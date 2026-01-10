@@ -38,7 +38,7 @@ def analyze_pivot():
     return payload
 
 # --- 3. THE FRONTEND (Dash Sidebar uses this) ---
-dash.register_page(__name__, icon="fa-coins", name="Crypto Dash")
+dash.register_page(__name__, icon="fa-coins", name="Crypto Dash 1")
 
 layout = dbc.Container([
     html.H1("Crypto SMA100 Monitor", className="text-center my-4"),
