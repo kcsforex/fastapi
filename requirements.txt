@@ -5,4 +5,4 @@ dash-bootstrap-components
 pandas
 ccxt
 psycopg2-binary
-databricks
+databricks-sql-connector
