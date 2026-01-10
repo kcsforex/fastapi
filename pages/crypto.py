@@ -47,7 +47,7 @@ layout = dbc.Container([
     dcc.Graph(id='main-chart')
 ], fluid=True)
 
-@dash_app.callback(
+@callback(
     [Output('status-table-container', 'children'), Output('main-chart', 'figure')],
     [Input('refresh', 'n_intervals')]
 )
