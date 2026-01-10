@@ -16,7 +16,7 @@ SYMBOLS = ["BTC/USDT", "ETH/USDT", "SOL/USDT", "XRP/USDT", "SUI/USDT"]
 router = APIRouter()
 exchange = ccxt.bybit()
 
-@fastapi_app.get("/analyze/pivot")
+@router.get("/analyze/pivot")
 def analyze_pivot():
     payload = {"timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
     for symbol in SYMBOLS:
