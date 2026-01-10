@@ -124,7 +124,7 @@ def update_dashboard(n):
                 html.H5(f"${latest['xrp_price']:,.2f}", className="text-info"),
                 html.Small("SIGNAL", className="text-muted"),
                 html.H5(latest['xrp_status'], className="text-success" if latest['xrp_status'] == "ABOVE" else "text-danger")
-            ]), width=2)
+            ]), width=2),
                 dbc.Col(html.Div([
                 html.Small("ZEC/USDT", className="text-muted"),
                 html.H5(f"${latest['zec_price']:,.2f}", className="text-info"),
