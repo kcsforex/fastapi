@@ -5,6 +5,8 @@ from dash.dependencies import Input, Output
 from fastapi import APIRouter
 import plotly.express as px
 import pandas as pd
+import ccxt
+from datetime import datetime
 import psycopg2
 
 # --- 1. CONFIGURATION ---
