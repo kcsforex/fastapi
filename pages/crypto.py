@@ -93,13 +93,13 @@ def update_dashboard(n):
     # 1. Create Top Metrics (Quick visual check)
     latest = df.iloc[0]
     
-    # 1. Metrics with Dropdown
+    # 1. Metrics with Loop
     metric_cols = [
         dbc.Col(html.Div([
             html.Small(s, className="text-muted"),
             html.H5(f"${latest[f'{s.split('/')[0].lower()}_price']:,.2f}", className="text-info"),
-            html.Small("SIGNAL", className="text-muted"),
-            html.H5(latest[f"{s.split('/')[0].lower()}_status"],className="text-success" if latest[f"{s.split('/')[0].lower()}_status"] == "ABOVE" else "text-danger"
+            html.Small("SIGNAL (SMA100)", className="text-muted"),
+            html.H6(latest[f"{s.split('/')[0].lower()}_status"],className="text-success" if latest[f"{s.split('/')[0].lower()}_status"] == "ABOVE" else "text-danger"
             )      
         ]), width=2) for s in SYMBOLS
     ]
