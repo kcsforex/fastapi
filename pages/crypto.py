@@ -2,7 +2,8 @@ import pandas as pd
 import ccxt
 from datetime import datetime
 from fastapi import APIRouter
-from dash import dash, dcc, html, dash_table
+import dash
+from dash import dcc, html, dash_table, callback
 import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output
 import plotly.express as px
