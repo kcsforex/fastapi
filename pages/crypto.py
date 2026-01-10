@@ -79,8 +79,7 @@ layout = dbc.Container([
     [Output('metrics-container', 'children'), 
      Output('status-table-container', 'children'), 
      Output('main-chart', 'figure')],
-    [Input('refresh', 'n_intervals'),
-     Input('symbol-dropdown', 'value')])
+    [Input('refresh', 'n_intervals')])
 
 def update_dashboard(n, selected_symbol):
     conn = psycopg2.connect(DB_CONFIG)
