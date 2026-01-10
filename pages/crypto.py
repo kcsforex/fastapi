@@ -145,8 +145,13 @@ def update_dashboard(n):
         hover=True, 
         responsive=True,
         borderless=True,
-        className="text-light",
-        style={"backgroundColor": "transparent"}
+        className="text-light m-0", 
+        style={
+            "backgroundColor": "transparent", 
+            "--bs-table-bg": "transparent", # Overrides Bootstrap 5 background variable
+            "--bs-table-accent-bg": "transparent",
+            "color": "white"
+        }
     )
 
     return metrics, table, fig
