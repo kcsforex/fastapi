@@ -63,7 +63,7 @@ layout = dbc.Container([
 
     # Main Graph Card
     html.Div([
-        html.H5(id='chart-title', children="BTC Price Action", className="text-info mb-3"),     
+        html.H5(id="BTC Price Action", className="text-info mb-3"),     
         dcc.Graph(id='main-chart', config={'displayModeBar': False})
     ], style=CARD_STYLE, className="mb-4"),
 
@@ -78,8 +78,7 @@ layout = dbc.Container([
 @callback(
     [Output('metrics-container', 'children'), 
      Output('status-table-container', 'children'), 
-     Output('main-chart', 'figure'),
-     Output('chart-title', 'children')],
+     Output('main-chart', 'figure')],
     [Input('refresh', 'n_intervals'),
      Input('symbol-dropdown', 'value')])
 
@@ -91,8 +90,6 @@ def update_dashboard(n, selected_symbol):
     if df.empty:
         return dash.no_update, "No data found", {}, "No Data"
 
-    sym = (selected_symbol or "btc").lower()
-
     # 1. Create Top Metrics (Quick visual check)
     latest = df.iloc[0]
     
@@ -100,33 +97,32 @@ def update_dashboard(n, selected_symbol):
     metrics = dbc.Row([
             dbc.Col(html.Div([
                 html.Small("BTC/USDT", className="text-muted"),
-                html.H4(f"${latest['btc_price']:,.2f}", className="text-info")
+                html.H4(f"${latest['btc_price']:,.2f}", className="text-info"),
+                html.Small("SIGNAL", className="text-muted"),
+                html.H4(latest['btc_status'], className="text-success" if latest[f'{sym}_status'] == "ABOVE" else "text-danger")      
             ]), width=3),
             dbc.Col(html.Div([
                 html.Small("ETH/USDT", className="text-muted"),
                 html.H4(f"${latest['eth_price']:,.2f}", className="text-primary")
-            ]), width=3),
-            dbc.Col(html.Div([
                 html.Small("SIGNAL", className="text-muted"),
-                html.H4(latest[f'{sym}_status'], 
-                        className="text-success" if latest[f'{sym}_status'] == "ABOVE" else "text-danger")
+                html.H4(latest['eth_status'], className="text-success" if latest[f'{sym}_status'] == "ABOVE" else "text-danger")
             ]), width=3),
             dbc.Col(html.Div([
-                html.Small("SELECT SYMBOL", className="text-muted font-monospace"),
-                dcc.Dropdown(
-                    id='symbol-dropdown',
-                    options=[{'label': s.replace('/USDT', ''), 'value': s.split('/')[0].lower()} for s in SYMBOLS],
-                    value=sym,
-                    clearable=False,
-                    searchable=False
-                    #className="custom-dropdown" # You can style this in your CSS
-                )
+                html.Small("SOL/USDT", className="text-muted"),
+                html.H4(f"${latest['sol_price']:,.2f}", className="text-primary")
+                html.Small("SIGNAL", className="text-muted"),
+                html.H4(latest['sol_status'], className="text-success" if latest[f'{sym}_status'] == "ABOVE" else "text-danger")
+            ]), width=3),
+            dbc.Col(html.Div([
+                html.Small("SUI/USDT", className="text-muted"),
+                html.H4(f"${latest['sui_price']:,.2f}", className="text-primary")
+                html.Small("SIGNAL", className="text-muted"),
+                html.H4(latest['sui_status'], className="text-success" if latest[f'{sym}_status'] == "ABOVE" else "text-danger")
             ]), width=3)
         ], align="center")
 
     # 2. Graph Styling
-    price_col = f"{sym}_price"
-    fig = px.line(df, x="timestamp", y=price_col, template="plotly_dark")
+    fig = px.line(df, x="timestamp", y=btc_price, template="plotly_dark")
     fig.update_traces(line_color='#00d1ff', line_width=3)
     fig.update_layout(
             paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)',
@@ -154,4 +150,4 @@ def update_dashboard(n, selected_symbol):
     )
 
     chart_title = f"{sym.upper()} Price Action"
-    return metrics, table, fig, chart_title
+    return metrics, table, fig
