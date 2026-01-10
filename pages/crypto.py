@@ -78,11 +78,12 @@ layout = dbc.Container([
 @callback(
     [Output('metrics-container', 'children'), 
      Output('status-table-container', 'children'), 
-     Output('main-chart', 'figure')],
-    [Input('refresh', 'n_intervals')]
-)
+     Output('main-chart', 'figure'),
+     Output('chart-title', 'children')],
+    [Input('refresh', 'n_intervals'),
+     Input('symbol-dropdown', 'value')]
 
-def update_dashboard(n):
+def update_dashboard(n, selected_symbol):
     conn = psycopg2.connect(DB_CONFIG)
     # Query the pivot table n8n is writing to
     df = pd.read_sql("SELECT * FROM status_pivot_logs ORDER BY timestamp DESC LIMIT 20", conn)
