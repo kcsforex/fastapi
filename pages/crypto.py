@@ -149,5 +149,4 @@ def update_dashboard(n, selected_symbol):
         style={"backgroundColor": "transparent"}
     )
 
-    chart_title = f"{sym.upper()} Price Action"
     return metrics, table, fig
