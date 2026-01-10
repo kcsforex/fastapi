@@ -1,3 +1,4 @@
+# 2026.01.10  10.00
 import dash
 from dash import html, dcc
 import dash_bootstrap_components as dbc
@@ -9,14 +10,7 @@ from fastapi.middleware.wsgi import WSGIMiddleware
 #from pages.ml_small_api import router as ml_small_router
 
 # ----- 1. DASH INITIALIZATION -----
-app = dash.Dash(
-    __name__, 
-    use_pages=True, 
-    external_stylesheets=[
-        dbc.themes.DARKLY,
-        "https://use.fontawesome.com/releases/v5.15.4/css/all.css"
-    ]
-)
+app = dash.Dash(__name__, use_pages=True, external_stylesheets=[dbc.themes.DARKLY, "https://use.fontawesome.com/releases/v5.15.4/css/all.css"])
 
 # ----- 2. NOW IMPORT YOUR PAGES -----
 # By importing them here, 'app' already exists when dash.register_page is called
