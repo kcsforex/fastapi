@@ -40,7 +40,7 @@ def analyze_pivot():
 # --- 3. THE FRONTEND (Dash Sidebar uses this) ---
 dash.register_page(__name__, icon="fa-coins", name="Crypto Dash")
 
-dash_app.layout = dbc.Container([
+layout = dbc.Container([
     html.H1("Crypto SMA100 Monitor", className="text-center my-4"),
     dcc.Interval(id='refresh', interval=60*1000), # Refresh UI every minute
     html.Div(id='status-table-container'),
