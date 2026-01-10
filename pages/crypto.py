@@ -87,8 +87,8 @@ def update_dashboard(n, selected_symbol):
     # Query the pivot table n8n is writing to
     df = pd.read_sql("SELECT * FROM status_pivot_logs ORDER BY timestamp DESC LIMIT 20", conn)
     conn.close()
-    if df.empty:
-        return dash.no_update, "No data found", {}, "No Data"
+    #if df.empty:
+    #    return dash.no_update, "No data found", {}, "No Data"
 
     # 1. Create Top Metrics (Quick visual check)
     latest = df.iloc[0]
@@ -99,30 +99,30 @@ def update_dashboard(n, selected_symbol):
                 html.Small("BTC/USDT", className="text-muted"),
                 html.H4(f"${latest['btc_price']:,.2f}", className="text-info"),
                 html.Small("SIGNAL", className="text-muted"),
-                html.H4(latest['btc_status'], className="text-success" if latest[f'{sym}_status'] == "ABOVE" else "text-danger")      
+                html.H4(latest['btc_status'], className="text-success" if latest['btc_status'] == "ABOVE" else "text-danger")      
             ]), width=3),
             dbc.Col(html.Div([
                 html.Small("ETH/USDT", className="text-muted"),
                 html.H4(f"${latest['eth_price']:,.2f}", className="text-primary"),
                 html.Small("SIGNAL", className="text-muted"),
-                html.H4(latest['eth_status'], className="text-success" if latest[f'{sym}_status'] == "ABOVE" else "text-danger")
+                html.H4(latest['eth_status'], className="text-success" if latest['eth_status'] == "ABOVE" else "text-danger")
             ]), width=3),
             dbc.Col(html.Div([
                 html.Small("SOL/USDT", className="text-muted"),
                 html.H4(f"${latest['sol_price']:,.2f}", className="text-primary"),
                 html.Small("SIGNAL", className="text-muted"),
-                html.H4(latest['sol_status'], className="text-success" if latest[f'{sym}_status'] == "ABOVE" else "text-danger")
+                html.H4(latest['sol_status'], className="text-success" if latest['sol_status'] == "ABOVE" else "text-danger")
             ]), width=3),
             dbc.Col(html.Div([
                 html.Small("SUI/USDT", className="text-muted"),
                 html.H4(f"${latest['sui_price']:,.2f}", className="text-primary"),
                 html.Small("SIGNAL", className="text-muted"),
-                html.H4(latest['sui_status'], className="text-success" if latest[f'{sym}_status'] == "ABOVE" else "text-danger")
+                html.H4(latest['sui_status'], className="text-success" if latest['sui_status'] == "ABOVE" else "text-danger")
             ]), width=3)
         ], align="center")
 
     # 2. Graph Styling
-    fig = px.line(df, x="timestamp", y=btc_price, template="plotly_dark")
+    fig = px.line(df, x="timestamp", y="btc_price", template="plotly_dark")
     fig.update_traces(line_color='#00d1ff', line_width=3)
     fig.update_layout(
             paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)',
