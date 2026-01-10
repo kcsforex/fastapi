@@ -86,26 +86,45 @@ def update_dashboard(n):
     # Query the pivot table n8n is writing to
     df = pd.read_sql("SELECT * FROM status_pivot_logs ORDER BY timestamp DESC LIMIT 20", conn)
     conn.close()
+    if df.empty:
+        return dash.no_update, "No data found", {}, "No Data"
+
+    sym = (selected_symbol or "btc").lower()
 
     # 1. Create Top Metrics (Quick visual check)
     latest = df.iloc[0]
+    
+    # 1. Metrics with Dropdown
     metrics = dbc.Row([
             dbc.Col(html.Div([
                 html.Small("BTC/USDT", className="text-muted"),
                 html.H4(f"${latest['btc_price']:,.2f}", className="text-info")
-            ])),
+            ]), width=3),
             dbc.Col(html.Div([
                 html.Small("ETH/USDT", className="text-muted"),
                 html.H4(f"${latest['eth_price']:,.2f}", className="text-primary")
-            ])),
+            ]), width=3),
             dbc.Col(html.Div([
                 html.Small("SIGNAL", className="text-muted"),
-                html.H4(latest['btc_status'], className="text-success" if latest['btc_status'] == "ABOVE" else "text-danger")
-            ]))
-        ])
+                html.H4(latest[f'{sym}_status'], 
+                        className="text-success" if latest[f'{sym}_status'] == "ABOVE" else "text-danger")
+            ]), width=3),
+            dbc.Col(html.Div([
+                html.Small("SELECT SYMBOL", className="text-muted font-monospace"),
+                dcc.Dropdown(
+                    id='symbol-dropdown',
+                    options=[{'label': s.replace('/USDT', ''), 'value': s.split('/')[0].lower()} for s in SYMBOLS],
+                    value=sym,
+                    clearable=False,
+                    searchable=False,
+                    className="custom-dropdown" # You can style this in your CSS
+                )
+            ]), width=3)
+        ], align="center")
 
     # 2. Graph Styling
-    fig = px.line(df, x="timestamp", y="btc_price", template="plotly_dark")
+    price_col = f"{sym}_price"
+    fig = px.line(df, x="timestamp", y=price_col, template="plotly_dark")
     fig.update_traces(line_color='#00d1ff', line_width=3)
     fig.update_layout(
             paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)',
@@ -119,20 +138,18 @@ def update_dashboard(n):
     #        style_header={'backgroundColor': 'transparent', 'color': '#00d1ff', 'fontWeight': 'bold', 'borderBottom': '1px solid #333'},
     #        style_cell={'backgroundColor': 'transparent', 'color': 'white', 'padding': '12px', 'fontSize': '13px'},page_size=10)
 
+    display_df = df.copy()
+    display_df.columns = [c.replace('_', ' ').upper() for c in display_df.columns]
+    
     table = dbc.Table.from_dataframe(
-        df, 
+        display_df, 
         striped=False, 
-        bordered=False, 
         hover=True, 
         responsive=True,
-        className="text-light align-middle",
-        style={
-            "fontSize": "13px",
-            "borderCollapse": "separate",
-            "borderSpacing": "0 8px" # Adds spacing between rows
-        }
+        borderless=True,
+        className="text-light",
+        style={"backgroundColor": "transparent"}
     )
 
-    return metrics, table, fig
-  #except Exception as e:
-    #return html.Div(f"Error: {e}", className="text-danger"), "", px.scatter()
+    chart_title = f"{sym.upper()} Price Action"
+    return metrics, table, fig, chart_title
