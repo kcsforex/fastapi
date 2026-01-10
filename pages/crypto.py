@@ -2,6 +2,7 @@ import dash
 from dash import dcc, html, dash_table, callback
 import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output
+from fastapi import APIRouter
 import plotly.express as px
 import pandas as pd
 import psycopg2
