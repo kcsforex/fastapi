@@ -2,40 +2,9 @@ import dash
 from dash import dcc, html, dash_table, callback
 import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output
-from fastapi import APIRouter
 import plotly.express as px
 import pandas as pd
-import ccxt
-from datetime import datetime
 import psycopg2
-
-# --- 1. CONFIGURATION ---
-DB_CONFIG = "postgresql://sql_admin:sql_pass@72.62.151.169:5432/n8n"
-SYMBOLS = ["BTC/USDT", "ETH/USDT", "SOL/USDT", "XRP/USDT", "SUI/USDT"]
-
-# --- 2. FASTAPI  (n8n targets this) ---
-router = APIRouter()
-exchange = ccxt.bybit()
-
-@router.get("/analyze/pivot")
-def analyze_pivot():
-    payload = {"timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
-    for symbol in SYMBOLS:
-        try:
-            bars = exchange.fetch_ohlcv(symbol, timeframe='5m', limit=110)
-            df = pd.DataFrame(bars, columns=['ts', 'o', 'h', 'l', 'c', 'v'])
-            df['sma100'] = df['c'].rolling(window=100).mean()
-            
-            curr, prev = df.iloc[-1], df.iloc[-2]
-            col = symbol.split('/')[0]
-            
-            payload[f"{col}_price"] = float(curr['c'])
-            payload[f"{col}_status"] = "ABOVE" if curr['c'] > curr['sma100'] else "BELOW"
-            #payload[f"{col}_cross"] = bool(prev['c'] <= prev['sma100'] and curr['c'] > curr['sma100'])
-        
-        except Exception as e:
-            payload[f"{symbol}_error"] = str(e)
-    return payload
 
 dash.register_page(__name__, icon="fa-coins", name="Crypto Dash")
 
