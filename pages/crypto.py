@@ -94,7 +94,7 @@ def update_dashboard(n):
     latest = df.iloc[0]
     
     # 1. Metrics with Dropdown
-  metric_cols = [
+    metric_cols = [
         dbc.Col(html.Div([
             html.Small(s, className="text-muted"),
             html.H5(f"${latest[f'{s.split('/')[0].lower()}_price']:,.2f}", className="text-info"),
