@@ -63,7 +63,7 @@ layout = dbc.Container([
 
     # Main Graph Card
     html.Div([
-        html.H5(id="BTC Price Action", className="text-info mb-3"),     
+        html.H5("BTC Price Action", className="text-info mb-3"),     
         dcc.Graph(id='main-chart', config={'displayModeBar': False})
     ], style=CARD_STYLE, className="mb-4"),
 
