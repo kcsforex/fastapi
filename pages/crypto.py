@@ -12,7 +12,7 @@ import psycopg2
 
 # --- 1. CONFIGURATION ---
 DB_CONFIG = "postgresql://sql_admin:sql_pass@72.62.151.169:5432/n8n"
-SYMBOLS = ["BTC/USDT", "ETH/USDT", "SOL/USDT", "XRP/USDT", "SUI/USDT", "ZEC/USDT"]
+SYMBOLS = ["BTC/USDT", "ETH/USDT", "SOL/USDT", "XRP/USDT", "SUI/USDT", "LTC/USDT"]
 
 # --- 2. FASTAPI  (n8n targets this) ---
 router = APIRouter()
@@ -94,44 +94,16 @@ def update_dashboard(n):
     latest = df.iloc[0]
     
     # 1. Metrics with Dropdown
-    metrics = dbc.Row([
-            dbc.Col(html.Div([
-                html.Small("BTC/USDT", className="text-muted"),
-                html.H5(f"${latest['btc_price']:,.2f}", className="text-info"),
-                html.Small("SIGNAL", className="text-muted"),
-                html.H5(latest['btc_status'], className="text-success" if latest['btc_status'] == "ABOVE" else "text-danger")      
-            ]), width=2),
-            dbc.Col(html.Div([
-                html.Small("ETH/USDT", className="text-muted"),
-                html.H5(f"${latest['eth_price']:,.2f}", className="text-info"),
-                html.Small("SIGNAL", className="text-muted"),
-                html.H5(latest['eth_status'], className="text-success" if latest['eth_status'] == "ABOVE" else "text-danger")
-            ]), width=2),
-            dbc.Col(html.Div([
-                html.Small("SOL/USDT", className="text-muted"),
-                html.H5(f"${latest['sol_price']:,.2f}", className="text-info"),
-                html.Small("SIGNAL", className="text-muted"),
-                html.H5(latest['sol_status'], className="text-success" if latest['sol_status'] == "ABOVE" else "text-danger")
-            ]), width=2),
-            dbc.Col(html.Div([
-                html.Small("SUI/USDT", className="text-muted"),
-                html.H5(f"${latest['sui_price']:,.2f}", className="text-info"),
-                html.Small("SIGNAL", className="text-muted"),
-                html.H5(latest['sui_status'], className="text-success" if latest['sui_status'] == "ABOVE" else "text-danger")
-            ]), width=2),
-                dbc.Col(html.Div([
-                html.Small("XRP/USDT", className="text-muted"),
-                html.H5(f"${latest['xrp_price']:,.2f}", className="text-info"),
-                html.Small("SIGNAL", className="text-muted"),
-                html.H5(latest['xrp_status'], className="text-success" if latest['xrp_status'] == "ABOVE" else "text-danger")
-            ]), width=2),
-                dbc.Col(html.Div([
-                html.Small("ZEC/USDT", className="text-muted"),
-                html.H5(f"${latest['zec_price']:,.2f}", className="text-info"),
-                html.Small("SIGNAL", className="text-muted"),
-                html.H5(latest['zec_status'], className="text-success" if latest['zec_status'] == "ABOVE" else "text-danger")
-            ]), width=2)
-        ], align="center")
+    metric_cols = [
+        dbc.Col(html.Div([
+            html.Small(s, className="text-muted"),
+            html.H5(f"${latest[f'{s.lower()}_price']:,.2f}", className="text-info"),
+            html.Small("SIGNAL", className="text-muted"),
+            html.H5(latest[f"{s.lower()}_status"], className="text-success" if latest[f"{s.lower()}_status"] == "ABOVE" else "text-danger"
+            )      
+        ]), width=2) for s in SYMBOLS
+    ]
+    metrics = dbc.Row(metric_cols, align="center")
 
     # 2. Graph Styling
     fig = px.line(df, x="timestamp", y="btc_price", template="plotly_dark")
