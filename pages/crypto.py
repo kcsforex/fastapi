@@ -114,14 +114,24 @@ def update_dashboard(n):
         )
 
     # 3. Table Styling
-    table = dash_table.DataTable(
-            data=df.to_dict('records'),
-            columns=[{"name": i.replace('_', ' ').upper(), "id": i} for i in df.columns],
-            style_as_list_view=True,
-            style_header={'backgroundColor': 'transparent', 'color': '#00d1ff', 'fontWeight': 'bold', 'borderBottom': '1px solid #333'},
-            style_cell={'backgroundColor': 'transparent', 'color': 'white', 'padding': '12px', 'fontSize': '13px'},
-            page_size=10
-        )
+    #table = dash_table.DataTable(data=df.to_dict('records'),
+    #        columns=[{"name": i.replace('_', ' ').upper(), "id": i} for i in df.columns],style_as_list_view=True,
+    #        style_header={'backgroundColor': 'transparent', 'color': '#00d1ff', 'fontWeight': 'bold', 'borderBottom': '1px solid #333'},
+    #        style_cell={'backgroundColor': 'transparent', 'color': 'white', 'padding': '12px', 'fontSize': '13px'},page_size=10)
+
+    table = dbc.Table.from_dataframe(
+        df, 
+        striped=False, 
+        bordered=False, 
+        hover=True, 
+        responsive=True,
+        className="text-light align-middle",
+        style={
+            "fontSize": "13px",
+            "borderCollapse": "separate",
+            "borderSpacing": "0 8px" # Adds spacing between rows
+        }
+    )
 
     return metrics, table, fig
   #except Exception as e:
