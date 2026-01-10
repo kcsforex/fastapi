@@ -12,7 +12,7 @@ import psycopg2
 
 # --- 1. CONFIGURATION ---
 DB_CONFIG = "postgresql://sql_admin:sql_pass@72.62.151.169:5432/n8n"
-SYMBOLS = ["BTC/USDT", "ETH/USDT", "SOL/USDT", "XRP/USDT", "SUI/USDT"]
+SYMBOLS = ["BTC/USDT", "ETH/USDT", "SOL/USDT", "XRP/USDT", "SUI/USDT", "ZEC/USDT"]
 
 # --- 2. FASTAPI  (n8n targets this) ---
 router = APIRouter()
@@ -124,6 +124,12 @@ def update_dashboard(n):
                 html.H5(f"${latest['xrp_price']:,.2f}", className="text-info"),
                 html.Small("SIGNAL", className="text-muted"),
                 html.H5(latest['xrp_status'], className="text-success" if latest['xrp_status'] == "ABOVE" else "text-danger")
+            ]), width=2)
+                dbc.Col(html.Div([
+                html.Small("ZEC/USDT", className="text-muted"),
+                html.H5(f"${latest['zec_price']:,.2f}", className="text-info"),
+                html.Small("SIGNAL", className="text-muted"),
+                html.H5(latest['zec_status'], className="text-success" if latest['zec_status'] == "ABOVE" else "text-danger")
             ]), width=2)
         ], align="center")
 
