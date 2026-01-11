@@ -45,7 +45,7 @@ layout = html.Div(
 
 
 @callback(Output("table", "children"), Input("selector-1", "value"))
-def create_table(val1, val2):
+def create_table(val1):
     connection = sql.connect(
         server_hostname=SERVER_HOSTNAME, http_path=HTTP_PATH, access_token=ACCESS_TOKEN
     )
