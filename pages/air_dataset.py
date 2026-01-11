@@ -37,7 +37,6 @@ layout = html.Div(
     [ 
         #dcc.Loading(dcc.Graph(id="sample-chart-2")),
         dcc.Input(id="selector-1", type="number", min=10, max=200, step=10, value=150),
-        dcc.Dropdown(id="selector-2",options=['SpiceJet', 'AirAsia', 'Air_India', 'Vistara', 'Indigo'],value='Indigo'),
         #dcc.Input(id="selector-2", type="text", value=list('SpiseJet','AirAsia', 'Air_India')),
          dbc.Container([    html.Div(id="table")], fluid=True)
     ],
@@ -45,15 +44,14 @@ layout = html.Div(
 )
 
 
-@callback(Output("table", "children"), Input("selector-1", "value"), Input("selector-2", "value"))
+@callback(Output("table", "children"), Input("selector-1", "value"))
 def create_table(val1, val2):
     connection = sql.connect(
         server_hostname=SERVER_HOSTNAME, http_path=HTTP_PATH, access_token=ACCESS_TOKEN
     )
     cursor = connection.cursor()
     cursor.execute(
-        f"SELECT * FROM delta.`{delta_path}`WHERE airline = '{val2}' LIMIT {val1}"
-        #f"SELECT * FROM {DB_NAME}.{TABLE_NAME} WHERE age > {selected_val} LIMIT 100"
+        f"SELECT * FROM delta.`{delta_path}` LIMIT {val1}"
     )
     df = cursor.fetchall_arrow()
     result_df = df.to_pandas()
