@@ -27,7 +27,14 @@ HTTP_PATH = '/sql/1.0/warehouses/cbfc343eb927c998'
 headers = {"Authorization": f"Bearer {TOKEN}", "Content-Type": "application/json"}
 
 # --- 3. DASH REGISTRATION & UI ---
-dash.register_page(__name__, icon="fa-brain", name="ML Databricks")
+#dash.register_page(__name__, icon="fa-brain", name="ML Databricks")
+
+dash.register_page(
+    __name__,
+    name="ML Databricks",
+    icon="fa-brain",
+    path="/ml-databricks"
+)
 
 CARD_STYLE = {
     "background": "rgba(255, 255, 255, 0.03)",
