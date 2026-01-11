@@ -82,7 +82,7 @@ layout = dbc.Container([
     Output("rf-table-container", "children")],
     [Input("run-btn", "n_clicks")],
     [State("numTrees", "value"),
-     State("maxDepth", "value")]
+     State("maxDepth", "value")],
     prevent_initial_call=True
 )
 def update_chart(n_clicks, numTrees, maxDepth):
