@@ -23,6 +23,16 @@ delta_path = '/Volumes/test_cat/test_db/test_vol/bronze/delta_air_dataset/'
 
 dash.register_page(__name__, icon="fa-brain", name="Air Dataset")
 
+CARD_STYLE = {
+    "background": "rgba(255, 255, 255, 0.03)",
+    "backdrop-filter": "blur(10px)",
+    "border-radius": "15px",
+    "border": "1px solid rgba(255, 255, 255, 0.1)",
+    "padding": "25px",
+    "marginBottom": "20px"
+}
+
+
 layout = html.Div(
     [ 
         #dcc.Loading(dcc.Graph(id="sample-chart-2")),
@@ -51,5 +61,20 @@ def create_table(val1, val2):
     cursor.close()
     connection.close()
 
-    return dbc.Table.from_dataframe(result_df, striped=True, bordered=True, hover=True)
+    table = dbc.Table.from_dataframe(
+        result_df, 
+        striped=False, 
+        hover=True, 
+        responsive=True,
+        borderless=True,
+        className="text-light m-0", 
+        style={
+            "backgroundColor": "transparent", 
+            "--bs-table-bg": "transparent", # Overrides Bootstrap 5 background variable
+            "--bs-table-accent-bg": "transparent",
+            "color": "white"
+        }
+    )
+
+    return table
 
