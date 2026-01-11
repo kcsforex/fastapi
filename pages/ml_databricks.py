@@ -135,13 +135,27 @@ def update_chart(n_clicks, numTrees, maxDepth):
         font_color="white", margin=dict(t=50, b=0, l=0, r=0)
     )
 
-    table = dash_table.DataTable(
-        data=result_df.to_dict('records'),
-        columns=[{"name": i.upper(), "id": i} for i in result_df.columns],
-        page_size=10,
-        style_header={'backgroundColor': 'rgba(0,0,0,0.5)', 'color': '#00d1ff', 'border': '1px solid #444'},
-        style_cell={'backgroundColor': 'transparent', 'color': 'white', 'border': '1px solid #333'},
-        style_table={'overflowX': 'auto'}
+    #table = dash_table.DataTable(
+    #    data=result_df.to_dict('records'),
+    #    columns=[{"name": i.upper(), "id": i} for i in result_df.columns],
+#        style_header={'backgroundColor': 'rgba(0,0,0,0.5)', 'color': '#00d1ff', 'border': '1px solid #444'},
+ #       style_cell={'backgroundColor': 'transparent', 'color': 'white', 'border': '1px solid #333'},
+  #      style_table={'overflowX': 'auto'}
+   # )
+
+    table = dbc.Table.from_dataframe(
+        result_df, 
+        striped=False, 
+        hover=True, 
+        responsive=True,
+        borderless=True,
+        className="text-light m-0", 
+        style={
+            "backgroundColor": "transparent", 
+            "--bs-table-bg": "transparent", # Overrides Bootstrap 5 background variable
+            "--bs-table-accent-bg": "transparent",
+            "color": "white"
+        }
     )
 
     return fig, table
