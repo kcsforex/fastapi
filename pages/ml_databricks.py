@@ -1,5 +1,6 @@
+# 2026.01.11  10.00
 import dash
-from dash import dcc, html, Input, Output, callback, dash_table
+from dash import dcc, html, Input, Output, State, callback, dash_table
 from dash.exceptions import PreventUpdate
 import dash_bootstrap_components as dbc
 import plotly.express as px
@@ -19,14 +20,14 @@ def trigger_external_job():
 
 # --- 2. CONFIGURATION ---
 DATABRICKS_INSTANCE = 'dbc-9c577faf-b445.cloud.databricks.com' # Removed https:// for sql.connect
-TOKEN = 'dapif047182091035d8ea79cd0f22ddd6bee'
+TOKEN = 'dapi04d3d1a0eb55db7ea63b2a6f3f2e1fa6' 
 JOB_ID = '718482410766048'
 HTTP_PATH = '/sql/1.0/warehouses/cbfc343eb927c998'
 
 headers = {"Authorization": f"Bearer {TOKEN}", "Content-Type": "application/json"}
 
 # --- 3. DASH REGISTRATION & UI ---
-dash.register_page(__name__, icon="fa-brain", name="ML Engine (Large)")
+dash.register_page(__name__, icon="fa-brain", name="ML Databricks")
 
 CARD_STYLE = {
     "background": "rgba(255, 255, 255, 0.03)",
@@ -48,11 +49,11 @@ layout = dbc.Container([
         dbc.Col([
             html.Div([
                 html.Label("Number of Trees", className="text-info small"),
-                dcc.Slider(id="numTrees", min=5, max=25, step=5, value=10, 
+                dcc.Slider(id="numTrees", min=3, max=10, step=1, value=5, 
                            marks={i: {'label': str(i), 'style': {'color': 'white'}} for i in range(5, 26, 5)}),
                 
                 html.Label("Max Depth", className="text-info small mt-4"),
-                dcc.Slider(id="maxDepth", min=2, max=10, step=1, value=3,
+                dcc.Slider(id="maxDepth", min=2, max=5, step=1, value=3,
                            marks={i: {'label': str(i), 'style': {'color': 'white'}} for i in range(2, 11, 2)}),
                 
                 dbc.Button([
@@ -77,11 +78,11 @@ layout = dbc.Container([
 
 # --- 4. CALLBACKS ---
 @callback(
-    Output("rf-chart", "figure"),
-    Output("rf-table-container", "children"),
-    Input("run-btn", "n_clicks"),
-    Input("numTrees", "value"),
-    Input("maxDepth", "value"),
+    [Output("rf-chart", "figure"),
+    Output("rf-table-container", "children")],
+    [Input("run-btn", "n_clicks")],
+    [State("numTrees", "value"),
+     State("maxDepth", "value")]
     prevent_initial_call=True
 )
 def update_chart(n_clicks, numTrees, maxDepth):
@@ -89,7 +90,7 @@ def update_chart(n_clicks, numTrees, maxDepth):
         raise PreventUpdate
 
     # A. Trigger Databricks job
-    run_now_url = f"https://{DATABRICKS_INSTANCE}/api/2.1/jobs/run-now"
+    run_now_url = f"https://{DATABRICKS_INSTANCE}/api/2.2/jobs/run-now"
     payload = {
         "job_id": JOB_ID, 
         "notebook_params": {"numTrees": str(numTrees), "maxDepth": str(maxDepth)}
@@ -102,7 +103,7 @@ def update_chart(n_clicks, numTrees, maxDepth):
     run_id = response.json().get("run_id")
 
     # B. Poll status (Simplified for 8GB RAM responsiveness)
-    status_url = f"https://{DATABRICKS_INSTANCE}/api/2.1/jobs/runs/get?run_id={run_id}"
+    status_url = f"https://{DATABRICKS_INSTANCE}/api/2.2/jobs/runs/get?run_id={run_id}"
     for _ in range(20): # Timeout after ~60 seconds
         status_response = requests.get(status_url, headers=headers).json()
         state = status_response.get("state", {}).get("life_cycle_state")
