@@ -1,5 +1,5 @@
 import dash
-from dash import dcc, html, Input, Output, State, callback, dash_table
+from dash import dcc, html, Input, Output, State, callback
 from dash.exceptions import PreventUpdate
 import dash_bootstrap_components as dbc
 import plotly.express as px
@@ -32,7 +32,7 @@ headers = {
 }
 
 # --------------------------------------------------
-# 3. SQL WAREHOUSE LOADER
+# 3. SQL WAREHOUSE QUERY (SAFE)
 # --------------------------------------------------
 def load_sql_results(limit=50):
     connection = sql.connect(
@@ -56,52 +56,9 @@ def load_sql_results(limit=50):
     return df
 
 # --------------------------------------------------
-# 4. LOAD INITIAL DATA (ONCE)
+# 4. DASH PAGE REGISTRATION
 # --------------------------------------------------
-try:
-    initial_df = load_sql_results()
-except Exception as e:
-    print("Initial SQL load failed:", e)
-    initial_df = pd.DataFrame()
-
-# --------------------------------------------------
-# 5. INITIAL FIGURE & TABLE
-# --------------------------------------------------
-if not initial_df.empty:
-    initial_fig = px.scatter(
-        initial_df,
-        x="target",
-        y="prediction",
-        title="Initial Model Results",
-        template="plotly_dark",
-    )
-else:
-    initial_fig = px.scatter(title="No data available")
-
-initial_fig.update_layout(
-    paper_bgcolor="rgba(0,0,0,0)",
-    plot_bgcolor="rgba(0,0,0,0)",
-    font_color="white",
-    margin=dict(t=50, b=0, l=0, r=0),
-)
-
-initial_table = (
-    dbc.Table.from_dataframe(
-        initial_df,
-        striped=False,
-        hover=True,
-        responsive=True,
-        borderless=True,
-        className="text-light m-0",
-    )
-    if not initial_df.empty
-    else html.Div("No data available", className="text-muted")
-)
-
-# --------------------------------------------------
-# 6. DASH REGISTRATION & UI
-# --------------------------------------------------
-dash.register_page(__name__, icon="fa-brain", name="ML Databricks1")
+dash.register_page(__name__, icon="fa-brain", name="ML Databricks")
 
 CARD_STYLE = {
     "background": "rgba(255, 255, 255, 0.03)",
@@ -112,6 +69,9 @@ CARD_STYLE = {
     "marginBottom": "20px",
 }
 
+# --------------------------------------------------
+# 5. LAYOUT (NO BLOCKING CALLS)
+# --------------------------------------------------
 layout = dbc.Container(
     [
         html.Div(
@@ -175,7 +135,7 @@ layout = dbc.Container(
                                 dcc.Loading(
                                     dcc.Graph(
                                         id="rf-chart",
-                                        figure=initial_fig,
+                                        figure=px.scatter(title="Loading data..."),
                                         config={"displayModeBar": False},
                                     ),
                                     type="graph",
@@ -186,7 +146,7 @@ layout = dbc.Container(
                         ),
                         html.Div(
                             id="rf-table-container",
-                            children=initial_table,
+                            children=dbc.Spinner(color="info"),
                             style=CARD_STYLE,
                         ),
                     ],
@@ -200,18 +160,60 @@ layout = dbc.Container(
 )
 
 # --------------------------------------------------
-# 7. CALLBACK
+# 6. INITIAL LOAD CALLBACK (RUNS ON PAGE LOAD)
 # --------------------------------------------------
 @callback(
-    [Output("rf-chart", "figure"), Output("rf-table-container", "children")],
+    Output("rf-chart", "figure"),
+    Output("rf-table-container", "children"),
+    Input("rf-chart", "id"),  # fires once
+)
+def load_initial_data(_):
+    try:
+        df = load_sql_results()
+    except Exception as e:
+        return (
+            px.scatter(title="Failed to load data"),
+            html.Div(str(e), className="text-danger"),
+        )
+
+    fig = px.scatter(
+        df,
+        x="target",
+        y="prediction",
+        title="Initial Model Results",
+        template="plotly_dark",
+    )
+
+    fig.update_layout(
+        paper_bgcolor="rgba(0,0,0,0)",
+        plot_bgcolor="rgba(0,0,0,0)",
+        font_color="white",
+        margin=dict(t=50, b=0, l=0, r=0),
+    )
+
+    table = dbc.Table.from_dataframe(
+        df,
+        striped=False,
+        hover=True,
+        responsive=True,
+        borderless=True,
+        className="text-light m-0",
+    )
+
+    return fig, table
+
+# --------------------------------------------------
+# 7. RUN MODEL CALLBACK
+# --------------------------------------------------
+@callback(
+    Output("rf-chart", "figure"),
+    Output("rf-table-container", "children"),
     Input("run-btn", "n_clicks"),
     State("numTrees", "value"),
     State("maxDepth", "value"),
+    prevent_initial_call=True,
 )
 def update_chart(n_clicks, numTrees, maxDepth):
-    if not n_clicks:
-        return initial_fig, initial_table
-
     # Trigger job
     run_now_url = f"https://{DATABRICKS_INSTANCE}/api/2.2/jobs/run-now"
     payload = {
@@ -231,7 +233,7 @@ def update_chart(n_clicks, numTrees, maxDepth):
 
     run_id = response.json().get("run_id")
 
-    # Poll status
+    # Poll job
     status_url = (
         f"https://{DATABRICKS_INSTANCE}/api/2.2/jobs/runs/get?run_id={run_id}"
     )
@@ -241,7 +243,7 @@ def update_chart(n_clicks, numTrees, maxDepth):
             break
         time.sleep(3)
 
-    # Query results
+    # Reload SQL results
     try:
         df = load_sql_results()
     except Exception as e:
@@ -275,3 +277,4 @@ def update_chart(n_clicks, numTrees, maxDepth):
     )
 
     return fig, table
+
