@@ -1,9 +1,11 @@
 # 2025.11.30  11.00
+import dash
 from dash import dash, html, dcc, Output, Input, callback
 import dash_bootstrap_components as dbc
 from databricks import sql
 import pandas as pd
 import os
+import requests
 
 SERVER_HOSTNAME = 'dbc-9c577faf-b445.cloud.databricks.com' 
 HTTP_PATH = '/sql/1.0/warehouses/cbfc343eb927c998' 
