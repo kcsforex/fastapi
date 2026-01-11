@@ -6,6 +6,15 @@ from databricks import sql
 import pandas as pd
 import os
 import requests
+from fastapi import APIRouter
+
+# --- 1. FASTAPI ROUTER (If you want n8n to trigger the job) ---
+router = APIRouter()
+
+@router.post("/airtrigger")
+def trigger_external_job():
+    # Logic to trigger Databricks from n8n could go here
+    return {"status": "Air trigger available via UI"}
 
 SERVER_HOSTNAME = 'dbc-9c577faf-b445.cloud.databricks.com' 
 HTTP_PATH = '/sql/1.0/warehouses/cbfc343eb927c998' 
