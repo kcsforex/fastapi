@@ -41,7 +41,7 @@ layout = html.Div(
         #dcc.Input(id="selector-2", type="text", value=list('SpiseJet','AirAsia', 'Air_India')),
          dbc.Container([    html.Div(id="table")], fluid=True)
     ],
-    style={"background-color": "white", "height": "100vh"},
+    style=CARD_STYLE,
 )
 
 
