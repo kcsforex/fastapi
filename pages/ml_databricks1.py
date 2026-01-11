@@ -58,7 +58,14 @@ def load_sql_results(limit=50):
 # --------------------------------------------------
 # 4. DASH PAGE REGISTRATION
 # --------------------------------------------------
-dash.register_page(__name__, icon="fa-brain", name="ML Databricks1")
+#dash.register_page(__name__, icon="fa-brain", name="ML Databricks1")
+
+dash.register_page(
+    __name__,
+    name="ML Databricks1",
+    icon="fa-brain",
+    path="/ml-databricks1"
+)
 
 CARD_STYLE = {
     "background": "rgba(255, 255, 255, 0.03)",
