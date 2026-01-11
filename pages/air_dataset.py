@@ -7,13 +7,12 @@ import os
 
 SERVER_HOSTNAME = 'dbc-9c577faf-b445.cloud.databricks.com' 
 HTTP_PATH = '/sql/1.0/warehouses/cbfc343eb927c998' 
-ACCESS_TOKEN = 'dapif047182091035d8ea79cd0f22ddd6bee' 
+ACCESS_TOKEN = 'dapi04d3d1a0eb55db7ea63b2a6f3f2e1fa6' 
 delta_path = '/Volumes/test_cat/test_db/test_vol/bronze/delta_air_dataset/'
 
-#app = Dash()
-app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
+dash.register_page(__name__, icon="fa-brain", name="Air Dataset")
 
-app.layout = html.Div(
+layout = html.Div(
     [ 
         #dcc.Loading(dcc.Graph(id="sample-chart-2")),
         dcc.Input(id="selector-1", type="number", min=10, max=200, step=10, value=150),
@@ -42,10 +41,4 @@ def create_table(val1, val2):
     connection.close()
 
     return dbc.Table.from_dataframe(result_df, striped=True, bordered=True, hover=True)
-    #return dash_table.DataTable(df.to_dict("records"), [{"name": i, "id": i} for i in df.columns])
-    #asset_table = dbc.Table.from_dataframe(binance_data, striped=True, bordered=True, hover=True)
-    #return asset_table
 
-
-if __name__ == "__main__":
-    app.run(debug=True)
