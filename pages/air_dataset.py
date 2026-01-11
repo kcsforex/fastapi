@@ -36,7 +36,7 @@ CARD_STYLE = {
 layout = html.Div(
     [ 
         #dcc.Loading(dcc.Graph(id="sample-chart-2")),
-        dcc.Input(id="selector-1", type="number", min=10, max=200, step=10, value=150),
+        dcc.Input(id="selector-1", type="number", min=10, max=200, step=10, value=50),
         #dcc.Input(id="selector-2", type="text", value=list('SpiseJet','AirAsia', 'Air_India')),
          dbc.Container([    html.Div(id="table")], fluid=True)
     ],
