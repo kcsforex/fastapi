@@ -14,7 +14,7 @@ app = dash.Dash(__name__, use_pages=True, external_stylesheets=[dbc.themes.DARKL
 
 # ----- 2. NOW IMPORT YOUR PAGES -----
 # By importing them here, 'app' already exists when dash.register_page is called
-from pages import crypto, crypto0, home  # This triggers register_page correctly
+from pages import home, crypto, crypto0,  ml_databricks, ml_databricks1 # This triggers register_page correctly
 
 # ----- 3. FASTAPI WRAPPER -----
 server = FastAPI(title="Dash Main App")
