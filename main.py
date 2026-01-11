@@ -21,8 +21,8 @@ server = FastAPI(title="Dash Main App")
 
 # ----- 4. Use the router directly from the imported module -----
 server.include_router(crypto.router, prefix="/api/crypto", tags=["Crypto"])
-server.include_router(ml-databricks.router, prefix="/api/ml-db", tags=["Machine Learning"])
-server.include_router(ml-databricks1.router, prefix="/api/ml-db1", tags=["Machine Learning1"])
+server.include_router(ml_databricks.router, prefix="/api/ml_db", tags=["Machine Learning"])
+server.include_router(ml_databricks1.router, prefix="/api/ml_db1", tags=["Machine Learning1"])
 #server.include_router(flight_router, prefix="/api/flights")
 #server.include_router(ml_small_router, prefix="/api/ml-small")
 
