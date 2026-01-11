@@ -14,7 +14,7 @@ app = dash.Dash(__name__, use_pages=True, external_stylesheets=[dbc.themes.DARKL
 
 # ----- 2. NOW IMPORT YOUR PAGES -----
 # By importing them here, 'app' already exists when dash.register_page is called
-from pages import home, crypto, crypto0,  ml_databricks, ml_databricks1
+from pages import home, crypto, crypto0,  ml_databricks
 
 # ----- 3. FASTAPI WRAPPER -----
 server = FastAPI(title="Dash Main App")
@@ -22,7 +22,6 @@ server = FastAPI(title="Dash Main App")
 # ----- 4. Use the router directly from the imported module -----
 server.include_router(crypto.router, prefix="/api/crypto", tags=["Crypto"])
 server.include_router(ml_databricks.router, prefix="/api/ml_db", tags=["Machine Learning"])
-server.include_router(ml_databricks1.router, prefix="/api/ml_db1", tags=["Machine Learning1"])
 #server.include_router(flight_router, prefix="/api/flights")
 #server.include_router(ml_small_router, prefix="/api/ml-small")
 
