@@ -19,7 +19,7 @@ def trigger_external_job():
     return {"status": "Job trigger available via UI"}
 
 # --- 2. CONFIGURATION ---
-DATABRICKS_INSTANCE = 'dbc-9c577faf-b445.cloud.databricks.com' # Removed https:// for sql.connect
+DATABRICKS_INSTANCE = 'dbc-9c577faf-b445.cloud.databricks.com'
 TOKEN = 'dapi04d3d1a0eb55db7ea63b2a6f3f2e1fa6' 
 JOB_ID = '718482410766048'
 HTTP_PATH = '/sql/1.0/warehouses/cbfc343eb927c998'
@@ -28,13 +28,7 @@ headers = {"Authorization": f"Bearer {TOKEN}", "Content-Type": "application/json
 
 # --- 3. DASH REGISTRATION & UI ---
 #dash.register_page(__name__, icon="fa-brain", name="ML Databricks")
-
-dash.register_page(
-    __name__,
-    name="ML Databricks",
-    icon="fa-brain",
-    path="/ml-databricks"
-)
+dash.register_page( __name__, name="ML Databricks", icon="fa-brain", path="/ml-databricks")
 
 CARD_STYLE = {
     "background": "rgba(255, 255, 255, 0.03)",
@@ -98,10 +92,7 @@ def update_chart(n_clicks, numTrees, maxDepth):
 
     # A. Trigger Databricks job
     run_now_url = f"https://{DATABRICKS_INSTANCE}/api/2.2/jobs/run-now"
-    payload = {
-        "job_id": JOB_ID, 
-        "notebook_params": {"numTrees": str(numTrees), "maxDepth": str(maxDepth)}
-    }
+    payload = { "job_id": JOB_ID, "notebook_params": {"numTrees": str(numTrees), "maxDepth": str(maxDepth)}}
 
     response = requests.post(run_now_url, headers=headers, json=payload)
     if response.status_code != 200:
@@ -120,11 +111,7 @@ def update_chart(n_clicks, numTrees, maxDepth):
 
     # C. Query Results using Databricks SQL
     try:
-        connection = sql.connect(
-            server_hostname=DATABRICKS_INSTANCE, 
-            http_path=HTTP_PATH, 
-            access_token=TOKEN
-        )
+        connection = sql.connect(server_hostname=DATABRICKS_INSTANCE, http_path=HTTP_PATH, access_token=TOKEN)
         with connection.cursor() as cursor:
             cursor.execute("SELECT age, sex, bmi, bp, target, prediction FROM test_cat.test_db.diab_pred LIMIT 50")
             result_df = cursor.fetchall_arrow().to_pandas()
@@ -132,37 +119,16 @@ def update_chart(n_clicks, numTrees, maxDepth):
     except Exception as e:
         return px.scatter(title=f"SQL Error: {e}"), html.Div(f"Query Error: {e}", className="text-danger")
 
-    # D. Build Visuals
-    fig = px.scatter(result_df, x="target", y="prediction", 
-                     title=f"RF Results: Trees={numTrees} | Depth={maxDepth}",
-                     template="plotly_dark")
+    fig = px.scatter(result_df, x="target", y="prediction", title=f"RF Results: Trees={numTrees} | Depth={maxDepth}", template="plotly_dark")
     
-    fig.update_layout(
-        paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)',
-        font_color="white", margin=dict(t=50, b=0, l=0, r=0)
-    )
+    fig.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)',font_color="white", margin=dict(t=50, b=0, l=0, r=0))
 
-    #table = dash_table.DataTable(
-    #    data=result_df.to_dict('records'),
-    #    columns=[{"name": i.upper(), "id": i} for i in result_df.columns],
-#        style_header={'backgroundColor': 'rgba(0,0,0,0.5)', 'color': '#00d1ff', 'border': '1px solid #444'},
- #       style_cell={'backgroundColor': 'transparent', 'color': 'white', 'border': '1px solid #333'},
-  #      style_table={'overflowX': 'auto'}
-   # )
+    table_df = result_df.copy()
+    numeric_cols = table_df.select_dtypes(include="number").columns
+    table_df[numeric_cols] = table_df[numeric_cols].round(3)
 
-    table = dbc.Table.from_dataframe(
-        result_df, 
-        striped=False, 
-        hover=True, 
-        responsive=True,
-        borderless=True,
-        className="text-light m-0", 
-        style={
-            "backgroundColor": "transparent", 
-            "--bs-table-bg": "transparent", # Overrides Bootstrap 5 background variable
-            "--bs-table-accent-bg": "transparent",
-            "color": "white"
-        }
+    table = dbc.Table.from_dataframe(result_df, striped=False, hover=True, responsive=True, borderless=True, className="text-light m-0", 
+        style={"backgroundColor": "transparent", "--bs-table-bg": "transparent", "--bs-table-accent-bg": "transparent", "color": "white"}
     )
 
     return fig, table
