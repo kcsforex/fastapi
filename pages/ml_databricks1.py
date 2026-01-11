@@ -141,7 +141,7 @@ layout = dbc.Container(
                             [
                                 dcc.Loading(
                                     dcc.Graph(
-                                        id="rf-chart",
+                                        id="rf-chart1",
                                         figure=px.scatter(title="Loading data..."),
                                         config={"displayModeBar": False},
                                     ),
@@ -152,7 +152,7 @@ layout = dbc.Container(
                             style=CARD_STYLE,
                         ),
                         html.Div(
-                            id="rf-table-container",
+                            id="rf-table-container1",
                             children=dbc.Spinner(color="info"),
                             style=CARD_STYLE,
                         ),
@@ -170,9 +170,9 @@ layout = dbc.Container(
 # 6. INITIAL LOAD CALLBACK (RUNS ON PAGE LOAD)
 # --------------------------------------------------
 @callback(
-    Output("rf-chart", "figure"),
-    Output("rf-table-container", "children"),
-    Input("rf-chart", "id"),  # fires once
+    Output("rf-chart1", "figure"),
+    Output("rf-table-container1", "children"),
+    Input("rf-chart1", "id"),  # fires once
 )
 def load_initial_data(_):
     try:
@@ -213,9 +213,9 @@ def load_initial_data(_):
 # 7. RUN MODEL CALLBACK
 # --------------------------------------------------
 @callback(
-    Output("rf-chart", "figure"),
-    Output("rf-table-container", "children"),
-    Input("run-btn", "n_clicks"),
+    Output("rf-chart1", "figure"),
+    Output("rf-table-container1", "children"),
+    Input("run-btn1", "n_clicks"),
     State("numTrees", "value"),
     State("maxDepth", "value"),
     prevent_initial_call=True,
