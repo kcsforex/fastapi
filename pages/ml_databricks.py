@@ -128,7 +128,7 @@ def update_chart(n_clicks, numTrees, maxDepth):
     # D. Build Visuals
     fig = px.scatter(result_df, x="target", y="prediction", 
                      title=f"RF Results: Trees={numTrees} | Depth={maxDepth}",
-                     template="plotly_dark", trendline="ols")
+                     template="plotly_dark")
     
     fig.update_layout(
         paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)',
