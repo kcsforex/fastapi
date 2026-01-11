@@ -123,11 +123,16 @@ def update_chart(n_clicks, numTrees, maxDepth):
     
     fig.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)',font_color="white", margin=dict(t=50, b=0, l=0, r=0))
 
+    #result_df_formatted = result_df.copy()
+    #for col in result_df_formatted.columns:
+    #    result_df_formatted[col] = pd.to_numeric(result_df_formatted[col], errors='ignore')
+    #result_df_formatted = result_df_formatted.round(3)
+
     table_df = result_df.copy()
     numeric_cols = table_df.select_dtypes(include="number").columns
     table_df[numeric_cols] = table_df[numeric_cols].round(3)
 
-    table = dbc.Table.from_dataframe(result_df, striped=False, hover=True, responsive=True, borderless=True, className="text-light m-0", 
+    table = dbc.Table.from_dataframe(table_df, striped=False, hover=True, responsive=True, borderless=True, className="text-light m-0", 
         style={"backgroundColor": "transparent", "--bs-table-bg": "transparent", "--bs-table-accent-bg": "transparent", "color": "white"}
     )
 
