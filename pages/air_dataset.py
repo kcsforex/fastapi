@@ -1,6 +1,6 @@
 # 2025.11.30  11.00
 import dash
-from dash import dash, html, dcc, Output, Input, callback
+from dash import html, dcc, Output, Input, callback
 import dash_bootstrap_components as dbc
 from databricks import sql
 import pandas as pd
