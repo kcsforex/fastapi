@@ -136,9 +136,11 @@ layout = dbc.Container([
     dbc.Col(
         dbc.Card(
             dbc.CardBody([
-                html.H4("Runtime Environment", className="text-light"),
-                html.Div(id="env-table"),
-                dbc.Button("Refresh", id="refresh-btn", color="secondary", outline=True, size="sm", className="mt-3")
+                dbc.Row([
+                dbc.Col(html.H4("Runtime Environment", className="text-light"), width=3),
+                 dbc.Col(dbc.Button("Refresh", id="refresh-btn", color="secondary", outline=True, size="sm", className="mt-3"), width=3)
+                ]),
+                html.Div(id="env-table")
             ]),
             style=CARD_STYLE
         ),
