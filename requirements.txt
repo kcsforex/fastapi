@@ -7,3 +7,4 @@ ccxt
 psycopg2-binary
 databricks-sql-connector
 pyarrow
+scikit-learn
