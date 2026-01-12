@@ -1,4 +1,4 @@
-# 2025.11.30  11.00
+# 2026.01.12  10.00
 import dash
 from dash import html, dcc, Output, Input, callback
 import dash_bootstrap_components as dbc
@@ -33,15 +33,15 @@ CARD_STYLE = {
 }
 
 
-layout = html.Div(
-    [ 
-        #dcc.Loading(dcc.Graph(id="sample-chart-2")),
-        dcc.Input(id="selector-1", type="number", min=10, max=200, step=10, value=50),
-        #dcc.Input(id="selector-2", type="text", value=list('SpiseJet','AirAsia', 'Air_India')),
-         dbc.Container([    html.Div(id="table")], fluid=True)
-    ],
-    style=CARD_STYLE,
-)
+layout = html.Div([
+    dcc.Input(id="selector-1", type="number", min=10, max=200, step=10, value=50),
+    dcc.Loading(
+        id="loading",
+        type="default",
+        children=html.Div(id="table")
+    )
+], style=CARD_STYLE)
+
 
 
 @callback(Output("table", "children"), Input("selector-1", "value"))
