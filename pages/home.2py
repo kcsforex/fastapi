@@ -36,7 +36,7 @@ def get_runtime_info():
     return info_header, pkg_rows
 
 
-dash.register_page(__name__, path='/', icon="fa-home", name="Overview")
+dash.register_page(__name__, icon="fa-home", name="Home2")
 
 layout = dbc.Container([
 
@@ -140,6 +140,7 @@ def render_tables(_):
     )
 
     return env_tbl, pkg_tbl
+
 
 
 
