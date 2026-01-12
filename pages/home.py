@@ -76,19 +76,6 @@ def get_host_metrics():
 
 
 # =========================
-# Platform / Coolify info
-# =========================
-
-def get_platform_context():
-    return [
-        ("Running in Docker", "Yes" if os.path.exists("/.dockerenv") else "No"),
-        ("Coolify Project", os.getenv("COOLIFY_PROJECT_NAME", "unknown")),
-        ("Coolify Service", os.getenv("COOLIFY_SERVICE_NAME", "unknown")),
-        ("Coolify Version", os.getenv("COOLIFY_VERSION", "not exposed")),
-    ]
-
-
-# =========================
 # Page registration
 # =========================
 
@@ -177,10 +164,9 @@ layout = dbc.Container([
 def render_tables(_):
 
     runtime_info, pkg_rows = get_runtime_info()
-    platform_info = get_platform_context()
     host_metrics = get_host_metrics()
 
-    env_rows = runtime_info + platform_info + host_metrics
+    env_rows = runtime_info + host_metrics
 
     env_tbl = dbc.Table(
         [
