@@ -34,7 +34,7 @@ CARD_STYLE = {
 
 
 layout = html.Div([
-    dcc.Input(id="selector-1", type="number", min=10, max=200, step=10, value=50),
+    dcc.Input(id="selector-1", type="number", min=10, max=200, step=10, value=25),
     dcc.Loading(
         id="loading",
         type="default",
@@ -51,7 +51,10 @@ def create_table(val1):
     )
     cursor = connection.cursor()
     cursor.execute(
-        f"SELECT year, month, carrier_name, airport, arr_flights, arr_del15, round(arr_flights/arr_del15,3) as delay_rate  FROM delta.`{delta_path}` LIMIT {val1}"
+        f"SELECT year, month, carrier_name, airport, arr_flights, arr_del15, ROUND(arr_del15 / NULLIF(arr_flights, 0), 3) AS delay_rate  
+        FROM delta.`{delta_path}` 
+        ORDER BY year DESC, month DESC
+        LIMIT {val1}"
     )
     df = cursor.fetchall_arrow()
     result_df = df.to_pandas()
