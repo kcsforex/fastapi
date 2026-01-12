@@ -191,8 +191,7 @@ def render_tables(_):
         hover=True,
         responsive=True,
         borderless=True,
-        #className="text-light table-sm m-0",
-        className="text-light table-sm m-0 font-monospace",
+        className="text-light table-sm m-0",
         style=TABLE_STYLE
     )
 
@@ -211,8 +210,7 @@ def render_tables(_):
         hover=True,
         responsive=True,
         borderless=True,
-        #className="text-light table-sm m-0",
-        className="text-light table-sm m-0 font-monospace",
+        className="text-light table-sm m-0", #font-monospace"
         style=TABLE_STYLE
     )
 
