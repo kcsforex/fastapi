@@ -1,6 +1,6 @@
 
 # syntax=docker/dockerfile:1.7-labs
-FROM python:3.11-slim
+FROM python:3.12-slim
 
 # Faster, cleaner Python defaults
 ENV PYTHONDONTWRITEBYTECODE=1 \
@@ -12,7 +12,7 @@ WORKDIR /app
 COPY requirements.txt .
 RUN --mount=type=cache,target=/root/.cache/pip \
     pip install --upgrade pip setuptools wheel && \
-    pip install -r requirements.txt
+    pip install --no-cache-dir -r requirements.txt
 
 # 2) App layer (your code) — only copy what you need
 COPY main.py .
