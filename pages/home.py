@@ -60,7 +60,7 @@ def get_runtime_info():
 # Host metrics
 # =========================
 
-def get_host_metrics():
+def get_host_metrics0():
     cpu = psutil.cpu_percent(interval=0.5)
     mem = psutil.virtual_memory()
     disk = shutil.disk_usage("/")
@@ -73,6 +73,39 @@ def get_host_metrics():
         ("Disk Usage", f"{disk.used / disk.total * 100:.1f} %"),
         ("Disk Total", f"{disk.total / (1024**3):.1f} GB"),
     ]
+
+# -----------------------------------------------------------------------------------
+
+def get_host_metrics():
+    cpu_freq = psutil.cpu_freq()
+    cpu_info = platform.processor() or "Unknown CPU"
+
+    mem = psutil.virtual_memory()
+    disk = shutil.disk_usage("/")
+
+    metrics = [
+        ("CPU Model", cpu_info),
+        ("CPU Cores (Logical)", psutil.cpu_count(logical=True)),
+        ("CPU Cores (Physical)", psutil.cpu_count(logical=False) or "n/a"),
+    ]
+
+    if cpu_freq:
+        metrics.extend([
+            ("CPU Frequency (Current)", f"{cpu_freq.current:.0f} MHz"),
+            ("CPU Frequency (Max)", f"{cpu_freq.max:.0f} MHz" if cpu_freq.max else "n/a"),
+        ])
+    else:
+        metrics.append(("CPU Frequency", "not exposed"))
+
+    metrics.extend([
+        ("CPU Usage", f"{psutil.cpu_percent(interval=0.5)} %"),
+        ("Memory Usage", f"{mem.percent} %"),
+        ("Memory Total", f"{mem.total / (1024**3):.1f} GB"),
+        ("Disk Usage", f"{disk.used / disk.total * 100:.1f} %"),
+        ("Disk Total", f"{disk.total / (1024**3):.1f} GB"),
+    ])
+
+    return metrics
 
 
 # =========================
