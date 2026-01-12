@@ -17,6 +17,7 @@ RUN --mount=type=cache,target=/root/.cache/pip \
 # 2) App layer (your code) — only copy what you need
 COPY main.py .
 COPY pages/home.py        pages/home.py
+COPY pages/home0.py        pages/home0.py
 COPY pages/air_dataset.py pages/air_dataset.py
 COPY pages/crypto.py      pages/crypto.py
 COPY pages/crypto0.py     pages/crypto0.py
