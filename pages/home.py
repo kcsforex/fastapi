@@ -44,7 +44,7 @@ layout = html.Div([
     html.H5("Package versions", className="text-light"),
     html.Div(id="packages-table"),
     dbc.Button("Refresh", id="refresh-btn", color="secondary", className="mt-3"),
-], style=CARD_STYLE) info
+], style=CARD_STYLE)
 
 layout = dbc.Container([
     # Welcome Header
@@ -141,4 +141,5 @@ def render_tables(_):
     )
 
     return env_tbl, pkg_tbl
+
 
