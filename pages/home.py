@@ -42,8 +42,7 @@ PACKAGES = [
 def get_runtime_info():
     info_header = [
         ("Python Version", sys.version.split()[0]),
-        ("Implementation", platform.python_implementation()),
-        ("OS Platform", platform.platform()),
+        ("OS Platform", platform.platform()[:11]),
     ]
 
     pkg_rows = []
@@ -54,7 +53,6 @@ def get_runtime_info():
             pkg_rows.append((p, "not installed"))
 
     return info_header, pkg_rows
-
 
 # =========================
 # Host metrics
@@ -69,7 +67,7 @@ def get_host_metrics():
     return [
         ("CPU Usage", f"{cpu} %"),
         ("CPU Cores", psutil.cpu_count(logical=True)),
-        ("CPU Frequency (Current)", f"{cpu_freq.current:.0f} MHz"),
+        ("CPU Frequency", f"{cpu_freq.current:.0f} MHz"),
         ("Memory Usage", f"{mem.percent} %"),
         ("Memory Total", f"{mem.total / (1024**3):.1f} GB"),
         ("Disk Usage", f"{disk.used / disk.total * 100:.1f} %"),
