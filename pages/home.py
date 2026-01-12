@@ -1,5 +1,5 @@
 import dash
-from dash import html, dcc
+from dash import html, dcc, callback, Output, Input
 import dash_bootstrap_components as dbc
 import sys
 import platform
@@ -141,5 +141,6 @@ def render_tables(_):
     )
 
     return env_tbl, pkg_tbl
+
 
 
