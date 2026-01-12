@@ -97,7 +97,8 @@ def update_dashboard(n):
     metric_cols = [
         dbc.Col(html.Div([
             html.Small(s, className="text-muted"),
-            html.H5(latest[f"{s.split('/')[0].lower()}_price"], className="text-info"),
+            #html.H5(latest[f"{s.split('/')[0].lower()}_price"], className="text-info"),
+            html.H5(f"${latest[f'{s.split('/') [0].lower()}_price']:,.2f}", className="text-info")
             html.Small("SIGNAL (SMA100)", className="text-muted"),
             html.H6(latest[f"{s.split('/')[0].lower()}_status"],className="text-success" if latest[f"{s.split('/')[0].lower()}_status"] == "ABOVE" else "text-danger"
             )      
