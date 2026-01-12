@@ -24,6 +24,12 @@ CARD_STYLE = {
     "marginBottom": "20px"
 }
 
+TABLE_STYLE = {
+    "backgroundColor": "transparent",
+    "--bs-table-bg": "transparent",
+    "--bs-table-accent-bg": "transparent",
+    "color": "white",
+}
 
 # =========================
 # Packages to inspect
@@ -33,7 +39,6 @@ PACKAGES = [
     "fastapi", "uvicorn", "dash", "dash-bootstrap-components", "ccxt",
     "pandas", "numpy", "scipy", "scikit-learn", "databricks-sql-connector"
 ]
-
 
 # =========================
 # Runtime info
@@ -79,13 +84,7 @@ def get_host_metrics():
 # Page registration
 # =========================
 
-dash.register_page(
-    __name__,
-    path="/",
-    name="Overview",
-    icon="fa-home"
-)
-
+dash.register_page( __name__, path="/", name="Overview", icon="fa-home")
 
 # =========================
 # Layout
@@ -175,48 +174,47 @@ layout = dbc.Container([
     Input("refresh-btn", "n_clicks"),
 )
 def render_tables(_):
-
+    
     runtime_info, pkg_rows = get_runtime_info()
+    platform_info = get_platform_context()
     host_metrics = get_host_metrics()
 
-    env_rows = runtime_info + host_metrics
+    # =========================
+    # ENV TABLE (DataFrame)
+    # =========================
 
-    env_tbl = dbc.Table(
-        [
-            html.Thead(html.Tr([
-                html.Th("Metric"),
-                html.Th("Value")
-            ])),
-            html.Tbody([
-                html.Tr([
-                    html.Td(k),
-                    html.Td(v)
-                ]) for k, v in env_rows
-            ])
-        ],
-        hover=True,
-        responsive=True,
-        className="table-sm text-light",
-        style={"backgroundColor": "transparent"}
+    env_df = pd.DataFrame(
+        runtime_info + host_metrics,
+        columns=["Metric", "Value"]
     )
 
-    pkg_tbl = dbc.Table(
-        [
-            html.Thead(html.Tr([
-                html.Th("Package"),
-                html.Th("Version")
-            ])),
-            html.Tbody([
-                html.Tr([
-                    html.Td(p),
-                    html.Td(v)
-                ]) for p, v in pkg_rows
-            ])
-        ],
+    env_tbl = dbc.Table.from_dataframe(
+        env_df,
+        striped=False,
         hover=True,
         responsive=True,
-        className="table-sm text-light",
-        style={"backgroundColor": "transparent"}
+        borderless=True,
+        className="text-light table-sm m-0",
+        style=TABLE_STYLE
+    )
+
+    # =========================
+    # PACKAGE TABLE (DataFrame)
+    # =========================
+
+    pkg_df = pd.DataFrame(
+        pkg_rows,
+        columns=["Package", "Version"]
+    )
+
+    pkg_tbl = dbc.Table.from_dataframe(
+        pkg_df,
+        striped=False,
+        hover=True,
+        responsive=True,
+        borderless=True,
+        className="text-light table-sm m-0",
+        style=TABLE_STYLE
     )
 
     return env_tbl, pkg_tbl
