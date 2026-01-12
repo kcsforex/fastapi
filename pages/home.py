@@ -130,24 +130,35 @@ layout = dbc.Container([
     ], className="mb-5"),
 
     # Runtime environment card
-    dbc.Card(
-        dbc.CardBody([
-            html.H4("Runtime Environment", className="text-light"),
-            html.Div(id="env-table"),
-            html.Hr(className="border-secondary"),
-            html.H5("Package Versions", className="text-light"),
-            html.Div(id="packages-table"),
-            dbc.Button(
-                "Refresh",
-                id="refresh-btn",
-                color="secondary",
-                outline=True,
-                size="sm",
-                className="mt-3"
-            )
-        ]),
-        style=CARD_STYLE
+    dbc.Row([
+
+    # Runtime Environment (LEFT)
+    dbc.Col(
+        dbc.Card(
+            dbc.CardBody([
+                html.H4("Runtime Environment", className="text-light"),
+                html.Div(id="env-table"),
+                dbc.Button("Refresh", id="refresh-btn", color="secondary", outline=True, size="sm", className="mt-3")
+            ]),
+            style=CARD_STYLE
+        ),
+        width=6
     ),
+
+    # Package Versions (RIGHT)
+    dbc.Col(
+        dbc.Card(
+            dbc.CardBody([
+                html.H4("Package Versions", className="text-light"),
+                html.Div(id="packages-table"),
+            ]),
+            style=CARD_STYLE
+        ),
+        width=6
+    ),
+
+], className="mb-4")
+
 
 ], fluid=True)
 
