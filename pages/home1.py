@@ -3,7 +3,7 @@ from dash import html, dcc
 import dash_bootstrap_components as dbc
 
 # Register this as the root page ('/')
-dash.register_page(__name__, path='/', icon="fa-home", name="Overview")
+dash.register_page(__name__, icon="fa-th-large", name="Home1")
 
 layout = dbc.Container([
     # Welcome Header
