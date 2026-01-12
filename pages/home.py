@@ -30,7 +30,7 @@ CARD_STYLE = {
 # =========================
 
 PACKAGES = [
-    "fastapi", "uvicorn", "dash", "dash-bootstrap-components",
+    "fastapi", "uvicorn", "dash", "dash-bootstrap-components", "ccxt",
     "pandas", "numpy", "scipy", "scikit-learn", "databricks-sql-connector"
 ]
 
