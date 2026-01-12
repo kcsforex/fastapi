@@ -2,7 +2,7 @@ import dash
 from dash import html
 import dash_bootstrap_components as dbc
 
-dash.register_page(__name__, path='/', icon="fa-th-large", name="Overview")
+dash.register_page(__name__, icon="fa-th-large", name="Home0")
 
 def create_status_card(title, value, status, color, icon):
     return dbc.Col(html.Div([
