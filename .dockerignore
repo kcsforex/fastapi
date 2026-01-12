@@ -1,0 +1,26 @@
+
+# VCS & metadata
+.git
+.gitignore
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Environments & secrets
+.env
+.env.*
+*.key
+*.pem
+
+# Build & logs
+*.log
+dist/
+build/
+artifacts/
+.cache/
+
+# Node/other heavy dirs
+node_modules/
