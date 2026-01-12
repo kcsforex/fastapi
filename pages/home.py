@@ -1,15 +1,12 @@
 import dash
 from dash import html, callback, Output, Input
 import dash_bootstrap_components as dbc
-
 import sys
 import platform
 import os
 import shutil
 import psutil
-
 from importlib.metadata import version, PackageNotFoundError
-
 
 # =========================
 # Styling
@@ -176,7 +173,6 @@ layout = dbc.Container([
 def render_tables(_):
     
     runtime_info, pkg_rows = get_runtime_info()
-    platform_info = get_platform_context()
     host_metrics = get_host_metrics()
 
     # =========================
