@@ -16,7 +16,6 @@ def trigger_external_job():
     # Logic to trigger Databricks from n8n could go here
     return {"status": "Air trigger available via UI"}
 
-
 # --- Configuration from environment ---
 DBX_HOST = os.getenv("DBX_HOST")
 DBX_HTTP_PATH = os.getenv("DBX_HTTP_PATH")
