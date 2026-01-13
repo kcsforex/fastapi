@@ -1,36 +1,33 @@
-# 2026.01.13  11.00
+# 2026.01.13  12.00
 import dash
 from dash import html, dcc
 import dash_bootstrap_components as dbc
 from fastapi import FastAPI
 from fastapi.middleware.wsgi import WSGIMiddleware
 
-#from pages.ml_large import router as ml_router
-#from pages.flights import router as flight_router
-#from pages.ml_small_api import router as ml_small_router
-
-# ----- 1. DASH INITIALIZATION -----
-app = dash.Dash(__name__, use_pages=True, external_stylesheets=[dbc.themes.DARKLY, "https://use.fontawesome.com/releases/v5.15.4/css/all.css"])
-
-# ----- 2. NOW IMPORT YOUR PAGES -----
+# ----- 1. NOW IMPORT YOUR PAGES -----
 # By importing them here, 'app' already exists when dash.register_page is called
 from pages import home, home0, crypto, crypto0,  ml_databricks, air_dataset
 
-# ----- 3. FASTAPI WRAPPER -----
+# ----- 2. FASTAPI WRAPPER -----
 server = FastAPI(title="Dash Main App")
 
-# ----- 4. API ROUTERS -----
+# ----- 2.1 HEALTH ENDPOINT -----
+@server.get("/health")
+def health():
+    return {"status": "ok"}
+
+# ----- 2.2. API ROUTERS -----
 server.include_router(crypto.router,        prefix="/api/crypto",  tags=["Crypto"])
 server.include_router(ml_databricks.router, prefix="/api/ml_db",   tags=["Machine Learning"])
 server.include_router(air_dataset.router,   prefix="/api/flights", tags=["Flights"])
 #server.include_router(ml_small_router, prefix="/api/ml-small")
 
-# ----- 4.1 HEALTH ENDPOINT -----
-@server.get("/health")
-def health():
-    return {"status": "ok"}
+# ----- 3. Mount Dash to FastAPI -----
+app = dash.Dash(__name__, use_pages=True, external_stylesheets=[dbc.themes.DARKLY, "https://use.fontawesome.com/releases/v5.15.4/css/all.css"])
+server.mount("/", WSGIMiddleware(app.server))
 
-# ----- 5. SIDEBAR & LAYOUT  (Your Modern Layout) -----
+# ----- 4. SIDEBAR & LAYOUT  (Your Modern Layout) -----
 SIDEBAR_STYLE = {
     "position": "fixed", "top": "15px", "left": "15px", "bottom": "15px",
     "width": "220px", "padding": "2rem 1rem",
@@ -45,7 +42,6 @@ SIDEBAR_STYLE = {
 sidebar = html.Div([
     html.H4("PETROSOFTEU CLOUD", className="text-center mb-4", style={"letterSpacing": "2px", "color": "ivory"}),
     
-    # User Profile Box
     html.Div([
         html.Div([
             html.I(className="fas fa-user-circle fa-2x text-info"),
@@ -77,6 +73,3 @@ app.layout = html.Div([
         "minHeight": "100vh"
     })
 ])
-
-# ----- 6. Mount Dash to FastAPI -----
-server.mount("/", WSGIMiddleware(app.server))
