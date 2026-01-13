@@ -18,7 +18,7 @@ def trigger_external_job():
 
 SERVER_HOSTNAME = 'dbc-9c577faf-b445.cloud.databricks.com' 
 HTTP_PATH = '/sql/1.0/warehouses/cbfc343eb927c998' 
-ACCESS_TOKEN = 'dapi04d3d1a0eb55db7ea63b2a6f3f2e1fa6' 
+ACCESS_TOKEN = 'dapi1f9b22f7d04f82f65f64f4b6957b8f7c'
 delta_path = '/Volumes/test_cat/test_db/test_vol/bronze/kg_airdelay_bronze/'
 
 dash.register_page(__name__, icon="fa-brain", name="Air Dataset")
