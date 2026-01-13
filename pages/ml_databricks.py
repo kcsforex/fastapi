@@ -20,7 +20,7 @@ def trigger_external_job():
 
 # --- 2. CONFIGURATION ---
 DATABRICKS_INSTANCE = 'dbc-9c577faf-b445.cloud.databricks.com'
-TOKEN = 'dapi04d3d1a0eb55db7ea63b2a6f3f2e1fa6' 
+TOKEN = 'dapi1f9b22f7d04f82f65f64f4b6957b8f7c'
 JOB_ID = '718482410766048'
 HTTP_PATH = '/sql/1.0/warehouses/cbfc343eb927c998'
 
