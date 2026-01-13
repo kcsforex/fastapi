@@ -1,4 +1,4 @@
-# 2026.01.10  10.00
+# 2026.01.13  10.00
 import dash
 from dash import html, dcc
 import dash_bootstrap_components as dbc
@@ -76,7 +76,6 @@ app.layout = html.Div([
 # ----- 6. Mount Dash to FastAPI -----
 server.mount("/", WSGIMiddleware(app.server))
 
-if __name__ == "__main__":
-    import uvicorn
-    # Use uvicorn to run the 'server' object
-    uvicorn.run(server, host="0.0.0.0", port=8050)
+#if __name__ == "__main__":
+#    import uvicorn
+#    uvicorn.run(server, host="0.0.0.0", port=8050)
