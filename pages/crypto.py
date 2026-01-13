@@ -87,8 +87,9 @@ def telegram():
             #}
         })
                           
-    #return results
-    return [{"coins": results}]
+    return results
+    #return [{"coins": results}]
+
 
 
 @router.get("/analyze/pivot")
