@@ -46,7 +46,7 @@ def analyze_pivot():
             elif cross_down:
                 payload[f"{col}_cross"] = "BEARISH_CROSS"
             else:
-                payload[f"{col}_cross"] = None
+                payload[f"{col}_cross"] = "NO_CROSS"
       
         except Exception as e:      
             payload[f"{symbol}_error"] = str(e)
