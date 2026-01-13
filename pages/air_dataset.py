@@ -16,9 +16,16 @@ def trigger_external_job():
     # Logic to trigger Databricks from n8n could go here
     return {"status": "Air trigger available via UI"}
 
-SERVER_HOSTNAME = 'dbc-9c577faf-b445.cloud.databricks.com' 
-HTTP_PATH = '/sql/1.0/warehouses/cbfc343eb927c998' 
-ACCESS_TOKEN = 'dapi1f9b22f7d04f82f65f64f4b6957b8f7c'
+
+# --- Configuration from environment ---
+DBX_HOST = os.getenv("DBX_HOST")
+DBX_HTTP_PATH = os.getenv("DBX_HTTP_PATH")
+DBX_TOKEN = os.getenv("DBX_TOKEN")
+KEEPALIVE_INTERVAL = int(os.getenv("DBX_KEEPALIVE_INTERVAL", "180"))  # seconds
+
+#SERVER_HOSTNAME = 'dbc-9c577faf-b445.cloud.databricks.com' 
+#HTTP_PATH = '/sql/1.0/warehouses/cbfc343eb927c998' 
+#ACCESS_TOKEN = 'dapi1f9b22f7d04f82f65f64f4b6957b8f7c'
 delta_path = '/Volumes/test_cat/test_db/test_vol/bronze/kg_airdelay_bronze/'
 
 dash.register_page(__name__, icon="fa-brain", name="Air Dataset")
@@ -42,12 +49,10 @@ layout = html.Div([
     )
 ], style=CARD_STYLE)
 
-
-
 @callback(Output("table", "children"), Input("selector-1", "value"))
 def create_table(val1):
     connection = sql.connect(
-        server_hostname=SERVER_HOSTNAME, http_path=HTTP_PATH, access_token=ACCESS_TOKEN
+        server_hostname=DBX_HOST, http_path=DBX_HTTP_PATH, access_token=DBX_TOKEN
     )
     cursor = connection.cursor()
     cursor.execute(
