@@ -42,15 +42,13 @@ def analyze_pivot():
             cross_down = (prev['c'] >= prev['sma100']) and (curr['c'] < curr['sma100'])
 
             if cross_up:
-                payload[f"{base}_cross"] = "BULLISH_CROSS"
+                payload[f"{col}_cross"] = "BULLISH_CROSS"
             elif cross_down:
-                payload[f"{base}_cross"] = "BEARISH_CROSS"
+                payload[f"{col}_cross"] = "BEARISH_CROSS"
             else:
-                payload[f"{base}_cross"] = None
+                payload[f"{col}_cross"] = None
       
         except Exception as e:      
-            # Use base for the key so it’s consistent with price/status/cross keys
-            base = symbol.split('/')[0]
             payload[f"{symbol}_error"] = str(e)
             
     return payload
