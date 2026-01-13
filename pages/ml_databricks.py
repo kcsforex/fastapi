@@ -1,4 +1,4 @@
-# 2026.01.11  12.00
+# 2026.01.12  18.00
 import dash
 from dash import dcc, html, Input, Output, State, callback, dash_table
 from dash.exceptions import PreventUpdate
@@ -90,7 +90,7 @@ def update_chart(n_clicks, numTrees, maxDepth):
     if not n_clicks:
         raise PreventUpdate
 
-    # A. Trigger Databricks job
+    # ----- A. Trigger Databricks job -----
     run_now_url = f"https://{DATABRICKS_INSTANCE}/api/2.2/jobs/run-now"
     payload = { "job_id": JOB_ID, "notebook_params": {"numTrees": str(numTrees), "maxDepth": str(maxDepth)}}
 
@@ -100,7 +100,7 @@ def update_chart(n_clicks, numTrees, maxDepth):
 
     run_id = response.json().get("run_id")
 
-    # B. Poll status (Simplified for 8GB RAM responsiveness)
+    # ----- B. Poll status (Simplified for 8GB RAM responsiveness) -----
     status_url = f"https://{DATABRICKS_INSTANCE}/api/2.2/jobs/runs/get?run_id={run_id}"
     for _ in range(20): # Timeout after ~60 seconds
         status_response = requests.get(status_url, headers=headers).json()
@@ -109,11 +109,11 @@ def update_chart(n_clicks, numTrees, maxDepth):
             break
         time.sleep(3)
 
-    # C. Query Results using Databricks SQL
+    # ----- C. Query Results using Databricks SQL -----
     try:
         connection = sql.connect(server_hostname=DATABRICKS_INSTANCE, http_path=HTTP_PATH, access_token=TOKEN)
         with connection.cursor() as cursor:
-            cursor.execute("SELECT age, sex, bmi, bp, target, prediction FROM test_cat.test_db.diab_pred LIMIT 50")
+            cursor.execute("SELECT age, sex, bmi, bp, target, prediction FROM test_cat.test_db.diab_pred LIMIT 15")
             result_df = cursor.fetchall_arrow().to_pandas()
         connection.close()
     except Exception as e:
