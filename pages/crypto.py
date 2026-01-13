@@ -71,6 +71,20 @@ def telegram():
                 "timestamp": timestamp
                 }
             })
+            
+        except Exception as e:
+            coin_name = symbol.split('/')[0]
+            results.append({
+            "json": {
+                "symbol": coin_name,
+                "pair": symbol,
+                "price": 0,
+                "status": "ERROR",
+                "cross": "ERROR",
+                "error": str(e),
+                "timestamp": timestamp
+            }
+        })
                           
     return results
 
