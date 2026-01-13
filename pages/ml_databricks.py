@@ -19,12 +19,13 @@ def trigger_external_job():
     return {"status": "Job trigger available via UI"}
 
 # --- 2. CONFIGURATION ---
-DATABRICKS_INSTANCE = 'dbc-9c577faf-b445.cloud.databricks.com'
-TOKEN = 'dapi1f9b22f7d04f82f65f64f4b6957b8f7c'
-JOB_ID = '718482410766048'
-HTTP_PATH = '/sql/1.0/warehouses/cbfc343eb927c998'
+DBX_HOST = os.getenv("DBX_HOST")
+DBX_HTTP_PATH = os.getenv("DBX_HTTP_PATH")
+DBX_TOKEN = os.getenv("DBX_TOKEN")
+KEEPALIVE_INTERVAL = int(os.getenv("DBX_KEEPALIVE_INTERVAL", "180"))
+DBX_JOB_ID = os.getenv("DBX_JOB_ID")
 
-headers = {"Authorization": f"Bearer {TOKEN}", "Content-Type": "application/json"}
+headers = {"Authorization": f"Bearer {DBX_TOKEN}", "Content-Type": "application/json"}
 
 # --- 3. DASH REGISTRATION & UI ---
 #dash.register_page(__name__, icon="fa-brain", name="ML Databricks")
@@ -91,8 +92,8 @@ def update_chart(n_clicks, numTrees, maxDepth):
         raise PreventUpdate
 
     # ----- A. Trigger Databricks job -----
-    run_now_url = f"https://{DATABRICKS_INSTANCE}/api/2.2/jobs/run-now"
-    payload = { "job_id": JOB_ID, "notebook_params": {"numTrees": str(numTrees), "maxDepth": str(maxDepth)}}
+    run_now_url = f"https://{DBX_HOST}/api/2.2/jobs/run-now"
+    payload = { "job_id": DBX_JOB_ID, "notebook_params": {"numTrees": str(numTrees), "maxDepth": str(maxDepth)}}
 
     response = requests.post(run_now_url, headers=headers, json=payload)
     if response.status_code != 200:
@@ -101,7 +102,7 @@ def update_chart(n_clicks, numTrees, maxDepth):
     run_id = response.json().get("run_id")
 
     # ----- B. Poll status (Simplified for 8GB RAM responsiveness) -----
-    status_url = f"https://{DATABRICKS_INSTANCE}/api/2.2/jobs/runs/get?run_id={run_id}"
+    status_url = f"https://{DBX_HOST}/api/2.2/jobs/runs/get?run_id={run_id}"
     for _ in range(20): # Timeout after ~60 seconds
         status_response = requests.get(status_url, headers=headers).json()
         state = status_response.get("state", {}).get("life_cycle_state")
@@ -111,7 +112,7 @@ def update_chart(n_clicks, numTrees, maxDepth):
 
     # ----- C. Query Results using Databricks SQL -----
     try:
-        connection = sql.connect(server_hostname=DATABRICKS_INSTANCE, http_path=HTTP_PATH, access_token=TOKEN)
+        connection = sql.connect(server_hostname=DBX_HOST, http_path=DBX_HTTP_PATH, access_token=DBX_TOKEN)
         with connection.cursor() as cursor:
             cursor.execute("SELECT age, sex, bmi, bp, target, prediction FROM test_cat.test_db.diab_pred LIMIT 15")
             result_df = cursor.fetchall_arrow().to_pandas()
