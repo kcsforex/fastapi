@@ -7,6 +7,7 @@ import plotly.express as px
 import pandas as pd
 import requests
 import time
+import os
 from databricks import sql
 from fastapi import APIRouter
 
