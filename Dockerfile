@@ -1,4 +1,4 @@
-
+# 2026.01.12 18.00
 # syntax=docker/dockerfile:1.7-labs
 FROM python:3.12-slim
 
@@ -8,13 +8,18 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 
 WORKDIR /app
 
-# 1) Dependencies layer (cached unless requirements.txt changes)
+# --- System dependencies & Healthcheck tools ---
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# --- Dependencies layer (cached unless requirements.txt changes) ---
 COPY requirements.txt .
 RUN --mount=type=cache,target=/root/.cache/pip \
-    pip install --upgrade pip setuptools wheel && \
+    pip install --upgrade pip setuptools wheel && \ #python -m pip install
     pip install --no-cache-dir -r requirements.txt
 
-# 2) App layer (your code) — only copy what you need
+# --- Application code (changes frequently, light layer) ---
 COPY main.py .
 COPY pages/home.py        pages/home.py
 COPY pages/home0.py        pages/home0.py
@@ -29,10 +34,6 @@ COPY pages/ml_databricks.py     pages/ml_databricks.py
 # COPY static/ static/
 
 EXPOSE 8000
-
-# --- Healthcheck tools ---
-RUN apt-get update && apt-get install -y --no-install-recommends curl \
-    && rm -rf /var/lib/apt/lists/*
 
 # Try FastAPI /health first, then fallback to root
 HEALTHCHECK --interval=30s --timeout=3s --start-period=20s --retries=3 \
