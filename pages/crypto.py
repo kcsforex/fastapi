@@ -18,6 +18,64 @@ SYMBOLS = ["BTC/USDT", "ETH/USDT", "SOL/USDT", "XRP/USDT", "SUI/USDT", "LTC/USDT
 router = APIRouter()
 exchange = ccxt.bybit()
 
+
+import ccxt
+
+# Initialize Bybit
+exchange = ccxt.bybit()
+
+@router.get("/telegram")
+def telegram():
+
+    # Define coins array
+    coins = ['BTC/USDT', 'ETH/USDT', 'SOL/USDT', 'XRP/USDT', 'SUI/USDT']
+    
+    timeframe = '5m'  # Match your trigger interval
+    limit = 101  # Fetch 101 to get the SMA100 and the current candle
+    
+    results = []
+    
+    for symbol in coins:
+        try:
+            ohlcv = exchange.fetch_ohlcv(symbol, timeframe, limit=limit)
+            closes = [candle[4] for candle in ohlcv]        
+            sma_100 = sum(closes[-100:]) / 100
+            current_price = closes[-1]
+            status = "ABOVE" if current_price > sma_100 else "BELOW"
+            diff_percent = ((current_price - sma_100) / sma_100) * 100
+        
+            prev_close = closes[-2]
+            prev_sma = sum(closes[-101:-1]) / 100  # SMA100 for previous candle
+            
+            prev_status = "ABOVE" if prev_close > prev_sma else "BELOW"
+            
+            if prev_status == "BELOW" and status == "ABOVE":
+                cross = "BULL_CROSS"
+            elif prev_status == "ABOVE" and status == "BELOW":
+                cross = "BEAR_CROSS"
+            else:
+                cross = "NO_CROSS"
+            
+            # Extract symbol name (BTC, ETH, etc.)
+            coin_name = symbol.split('/')[0]
+            
+            results.append({
+                "json": {
+                    f"{coin_name}_price": round(current_price, 2),
+                    f"{coin_name}_status": status,
+                    f"{coin_name}_cross": cross,
+                    "sma_100": round(sma_100, 2),
+                    "percent_diff": round(diff_percent, 2),
+                    "timestamp": exchange.iso8601(exchange.milliseconds())
+                }
+            })
+            
+        except Exception as e:
+            "error": str(e)
+                
+    return [{"json": result["json"]]
+
+
 @router.get("/analyze/pivot")
 def analyze_pivot():
     payload = {"timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
