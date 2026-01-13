@@ -29,5 +29,13 @@ COPY pages/ml_databricks.py     pages/ml_databricks.py
 # COPY static/ static/
 
 EXPOSE 8000
-CMD ["uvicorn", "main:server", "--host", "0.0.0.0", "--port", "8000"]
 
+# --- Healthcheck tools ---
+RUN apt-get update && apt-get install -y --no-install-recommends curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Try FastAPI /health first, then fallback to root
+HEALTHCHECK --interval=30s --timeout=3s --start-period=20s --retries=3 \
+  CMD curl -fsS http://127.0.0.1:8000/health || curl -fsS http://127.0.0.1:8000/ || exit 1
+
+CMD ["uvicorn", "main:server", "--host", "0.0.0.0", "--port", "8000"]
