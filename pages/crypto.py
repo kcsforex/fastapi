@@ -58,22 +58,22 @@ def telegram():
             
             # Extract symbol name (BTC, ETH, etc.)
             coin_name = symbol.split('/')[0]
-            
+
             results.append({
                 "json": {
-                    f"{coin_name}_price": round(current_price, 2),
-                    f"{coin_name}_status": status,
-                    f"{coin_name}_cross": cross,
-                    "sma_100": round(sma_100, 2),
-                    "percent_diff": round(diff_percent, 2),
-                    "timestamp": exchange.iso8601(exchange.milliseconds())
+                "symbol": coin_name,
+                "pair": symbol,
+                "price": round(current_price, 2),
+                "sma_100": round(sma_100, 2),
+                "status": status,
+                "cross": cross,
+                "percent_diff": round(diff_percent, 2),
+                "timestamp": timestamp
                 }
             })
-            
-        except Exception as e:
-            "error": str(e)
+            )
                 
-    return [{"json": results}]
+    return results
 
 
 @router.get("/analyze/pivot")
