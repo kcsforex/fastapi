@@ -25,6 +25,7 @@ def analyze_pivot():
         try:
             bars = exchange.fetch_ohlcv(symbol, timeframe='5m', limit=110)
             df = pd.DataFrame(bars, columns=['ts', 'o', 'h', 'l', 'c', 'v'])
+            df[['o','h','l','c','v']] = df[['o','h','l','c','v']].apply(pd.to_numeric, errors='coerce')
             df['sma100'] = df['c'].rolling(window=100).mean()
             
             curr, prev = df.iloc[-1], df.iloc[-2]
@@ -32,10 +33,26 @@ def analyze_pivot():
             
             payload[f"{col}_price"] = float(curr['c'])
             payload[f"{col}_status"] = "ABOVE" if curr['c'] > curr['sma100'] else "BELOW"
+            
             #payload[f"{col}_cross"] = bool(prev['c'] <= prev['sma100'] and curr['c'] > curr['sma100'])
-        
-        except Exception as e:
+            # --- Cross detection ---
+            # Bullish cross (price moved from below-or-equal to above)
+            cross_up = (prev['c'] <= prev['sma100']) and (curr['c'] > curr['sma100'])
+            # Bearish cross (price moved from above-or-equal to below)
+            cross_down = (prev['c'] >= prev['sma100']) and (curr['c'] < curr['sma100'])
+
+            if cross_up:
+                payload[f"{base}_cross"] = "BULLISH_CROSS"
+            elif cross_down:
+                payload[f"{base}_cross"] = "BEARISH_CROSS"
+            else:
+                payload[f"{base}_cross"] = None
+      
+        except Exception as e:      
+            # Use base for the key so it’s consistent with price/status/cross keys
+            base = symbol.split('/')[0]
             payload[f"{symbol}_error"] = str(e)
+            
     return payload
 
 # --- 3. THE FRONTEND (Dash Sidebar uses this) ---
