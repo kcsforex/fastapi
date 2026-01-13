@@ -61,7 +61,7 @@ def telegram():
             coin_name = symbol.split('/')[0]
 
             results.append({
-                "json": {
+                #"json": {
                 "symbol": coin_name,
                 "pair": symbol,
                 "price": round(current_price, 2),
@@ -70,13 +70,13 @@ def telegram():
                 "cross": cross,
                 "percent_diff": round(diff_percent, 2),
                 "timestamp": exchange.milliseconds()
-                }
+                #}
             })
             
         except Exception as e:
             coin_name = symbol.split('/')[0]
             results.append({
-            "json": {
+            #"json": {
                 "symbol": coin_name,
                 "pair": symbol,
                 "price": 0,
@@ -84,10 +84,11 @@ def telegram():
                 "cross": "ERROR",
                 "error": str(e),
                 "timestamp": exchange.milliseconds()
-            }
+            #}
         })
                           
-    return results
+    #return results
+    return [{"coin": results}]
 
 
 @router.get("/analyze/pivot")
