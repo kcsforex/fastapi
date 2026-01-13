@@ -8,28 +8,28 @@ from fastapi.middleware.wsgi import WSGIMiddleware
 # ----- 1. Initalize Dash -----
 app = dash.Dash(__name__, use_pages=True, external_stylesheets=[dbc.themes.DARKLY, "https://use.fontawesome.com/releases/v5.15.4/css/all.css"])
 
-# ----- 1. NOW IMPORT YOUR PAGES -----
+# ----- 2. NOW IMPORT YOUR PAGES -----
 # By importing them here, 'app' already exists when dash.register_page is called
 from pages import home, home0, crypto, crypto0,  ml_databricks, air_dataset
 
-# ----- 2. FASTAPI WRAPPER -----
+# ----- 3. FASTAPI WRAPPER -----
 server = FastAPI(title="Dash Main App")
 
-# ----- 2.1 HEALTH ENDPOINT -----
+# ----- 3.1 HEALTH ENDPOINT -----
 @server.get("/health")
 def health():
     return {"status": "ok"}
 
-# ----- 2.2. API ROUTERS -----
+# ----- 3.2. API ROUTERS -----
 server.include_router(crypto.router,        prefix="/api/crypto",  tags=["Crypto"])
 server.include_router(ml_databricks.router, prefix="/api/ml_db",   tags=["Machine Learning"])
 server.include_router(air_dataset.router,   prefix="/api/flights", tags=["Flights"])
 #server.include_router(ml_small_router, prefix="/api/ml-small")
 
-# ----- 3. Mount Dash to FastAPI -----
+# ----- 4. Mount Dash to FastAPI -----
 server.mount("/", WSGIMiddleware(app.server))
 
-# ----- 4. SIDEBAR & LAYOUT  (Your Modern Layout) -----
+# ----- 5. SIDEBAR & LAYOUT  (Your Modern Layout) -----
 SIDEBAR_STYLE = {
     "position": "fixed", "top": "15px", "left": "15px", "bottom": "15px",
     "width": "220px", "padding": "2rem 1rem",
