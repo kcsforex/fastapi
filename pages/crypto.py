@@ -71,8 +71,7 @@ def telegram():
                 "timestamp": timestamp
                 }
             })
-            )
-                
+                          
     return results
 
 
