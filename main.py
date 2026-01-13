@@ -1,4 +1,4 @@
-# 2026.01.13  10.00
+# 2026.01.13  11.00
 import dash
 from dash import html, dcc
 import dash_bootstrap_components as dbc
@@ -19,11 +19,16 @@ from pages import home, home0, crypto, crypto0,  ml_databricks, air_dataset
 # ----- 3. FASTAPI WRAPPER -----
 server = FastAPI(title="Dash Main App")
 
-# ----- 4. Use the router directly from the imported module -----
-server.include_router(crypto.router, prefix="/api/crypto", tags=["Crypto"])
-server.include_router(ml_databricks.router, prefix="/api/ml_db", tags=["Machine Learning"])
-server.include_router(air_dataset.router, prefix="/api/flights")
+# ----- 4. API ROUTERS -----
+server.include_router(crypto.router,        prefix="/api/crypto",  tags=["Crypto"])
+server.include_router(ml_databricks.router, prefix="/api/ml_db",   tags=["Machine Learning"])
+server.include_router(air_dataset.router,   prefix="/api/flights", tags=["Flights"])
 #server.include_router(ml_small_router, prefix="/api/ml-small")
+
+# ----- 4.1 HEALTH ENDPOINT -----
+@server.get("/health")
+def health():
+    return {"status": "ok"}
 
 # ----- 5. SIDEBAR & LAYOUT  (Your Modern Layout) -----
 SIDEBAR_STYLE = {
@@ -75,7 +80,3 @@ app.layout = html.Div([
 
 # ----- 6. Mount Dash to FastAPI -----
 server.mount("/", WSGIMiddleware(app.server))
-
-#if __name__ == "__main__":
-#    import uvicorn
-#    uvicorn.run(server, host="0.0.0.0", port=8050)
