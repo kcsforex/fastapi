@@ -5,6 +5,9 @@ import dash_bootstrap_components as dbc
 from fastapi import FastAPI
 from fastapi.middleware.wsgi import WSGIMiddleware
 
+# ----- 1. Initalize Dash -----
+app = dash.Dash(__name__, use_pages=True, external_stylesheets=[dbc.themes.DARKLY, "https://use.fontawesome.com/releases/v5.15.4/css/all.css"])
+
 # ----- 1. NOW IMPORT YOUR PAGES -----
 # By importing them here, 'app' already exists when dash.register_page is called
 from pages import home, home0, crypto, crypto0,  ml_databricks, air_dataset
@@ -24,7 +27,6 @@ server.include_router(air_dataset.router,   prefix="/api/flights", tags=["Flight
 #server.include_router(ml_small_router, prefix="/api/ml-small")
 
 # ----- 3. Mount Dash to FastAPI -----
-app = dash.Dash(__name__, use_pages=True, external_stylesheets=[dbc.themes.DARKLY, "https://use.fontawesome.com/releases/v5.15.4/css/all.css"])
 server.mount("/", WSGIMiddleware(app.server))
 
 # ----- 4. SIDEBAR & LAYOUT  (Your Modern Layout) -----
