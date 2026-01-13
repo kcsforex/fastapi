@@ -73,7 +73,7 @@ def telegram():
         except Exception as e:
             "error": str(e)
                 
-    return [{"json": result["json"]]
+    return [{"json": results]
 
 
 @router.get("/analyze/pivot")
