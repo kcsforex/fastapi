@@ -129,14 +129,12 @@ def update_dashboard(n):
     metrics = dbc.Row(metric_cols, align="center")
 
     # 2. Graph Styling
-    fig = px.line(df[df["pair"] == "BTC/USDT"], x="timestamp", y="price", template="plotly_dark")    
+    chart_df = df[df["pair"] == "BTC/USDT"].sort_values("timestamp")
+    fig = px.line(chart_df, x="timestamp", y="price", template="plotly_dark")    
     fig.update_traces(line_color='#00d1ff', line_width=3)
-    fig.update_layout(
-            paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)',
-            margin=dict(l=0, r=0, t=10, b=0), height=300,
-            xaxis=dict(showgrid=False), yaxis=dict(showgrid=True, gridcolor='rgba(255,255,255,0.05)')
-        )
-
+    fig.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', margin=dict(l=0, r=0, t=10, b=0), height=300,
+            xaxis=dict(showgrid=False), yaxis=dict(showgrid=True, gridcolor='rgba(255,255,255,0.05)'))
+  
     # 3. Crypto Table
     display_df = df.copy()
     display_df.columns = [c.replace('_', ' ').upper() for c in display_df.columns]
