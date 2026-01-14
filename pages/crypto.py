@@ -18,21 +18,11 @@ SYMBOLS = ["BTC/USDT", "ETH/USDT", "SOL/USDT", "XRP/USDT", "SUI/USDT", "LTC/USDT
 router = APIRouter()
 exchange = ccxt.bybit()
 
-
-import ccxt
-
-# Initialize Bybit
-exchange = ccxt.bybit()
-
 @router.get("/telegram")
 def telegram():
-
-    # Define coins array
-    #coins = ['BTC/USDT', 'ETH/USDT', 'SOL/USDT', 'XRP/USDT', 'SUI/USDT', 'LTC/USDT', 'LINK/USDT']
     
     timeframe = '5m'  # Match your trigger interval
-    limit = 101  # Fetch 101 to get the SMA100 and the current candle
-    
+    limit = 101  # Fetch 101 to get the SMA100 and the current candle   
     results = []
     timestamp = exchange.milliseconds()
     
@@ -57,35 +47,16 @@ def telegram():
             else:
                 price_cross = "NON-CROSS"
             
-            # Extract symbol name (BTC, ETH, etc.)
             coin_name = symbol.split('/')[0]
-
-            results.append({
-                #"json": {
-                "symbol": coin_name,
-                "pair": symbol,
-                "price": round(current_price, 2),
-                "sma_100": round(sma_100, 2),
-                "price_status": curr_status,
-                "price_cross": price_cross,
-                "percent_diff": round(diff_percent, 2),
-                "timestamp": timestamp
-                #}
+            results.append({"symbol": coin_name, "pair": symbol, "price": round(current_price, 2), "sma_100": round(sma_100, 2),
+                "price_status": curr_status, "price_cross": price_cross, "percent_diff": round(diff_percent, 2), "timestamp": timestamp
             })
             
         except Exception as e:
             coin_name = symbol.split('/')[0]
-            results.append({
-            #"json": {
-                "symbol": coin_name,
-                "pair": symbol,
-                "price": 0,
-                "price_status": "ERROR",
-                "price_cross": "ERROR",
-                "error": str(e),
-                "timestamp": timestamp
-            #}
-        })
+            results.append({"symbol": coin_name, "pair": symbol, "price": 0, "price_status": "ERROR", "price_cross": "ERROR", 
+            "error": str(e), "timestamp": timestamp
+            })
                           
     return results
 
@@ -109,16 +80,13 @@ layout = dbc.Container([
 
     dcc.Interval(id='refresh', interval=60*1000), 
 
-    # Top Metrics Row
     html.Div(id='metrics-container', className="mb-4"),
 
-    # Main Graph Card
     html.Div([
         html.H5("BTC Price Action", className="text-info mb-3"),     
         dcc.Graph(id='main-chart', config={'displayModeBar': False})
     ], style=CARD_STYLE, className="mb-4"),
 
-    # Table Card
     html.Div([
         html.H5("Execution Logs", className="text-light mb-3"),
         html.Div(id='status-table-container')
@@ -142,7 +110,6 @@ def update_dashboard(n):
         return dash.no_update, "No data found", {}, "No Data"
 
     # 1. Create Top Metrics (Quick visual check)
-    #latest = df.iloc[0]
     latest = (df.sort_values("timestamp").groupby("symbol", as_index=False).tail(1).assign(symbol=lambda x: x["symbol"].str.lower()).set_index("symbol"))
     
     metric_cols = [
@@ -167,28 +134,11 @@ def update_dashboard(n):
             xaxis=dict(showgrid=False), yaxis=dict(showgrid=True, gridcolor='rgba(255,255,255,0.05)')
         )
 
-    # 3. Table Styling
-    #table = dash_table.DataTable(data=df.to_dict('records'),
-    #        columns=[{"name": i.replace('_', ' ').upper(), "id": i} for i in df.columns],style_as_list_view=True,
-    #        style_header={'backgroundColor': 'transparent', 'color': '#00d1ff', 'fontWeight': 'bold', 'borderBottom': '1px solid #333'},
-    #        style_cell={'backgroundColor': 'transparent', 'color': 'white', 'padding': '12px', 'fontSize': '13px'},page_size=10)
-
     display_df = df.copy()
     display_df.columns = [c.replace('_', ' ').upper() for c in display_df.columns]
     
-    table = dbc.Table.from_dataframe(
-        display_df, 
-        striped=False, 
-        hover=True, 
-        responsive=True,
-        borderless=True,
-        className="text-light m-0", 
-        style={
-            "backgroundColor": "transparent", 
-            "--bs-table-bg": "transparent", # Overrides Bootstrap 5 background variable
-            "--bs-table-accent-bg": "transparent",
-            "color": "white"
-        }
+    table = dbc.Table.from_dataframe(display_df, striped=False, hover=True, responsive=True, borderless=True, className="text-light m-0", 
+        style={"backgroundColor": "transparent",  "--bs-table-bg": "transparent", "--bs-table-accent-bg": "transparent", "color": "white"}
     )
 
     return metrics, table, fig
