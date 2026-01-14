@@ -174,7 +174,7 @@ layout = dbc.Container([
 def update_dashboard(n):
     conn = psycopg2.connect(DB_CONFIG)
     # Query the pivot table n8n is writing to
-    df = pd.read_sql("SELECT * FROM status_pivot_logs ORDER BY timestamp DESC LIMIT 20", conn)
+    df = pd.read_sql("SELECT * FROM status_crypto_logs ORDER BY timestamp DESC LIMIT 20", conn)
     conn.close()
     if df.empty:
         return dash.no_update, "No data found", {}, "No Data"
