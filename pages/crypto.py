@@ -119,8 +119,9 @@ def update_dashboard(n):
             html.H5(f"${latest.loc[s.split('/')[0].lower(), 'price']:.2f}", className="text-info"),
             html.Small("SIGNAL", className="text-muted"),
             html.H6(latest.loc[s.split('/')[0].lower(), "price_status"],
-                className=("text-success" if latest.loc[s.split('/')[0].lower(), "price_status"] == "ABOVE" else "text-danger")),
-            html.H6(latest.loc[s.split('/')[0].lower(), "timestamp"]),
+                className=("text-success" if latest.loc[s.split('/')[0].lower(), "price_status"] == "ABOVE" else "text-danger")),    
+            html.H6(pd.to_datetime(latest.loc[s.split('/')[0].lower(), "timestamp"],unit="ms").strftime("%Y-%m-%d %H:%M"),
+                className="text-muted")    
         ]), width=2)
     for s in SYMBOLS[:6]
     ]
