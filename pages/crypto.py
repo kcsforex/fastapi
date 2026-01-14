@@ -180,7 +180,14 @@ def update_dashboard(n):
         return dash.no_update, "No data found", {}, "No Data"
 
     # 1. Create Top Metrics (Quick visual check)
-    latest = df.iloc[0]
+    #latest = df.iloc[0]
+    latest = (
+    df.sort_values("timestamp")
+      .groupby("symbol", as_index=False)
+      .tail(1)
+      .assign(symbol=lambda x: x["symbol"].str.lower())
+      .set_index("symbol")
+    )
     
     # 1. Metrics with Loop
     metric_cols = [
