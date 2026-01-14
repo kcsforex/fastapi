@@ -163,7 +163,7 @@ def update_dashboard(n):
     # 3. Crypto Table
     display_df = df.copy()
     display_df.columns = [c.replace('_', ' ').upper() for c in display_df.columns]
-    table = dbc.Table.from_dataframe(display_df, striped=False, hover=True, responsive=True, borderless=True, className="text-light m-0", 
+    table = dbc.Table.from_dataframe(display_df[:30], striped=False, hover=True, responsive=True, borderless=True, className="text-light m-0", 
         style={"backgroundColor": "transparent",  "--bs-table-bg": "transparent", "--bs-table-accent-bg": "transparent", "color": "white"}
     )
 
