@@ -42,7 +42,7 @@ def telegram():
             closes = [candle[4] for candle in ohlcv]        
             sma_100 = sum(closes[-100:]) / 100
             current_price = closes[-1]
-            price_status = "ABOVE" if current_price > sma_100 else "BELOW"
+            curr_status = "ABOVE" if current_price > sma_100 else "BELOW"
             diff_percent = ((current_price - sma_100) / sma_100) * 100
         
             prev_close = closes[-2]
@@ -50,9 +50,9 @@ def telegram():
             
             prev_status = "ABOVE" if prev_close > prev_sma else "BELOW"
             
-            if prev_status == "BELOW" and status == "ABOVE":
+            if prev_status == "BELOW" and curr_status == "ABOVE":
                 price_cross = "BULL-CROSS"
-            elif prev_status == "ABOVE" and status == "BELOW":
+            elif prev_status == "ABOVE" and curr_status == "BELOW":
                 price_cross = "BEAR-CROSS"
             else:
                 price_cross = "NON-CROSS"
