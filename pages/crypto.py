@@ -34,7 +34,7 @@ def telegram():
     limit = 101  # Fetch 101 to get the SMA100 and the current candle
     
     results = []
-    timestamp = exchange.iso8601(exchange.milliseconds())
+    timestamp = exchange.milliseconds()
     
     for symbol in coins:
         try:
