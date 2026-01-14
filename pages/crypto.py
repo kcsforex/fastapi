@@ -119,17 +119,17 @@ def update_dashboard(n):
     # metrics_update = pd.to_datetime(latest.loc["btc", "timestamp"],unit="ms").strftime("%Y-%m-%d %H:%M")
              
     # 1. Create Top Metrics (Quick visual check)
-    metric_cols = [
+metric_cols = [
     dbc.Col(
         html.Div([
             html.Small(s, className="text-muted"),
-            html.H5(f"${latest.loc[s.split('/')[0].lower(), 'price']:.2f}", className="text-info"),
+            html.H5(f"${latest[latest['symbol'] == s.split('/')[0]]['price'].values[0]:.2f}", className="text-info"),
             html.Small("SIGNAL", className="text-muted"),
-            html.H6(latest.loc[s.split('/')[0].lower(), "price_status"],
-                className=("text-success" if latest.loc[s.split('/')[0].lower(), "price_status"] == "ABOVE" else "text-danger"))     
+            html.H6(latest[latest['symbol'] == s.split('/')[0]]['price_status'].values[0], 
+                className=("text-success" if latest[latest['symbol'] == s.split('/')[0]]['price_status'].values[0] == "ABOVE" else "text-danger"))     
         ]), width=2)
     for s in SYMBOLS[:6]
-    ]
+]
     metrics = dbc.Row(metric_cols, align="center")
 
     # 2. Graph Styling
