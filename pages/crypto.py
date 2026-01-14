@@ -1,4 +1,4 @@
-# 2025.01.13  14.00
+# 2025.01.14  11.00
 import pandas as pd
 import ccxt
 from datetime import datetime
@@ -69,7 +69,7 @@ def telegram():
                 "status": status,
                 "cross": cross,
                 "percent_diff": round(diff_percent, 2),
-                "timestamp": exchange.milliseconds()
+                "timestamp": timestamp
                 #}
             })
             
@@ -83,7 +83,7 @@ def telegram():
                 "status": "ERROR",
                 "cross": "ERROR",
                 "error": str(e),
-                "timestamp": exchange.milliseconds()
+                "timestamp": timestamp
             #}
         })
                           
