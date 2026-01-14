@@ -28,7 +28,7 @@ exchange = ccxt.bybit()
 def telegram():
 
     # Define coins array
-    coins = ['BTC/USDT', 'ETH/USDT', 'SOL/USDT', 'XRP/USDT', 'SUI/USDT', 'LTC/USDT', 'LINK/USDT']
+    #coins = ['BTC/USDT', 'ETH/USDT', 'SOL/USDT', 'XRP/USDT', 'SUI/USDT', 'LTC/USDT', 'LINK/USDT']
     
     timeframe = '5m'  # Match your trigger interval
     limit = 101  # Fetch 101 to get the SMA100 and the current candle
@@ -36,7 +36,7 @@ def telegram():
     results = []
     timestamp = exchange.milliseconds()
     
-    for symbol in coins:
+    for symbol in SYMBOLS:
         try:
             ohlcv = exchange.fetch_ohlcv(symbol, timeframe, limit=limit)
             closes = [candle[4] for candle in ohlcv]        
@@ -190,7 +190,7 @@ def update_dashboard(n):
             html.Small("SIGNAL (SMA100)", className="text-muted"),
             html.H6(latest[f"{s.split('/')[0].lower()}_status"],className="text-success" if latest[f"{s.split('/')[0].lower()}_status"] == "ABOVE" else "text-danger"
             )      
-        ]), width=2) for s in SYMBOLS
+        ]), width=2) for s in SYMBOLS[:6]
     ]
     metrics = dbc.Row(metric_cols, align="center")
 
