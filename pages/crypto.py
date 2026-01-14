@@ -137,7 +137,7 @@ def update_dashboard(n):
 
     chart_layout = []
 
-    for symbol in SYMBOLS:
+    for symbol in SYMBOLS[:6]:
         # 1. Filter and Sort
         chart_df = df[df["pair"] == symbol].sort_values("timestamp")
         
