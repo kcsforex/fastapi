@@ -184,14 +184,31 @@ def update_dashboard(n):
     
     # 1. Metrics with Loop
     metric_cols = [
-        dbc.Col(html.Div([
+    dbc.Col(
+        html.Div([
             html.Small(s, className="text-muted"),
-            html.H5("$" + str(latest[f"{s.split('/')[0].lower()}_price"]), className="text-info"),
+
+            html.H5(
+                f"${latest.loc[s.split('/')[0].lower(), 'price']:.2f}",
+                className="text-info"
+            ),
+
             html.Small("SIGNAL (SMA100)", className="text-muted"),
-            html.H6(latest[f"{s.split('/')[0].lower()}_status"],className="text-success" if latest[f"{s.split('/')[0].lower()}_status"] == "ABOVE" else "text-danger"
-            )      
-        ]), width=2) for s in SYMBOLS[:6]
-    ]
+
+            html.H6(
+                latest.loc[s.split('/')[0].lower(), "price_status"],
+                className=(
+                    "text-success"
+                    if latest.loc[s.split('/')[0].lower(), "price_status"] == "ABOVE"
+                    else "text-danger"
+                ),
+            ),
+        ]),
+        width=2,
+    )
+    for s in SYMBOLS[:6]
+]
+
     metrics = dbc.Row(metric_cols, align="center")
 
     # 2. Graph Styling
