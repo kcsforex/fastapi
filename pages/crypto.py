@@ -1,4 +1,4 @@
-# 2025.01.14  12.00
+# 2025.01.14  14.00
 import pandas as pd
 import ccxt
 from datetime import datetime
@@ -12,7 +12,7 @@ import psycopg2
 
 # --- 1. CONFIGURATION ---
 DB_CONFIG = "postgresql://sql_admin:sql_pass@72.62.151.169:5432/n8n"
-SYMBOLS = ["BTC/USDT", "ETH/USDT", "SOL/USDT", "XRP/USDT", "SUI/USDT", "LTC/USDT", "AVAX/USDT"]
+SYMBOLS = ["BTC/USDT", "ETH/USDT", "SOL/USDT", "XRP/USDT", "SUI/USDT", "LTC/USDT", "AVAX/USDT", "LINK/USDT", "ADA/USDT", "BCH/USDT"]
 
 # --- 2. FASTAPI  (n8n targets this) ---
 router = APIRouter()
