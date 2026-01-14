@@ -129,11 +129,45 @@ def update_dashboard(n):
     metrics = dbc.Row(metric_cols, align="center")
 
     # 2. Graph Styling
-    chart_df = df[df["pair"] == "BTC/USDT"].sort_values("timestamp")
-    fig = px.line(chart_df, x="timestamp", y="price", template="plotly_dark")    
-    fig.update_traces(line_color='#00d1ff', line_width=3)
-    fig.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', margin=dict(l=0, r=0, t=10, b=0), height=300,
-            xaxis=dict(showgrid=False), yaxis=dict(showgrid=True, gridcolor='rgba(255,255,255,0.05)'))
+    #chart_df = df[df["pair"] == "BTC/USDT"].sort_values("timestamp")
+    #fig = px.line(chart_df, x="timestamp", y="price", template="plotly_dark")    
+    #fig.update_traces(line_color='#00d1ff', line_width=3)
+    #fig.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', margin=dict(l=0, r=0, t=10, b=0), height=300,
+    #        xaxis=dict(showgrid=False), yaxis=dict(showgrid=True, gridcolor='rgba(255,255,255,0.05)'))
+
+    chart_layout = []
+
+    for symbol in SYMBOLS:
+        # 1. Filter and Sort
+        chart_df = df[df["pair"] == symbol].sort_values("timestamp")
+        
+        # 2. Create Figure
+        fig = px.line(chart_df, x="timestamp", y="price", template="plotly_dark")
+        
+        # 3. Styling
+        fig.update_traces(line_color='#00d1ff', line_width=2)
+        fig.update_layout(
+            paper_bgcolor='rgba(0,0,0,0)', 
+            plot_bgcolor='rgba(0,0,0,0)',
+            margin=dict(l=10, r=10, t=30, b=10), # Added top margin for title
+            height=250,
+            title=dict(text=symbol, font=dict(size=14, color="#00d1ff"), x=0.05),
+            xaxis=dict(showgrid=False, title=""),
+            yaxis=dict(showgrid=True, gridcolor='rgba(255,255,255,0.05)', title="", side="right"),
+            hovermode="x unified"
+        )
+        
+        # 4. Append to layout list as a Bootstrap Column
+        chart_layout.append(
+            dbc.Col([
+                dcc.Graph(figure=fig, config={'displayModeBar': False})
+            ], width=6, className="mb-4") # width=6 creates 2 columns per row
+        )
+
+    # 5. Final Layout Assembly
+    layout = dbc.Container([
+        dbc.Row(chart_layout)
+    ], fluid=True)
   
     # 3. Crypto Table
     display_df = df.copy()
