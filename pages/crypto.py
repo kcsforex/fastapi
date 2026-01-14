@@ -214,12 +214,11 @@ def update_dashboard(n):
         width=2,
     )
     for s in SYMBOLS[:6]
-]
-
+    ]
     metrics = dbc.Row(metric_cols, align="center")
 
     # 2. Graph Styling
-    fig = px.line(df, x="timestamp", y="price", template="plotly_dark")
+    fig = px.line(df[df["pair"] == "BTC/USDT"], x="timestamp", y="price", template="plotly_dark")    
     fig.update_traces(line_color='#00d1ff', line_width=3)
     fig.update_layout(
             paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)',
