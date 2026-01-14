@@ -42,7 +42,7 @@ def telegram():
             closes = [candle[4] for candle in ohlcv]        
             sma_100 = sum(closes[-100:]) / 100
             current_price = closes[-1]
-            status = "ABOVE" if current_price > sma_100 else "BELOW"
+            price_status = "ABOVE" if current_price > sma_100 else "BELOW"
             diff_percent = ((current_price - sma_100) / sma_100) * 100
         
             prev_close = closes[-2]
@@ -51,11 +51,11 @@ def telegram():
             prev_status = "ABOVE" if prev_close > prev_sma else "BELOW"
             
             if prev_status == "BELOW" and status == "ABOVE":
-                cross = "BULL-CROSS"
+                price_cross = "BULL-CROSS"
             elif prev_status == "ABOVE" and status == "BELOW":
-                cross = "BEAR-CROSS"
+                price_cross = "BEAR-CROSS"
             else:
-                cross = "NON-CROSS"
+                price_cross = "NON-CROSS"
             
             # Extract symbol name (BTC, ETH, etc.)
             coin_name = symbol.split('/')[0]
@@ -66,8 +66,8 @@ def telegram():
                 "pair": symbol,
                 "price": round(current_price, 2),
                 "sma_100": round(sma_100, 2),
-                "status": status,
-                "cross": cross,
+                "price_status": price_status,
+                "price_cross": price_cross,
                 "percent_diff": round(diff_percent, 2),
                 "timestamp": timestamp
                 #}
@@ -80,8 +80,8 @@ def telegram():
                 "symbol": coin_name,
                 "pair": symbol,
                 "price": 0,
-                "status": "ERROR",
-                "cross": "ERROR",
+                "price_status": "ERROR",
+                "price_cross": "ERROR",
                 "error": str(e),
                 "timestamp": timestamp
             #}
