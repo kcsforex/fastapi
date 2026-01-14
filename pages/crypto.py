@@ -82,10 +82,7 @@ layout = dbc.Container([
 
     html.Div(id='metrics-container', className="mb-4"),
 
-    html.Div([
-        html.H5("BTC Price Action", className="text-info mb-3"),     
-        dbc.Row(id='charts-grid')
-    ], style=CARD_STYLE, className="mb-4"),
+    dbc.Row(id='charts-grid', className="g-3 mb-4"),
 
     html.Div([
         html.H5("Execution Logs", className="text-light mb-3"),
@@ -156,8 +153,11 @@ def update_dashboard(n):
         
         chart_cols.append(
             dbc.Col([
-                dcc.Graph(figure=fig, config={'displayModeBar': False})
-            ], width=6, className="mb-3")
+                html.Div([
+                    html.H6(symbol, className="text-info mb-1", style={"padding-left": "10px"}),
+                    dcc.Graph(figure=fig, config={'displayModeBar': False})
+                ], style=CARD_STYLE) # Applied here!
+            ], width=6, className="mb-2")
         )
   
     # 3. Crypto Table
