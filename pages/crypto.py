@@ -113,7 +113,8 @@ def update_dashboard(n):
     latest = (df.sort_values("timestamp").groupby("symbol", as_index=False).tail(1).assign(symbol=lambda x: x["symbol"].str.lower()).set_index("symbol"))
 
     # 0. Update Timestamp
-    metrics_update = pd.to_datetime(latest.loc["timestamp"],unit="ms").strftime("%Y-%m-%d %H:%M")
+    metrics_update = pd.to_datetime(latest["timestamp"].iloc[0],unit="ms").strftime("%Y-%m-%d %H:%M")
+    # metrics_update = pd.to_datetime(latest.loc["btc", "timestamp"],unit="ms").strftime("%Y-%m-%d %H:%M")
              
     # 1. Create Top Metrics (Quick visual check)
     metric_cols = [
@@ -123,9 +124,7 @@ def update_dashboard(n):
             html.H5(f"${latest.loc[s.split('/')[0].lower(), 'price']:.2f}", className="text-info"),
             html.Small("SIGNAL", className="text-muted"),
             html.H6(latest.loc[s.split('/')[0].lower(), "price_status"],
-                className=("text-success" if latest.loc[s.split('/')[0].lower(), "price_status"] == "ABOVE" else "text-danger")),    
-            html.H6(pd.to_datetime(latest.loc[s.split('/')[0].lower(), "timestamp"],unit="ms").strftime("%Y-%m-%d %H:%M"),
-                className="text-muted")    
+                className=("text-success" if latest.loc[s.split('/')[0].lower(), "price_status"] == "ABOVE" else "text-danger"))     
         ]), width=2)
     for s in SYMBOLS[:6]
     ]
