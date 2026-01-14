@@ -110,9 +110,7 @@ def update_dashboard(n):
     if df.empty:
         return dash.no_update, "No data found", {}, "No Data"
         
-    latest = df.sort_values("timestamp").groupby("symbol").last().reset_index() #as_index=False).tail(1) #.assign(symbol=lambda x: x["symbol"].str.lower()).set_index("symbol")
-
-    #summary = latest[['symbol', 'price', 'sma_100', 'percent_diff', 'price_status', 'price_cross', 'timestamp']]
+    latest = df.sort_values("timestamp").groupby("symbol").last().reset_index() 
 
     # 0. Update Timestamp
     metrics_update = f"Updated -> {pd.to_datetime(latest["timestamp"].iloc[0],unit="ms").strftime("%Y-%m-%d %H:%M")}"
@@ -123,10 +121,10 @@ def update_dashboard(n):
     dbc.Col(
         html.Div([
             html.Small(s, className="text-muted"),
-            html.H5(f"${latest[latest['symbol'] == s.split('/')[0]]['price'].values[0]:.2f}", className="text-info"),
+            html.H5(f"${latest[latest['pair'] == s['price'].values[0]:.2f}", className="text-info"),
             html.Small("SIGNAL", className="text-muted"),
-            html.H6(latest[latest['symbol'] == s.split('/')[0]]['price_status'].values[0], 
-                className=("text-success" if latest[latest['symbol'] == s.split('/')[0]]['price_status'].values[0] == "ABOVE" else "text-danger"))     
+            html.H6(latest[latest['pair'] == s['price_status'].values[0], 
+                className=("text-success" if latest[latest['pair'] == s['price_status'].values[0] == "ABOVE" else "text-danger"))     
         ]), width=2)
     for s in SYMBOLS[:6]
     ]
