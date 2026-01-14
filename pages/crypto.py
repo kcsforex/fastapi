@@ -84,7 +84,7 @@ layout = dbc.Container([
 
     html.Div([
         html.H5("BTC Price Action", className="text-info mb-3"),     
-        dcc.Graph(id='main-chart', config={'displayModeBar': False})
+        dbc.Row(id='charts-grid')
     ], style=CARD_STYLE, className="mb-4"),
 
     html.Div([
@@ -98,7 +98,7 @@ layout = dbc.Container([
     [Output('metrics-update', 'children'),
     Output('metrics-container', 'children'), 
      Output('status-table-container', 'children'), 
-     Output('main-chart', 'figure')],
+     Output('charts-grid', 'children')], # Changed output to the grid
     [Input('refresh', 'n_intervals')]
 )
 
@@ -135,39 +135,30 @@ def update_dashboard(n):
     #fig.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', margin=dict(l=0, r=0, t=10, b=0), height=300,
     #        xaxis=dict(showgrid=False), yaxis=dict(showgrid=True, gridcolor='rgba(255,255,255,0.05)'))
 
-    chart_layout = []
-
-    for symbol in SYMBOLS[:6]:
-        # 1. Filter and Sort
+    chart_cols = []
+    for symbol in SYMBOLS:
         chart_df = df[df["pair"] == symbol].sort_values("timestamp")
         
-        # 2. Create Figure
+        if chart_df.empty: continue
+
         fig = px.line(chart_df, x="timestamp", y="price", template="plotly_dark")
-        
-        # 3. Styling
         fig.update_traces(line_color='#00d1ff', line_width=2)
         fig.update_layout(
             paper_bgcolor='rgba(0,0,0,0)', 
             plot_bgcolor='rgba(0,0,0,0)',
-            margin=dict(l=10, r=10, t=30, b=10), # Added top margin for title
-            height=250,
-            title=dict(text=symbol, font=dict(size=14, color="#00d1ff"), x=0.05),
-            xaxis=dict(showgrid=False, title=""),
+            margin=dict(l=10, r=10, t=35, b=10),
+            height=200, # Reduced height to fit 3 rows nicely
+            title=dict(text=f" {symbol}", font=dict(size=13, color="#00d1ff"), x=0),
+            xaxis=dict(showgrid=False, title="", showticklabels=False), # Clean look
             yaxis=dict(showgrid=True, gridcolor='rgba(255,255,255,0.05)', title="", side="right"),
             hovermode="x unified"
         )
         
-        # 4. Append to layout list as a Bootstrap Column
-        chart_layout.append(
+        chart_cols.append(
             dbc.Col([
                 dcc.Graph(figure=fig, config={'displayModeBar': False})
-            ], width=6, className="mb-4") # width=6 creates 2 columns per row
+            ], width=6, className="mb-3")
         )
-
-    # 5. Final Layout Assembly
-    layout = dbc.Container([
-        dbc.Row(chart_layout)
-    ], fluid=True)
   
     # 3. Crypto Table
     display_df = df.copy()
@@ -176,4 +167,4 @@ def update_dashboard(n):
         style={"backgroundColor": "transparent",  "--bs-table-bg": "transparent", "--bs-table-accent-bg": "transparent", "color": "white"}
     )
 
-    return metrics_update, metrics, table, fig
+    return metrics_update, metrics, table, chart_cols
