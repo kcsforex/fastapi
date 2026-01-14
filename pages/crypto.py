@@ -66,7 +66,7 @@ def telegram():
                 "pair": symbol,
                 "price": round(current_price, 2),
                 "sma_100": round(sma_100, 2),
-                "price_status": price_status,
+                "price_status": curr_status,
                 "price_cross": price_cross,
                 "percent_diff": round(diff_percent, 2),
                 "timestamp": timestamp
