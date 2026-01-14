@@ -1,4 +1,4 @@
-# 2025.01.14  15.00
+# 2025.01.14  18.00
 import pandas as pd
 import ccxt
 from datetime import datetime
@@ -10,11 +10,11 @@ from dash.dependencies import Input, Output
 import plotly.express as px
 import psycopg2
 
-# --- 1. CONFIGURATION ---
+# ----- 1. CONFIGURATION -----
 DB_CONFIG = "postgresql://sql_admin:sql_pass@72.62.151.169:5432/n8n"
 SYMBOLS = ["BTC/USDT", "ETH/USDT", "SOL/USDT", "XRP/USDT", "SUI/USDT", "LTC/USDT", "AVAX/USDT", "LINK/USDT", "ADA/USDT", "BCH/USDT"]
 
-# --- 2. FASTAPI  (n8n targets this) ---
+# ----- 2. FASTAPI  (n8n targets this) -----
 router = APIRouter()
 exchange = ccxt.bybit()
 
@@ -60,7 +60,7 @@ def telegram():
                           
     return results
 
-# --- 3. THE FRONTEND (Dash Sidebar uses this) ---
+# ----- 3. THE FRONTEND (Dash Sidebar uses this) -----
 dash.register_page(__name__, icon="fa-coins", name="Crypto Dash")
 
 # Glassmorphism Card Style
@@ -113,7 +113,7 @@ def update_dashboard(n):
     latest = (df.sort_values("timestamp").groupby("symbol", as_index=False).tail(1).assign(symbol=lambda x: x["symbol"].str.lower()).set_index("symbol"))
 
     # 0. Update Timestamp
-    metrics_update = pd.to_datetime(latest["timestamp"].iloc[0],unit="ms").strftime("%Y-%m-%d %H:%M")
+    metrics_update = f"Updated:{pd.to_datetime(latest["timestamp"].iloc[0],unit="ms").strftime("%Y-%m-%d %H:%M")}"
     # metrics_update = pd.to_datetime(latest.loc["btc", "timestamp"],unit="ms").strftime("%Y-%m-%d %H:%M")
              
     # 1. Create Top Metrics (Quick visual check)
