@@ -75,7 +75,7 @@ CARD_STYLE = {
 layout = dbc.Container([
     html.Div([
         html.H2("Market Intelligence", className="text-light fw-bold mb-0"),
-        html.P("Live Bybit SMA100 Analysis", className="text-muted small"),
+        html.P(id='metrics-update', className="text-muted small"),
     ], className="mb-4"),
 
     dcc.Interval(id='refresh', interval=60*1000), 
@@ -95,7 +95,8 @@ layout = dbc.Container([
 ], fluid=True)
 
 @callback(
-    [Output('metrics-container', 'children'), 
+    [Output('metrics-update', 'children'),
+    Output('metrics-container', 'children'), 
      Output('status-table-container', 'children'), 
      Output('main-chart', 'figure')],
     [Input('refresh', 'n_intervals')]
@@ -108,10 +109,13 @@ def update_dashboard(n):
     conn.close()
     if df.empty:
         return dash.no_update, "No data found", {}, "No Data"
-
-    # 1. Create Top Metrics (Quick visual check)
+        
     latest = (df.sort_values("timestamp").groupby("symbol", as_index=False).tail(1).assign(symbol=lambda x: x["symbol"].str.lower()).set_index("symbol"))
-    
+
+    # 0. Update Timestamp
+    metrics_update = pd.to_datetime(latest.loc[s.split('/')[0].lower(), "timestamp"],unit="ms").strftime("%Y-%m-%d %H:%M")
+             
+    # 1. Create Top Metrics (Quick visual check)
     metric_cols = [
     dbc.Col(
         html.Div([
@@ -143,4 +147,4 @@ def update_dashboard(n):
         style={"backgroundColor": "transparent",  "--bs-table-bg": "transparent", "--bs-table-accent-bg": "transparent", "color": "white"}
     )
 
-    return metrics, table, fig
+    return metrics_update, metrics, table, fig
