@@ -104,7 +104,6 @@ layout = dbc.Container([
 
 def update_dashboard(n):
     conn = psycopg2.connect(DB_CONFIG)
-    # Query the pivot table n8n is writing to
     df = pd.read_sql("SELECT * FROM status_crypto_logs ORDER BY timestamp DESC LIMIT 20", conn)
     conn.close()
     if df.empty:
@@ -138,9 +137,9 @@ def update_dashboard(n):
             xaxis=dict(showgrid=False), yaxis=dict(showgrid=True, gridcolor='rgba(255,255,255,0.05)')
         )
 
+    # 3. Crypto Table
     display_df = df.copy()
     display_df.columns = [c.replace('_', ' ').upper() for c in display_df.columns]
-    
     table = dbc.Table.from_dataframe(display_df, striped=False, hover=True, responsive=True, borderless=True, className="text-light m-0", 
         style={"backgroundColor": "transparent",  "--bs-table-bg": "transparent", "--bs-table-accent-bg": "transparent", "color": "white"}
     )
