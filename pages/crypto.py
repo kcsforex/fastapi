@@ -121,20 +121,9 @@ def update_dashboard(n):
     dbc.Col(
         html.Div([
             html.Small(s, className="text-muted"),
-            # Corrected: Filter by symbol, select price column, and format to 2 decimals
-            html.H5(
-                f"${latest.loc[latest['symbol'] == s, 'price'].values[0]:.2f}", 
-                className="text-info"
-            ),
+            html.H5(f"${latest.loc[latest['pair'] == s, 'price'].values[0]:.2f}", className="text-info"),
             html.Small("SIGNAL", className="text-muted"),
-            # Corrected: Extracted the status value first to keep logic clean
-            html.H6(
-                latest.loc[latest['symbol'] == s, 'price_status'].values[0], 
-                className=(
-                    "text-success" if latest.loc[latest['symbol'] == s, 'price_status'].values[0] == "ABOVE" 
-                    else "text-danger"
-                )
-            )     
+            html.H6(latest.loc[latest['pair'] == s, 'price_status'].values[0], className=("text-success" if latest.loc[latest['pair'] == s, 'price_status'].values[0] == "ABOVE" else "text-danger"))     
         ]), width=2)
     for s in SYMBOLS[:6]
     ]
