@@ -157,7 +157,7 @@ def update_dashboard(n):
                     html.H6(symbol, className="text-info mb-1", style={"padding-left": "10px"}),
                     dcc.Graph(figure=fig, config={'displayModeBar': False})
                 ], style=CARD_STYLE) # Applied here!
-            ], width=6, className="mb-2")
+            ], width=4, className="mb-2")
         )
   
     # 3. Crypto Table
