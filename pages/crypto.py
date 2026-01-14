@@ -117,7 +117,7 @@ def update_dashboard(n):
         html.Div([
             html.Small(s, className="text-muted"),
             html.H5(f"${latest.loc[s.split('/')[0].lower(), 'price']:.2f}", className="text-info"),
-            html.Small("SIGNAL (SMA100)", className="text-muted"),
+            html.Small("SIGNAL", className="text-muted"),
             html.H6(latest.loc[s.split('/')[0].lower(), "price_status"],
                 className=("text-success" if latest.loc[s.split('/')[0].lower(), "price_status"] == "ABOVE" else "text-danger")),
         ]), width=2)
