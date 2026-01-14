@@ -216,10 +216,6 @@ def update_dashboard(n):
     for s in SYMBOLS[:6]
 ]
 
-    )
-    for s in SYMBOLS[:6]
-]
-
     metrics = dbc.Row(metric_cols, align="center")
 
     # 2. Graph Styling
