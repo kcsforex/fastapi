@@ -1,4 +1,4 @@
-# 2025.01.14  11.00
+# 2025.01.14  12.00
 import pandas as pd
 import ccxt
 from datetime import datetime
@@ -28,7 +28,7 @@ exchange = ccxt.bybit()
 def telegram():
 
     # Define coins array
-    coins = ['BTC/USDT', 'ETH/USDT', 'SOL/USDT', 'XRP/USDT', 'SUI/USDT']
+    coins = ['BTC/USDT', 'ETH/USDT', 'SOL/USDT', 'XRP/USDT', 'SUI/USDT', 'LTC/USDT', 'LINK/USDT']
     
     timeframe = '5m'  # Match your trigger interval
     limit = 101  # Fetch 101 to get the SMA100 and the current candle
@@ -51,11 +51,11 @@ def telegram():
             prev_status = "ABOVE" if prev_close > prev_sma else "BELOW"
             
             if prev_status == "BELOW" and status == "ABOVE":
-                cross = "BULL_CROSS"
+                cross = "BULL-CROSS"
             elif prev_status == "ABOVE" and status == "BELOW":
-                cross = "BEAR_CROSS"
+                cross = "BEAR-CROSS"
             else:
-                cross = "NO_CROSS"
+                cross = "NON-CROSS"
             
             # Extract symbol name (BTC, ETH, etc.)
             coin_name = symbol.split('/')[0]
