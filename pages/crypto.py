@@ -120,7 +120,7 @@ def update_dashboard(n):
             html.Small("SIGNAL", className="text-muted"),
             html.H6(latest.loc[s.split('/')[0].lower(), "price_status"],
                 className=("text-success" if latest.loc[s.split('/')[0].lower(), "price_status"] == "ABOVE" else "text-danger")),
-            html.H6(latest.loc[s, "timestamp"]),
+            html.H6(latest.loc[s.split('/')[0].lower(), "timestamp"]),
         ]), width=2)
     for s in SYMBOLS[:6]
     ]
