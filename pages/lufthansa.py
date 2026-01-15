@@ -23,7 +23,7 @@ def get_lufthansa_token():
 @router.get("/flight/{flight_number}")
 def get_flight_details(flight_number: str):
     token = 'vph5p8hm845j9fj5qhvxsr7h' #get_lufthansa_token()
-    base_url = f"https://api.lufthansa.com/v1/operations/customerflightinformation/{flight_number}"
+    base_url = f"https://api.lufthansa.com/v1/operations/customerflightinformation/{flight_number}/2026-01-14"
     headers = {"Authorization": f"Bearer {token}", "Accept": "application/json"}
     response = requests.get(base_url, headers=headers)
     return response.json()
