@@ -18,8 +18,7 @@ CARD_STYLE = {
     "backdropFilter": "blur(10px)",
     "borderRadius": "15px",
     "border": "1px solid rgba(255, 255, 255, 0.1)",
-    "padding": "25px",
-    "marginBottom": "20px"
+    "padding": "20px"
 }
 
 TABLE_STYLE = {
