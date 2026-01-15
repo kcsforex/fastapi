@@ -156,10 +156,10 @@ def update_dashboard(n):
         chart_cols.append(
             dbc.Col([
                 html.Div([
-                    html.H6(symbol, className="text-info mb-1", style={"padding": 10}),
+                    html.H6(symbol, className="text-info mb-1"),
                     dcc.Graph(figure=fig, config={'displayModeBar': False})
-                ], style=CARD_STYLE) # Applied here!
-            ], width=3, className="mb-2")
+                ], style=CARD_STYLE)
+            ], width=3, className="mb-1")
         )
   
     # 3. Crypto Table
