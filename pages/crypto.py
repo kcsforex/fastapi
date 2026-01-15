@@ -12,7 +12,7 @@ import psycopg2
 
 # ----- 1. CONFIGURATION -----
 DB_CONFIG = "postgresql://sql_admin:sql_pass@72.62.151.169:5432/n8n"
-SYMBOLS = ["BTC/USDT", "ETH/USDT", "SOL/USDT", "XRP/USDT", "TAO/USDT", "LTC/USDT", "AVAX/USDT", "LINK/USDT", "HYPE/USDT", "BCH/USDT", "BNB/USDT", "AAVE/USDT"]
+SYMBOLS = ["BTC/USDT", "ETH/USDT", "SOL/USDT", "XRP/USDT", "ZEN/USDT", "LTC/USDT", "AVAX/USDT", "LINK/USDT", "HYPE/USDT", "BCH/USDT", "BNB/USDT", "AAVE/USDT"]
 
 # ----- 2. FASTAPI  (n8n targets this) -----
 router = APIRouter()
