@@ -85,19 +85,11 @@ layout = dbc.Container([
     # gy-2 → moderate vertical gutter
     # mb-2 → smaller bottom margin
 
-    dbc.Row(id='charts-grid', className="g-3 mb-2"),
+    dbc.Row(id='charts-grid', className="g-3 mb-3"),
 
     html.Div([
         html.H5("Execution Logs", className="text-light mb-3"),
-        html.Div(id='status-table-container', 
-  style={
-        "height": "250px",          # fixed height
-        "overflowY": "auto",        # vertical scrollbar
-        "overflowX": "hidden",      # avoid horizontal bar
-        "paddingRight": "4px",      # small padding to avoid bar overlap
-        "backgroundColor": "transparent",
-    }
-)
+        html.Div(id='status-table-container', style={"height": "250px", "overflowY": "auto", "overflowX": "hidden", "backgroundColor": "transparent"})
     ], style=CARD_STYLE)
 
 ], fluid=True)
