@@ -135,6 +135,7 @@ def update_dashboard(n):
     chart_cols = []
     for symbol in SYMBOLS:
         chart_df = df[df["pair"] == symbol].sort_values("timestamp")
+        chart_df["timestamp"] = pd.to_datetime(chart_df["timestamp"], unit="ms")
         
         if chart_df.empty: continue
 
@@ -143,9 +144,9 @@ def update_dashboard(n):
         fig.update_layout(
             paper_bgcolor='rgba(0,0,0,0)', 
             plot_bgcolor='rgba(0,0,0,0)',
-            margin=dict(l=5, r=0, t=10, b=0),
-            height=200,
-            xaxis=dict(showgrid=False, title="", showticklabels=False), # Clean look
+            margin=dict(l=5, r=5, t=10, b=0),
+            height=150,
+            xaxis=dict(showgrid=False, title="", showticklabels=False, tickformat="%H:%M"), 
             yaxis=dict(showgrid=True, gridcolor='rgba(255,255,255,0.05)', title="", side="right")
         )
         
