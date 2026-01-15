@@ -146,7 +146,7 @@ def update_dashboard(n):
             plot_bgcolor='rgba(0,0,0,0)',
             margin=dict(l=5, r=5, t=10, b=0),
             height=150,
-            xaxis=dict(showgrid=False, title="", showticklabels=False, tickformat="%H:%M"), 
+            xaxis=dict(showgrid=False, title="", showticklabels=True, tickformat="%H:%M"), 
             yaxis=dict(showgrid=True, gridcolor='rgba(255,255,255,0.05)', title="", side="right")
         )
         
