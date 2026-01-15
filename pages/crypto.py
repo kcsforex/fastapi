@@ -143,9 +143,9 @@ def update_dashboard(n):
         fig.update_layout(
             paper_bgcolor='rgba(0,0,0,0)', 
             plot_bgcolor='rgba(0,0,0,0)',
-            margin=dict(l=10, r=10, t=35, b=10),
+            margin=dict(l=5, r=5, t=15, b=5),
             height=200, # Reduced height to fit 3 rows nicely
-            title=dict(text=f" {symbol}", font=dict(size=13, color="#00d1ff"), x=0),
+            #title=dict(text=f" {symbol}", font=dict(size=13, color="#00d1ff"), x=0),
             xaxis=dict(showgrid=False, title="", showticklabels=False), # Clean look
             yaxis=dict(showgrid=True, gridcolor='rgba(255,255,255,0.05)', title="", side="right"),
             hovermode="x unified"
