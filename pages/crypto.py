@@ -12,7 +12,7 @@ import psycopg2
 
 # ----- 1. CONFIGURATION -----
 DB_CONFIG = "postgresql://sql_admin:sql_pass@72.62.151.169:5432/n8n"
-SYMBOLS = ["BTC/USDT", "ETH/USDT", "SOL/USDT", "XRP/USDT", "SUI/USDT", "LTC/USDT", "AVAX/USDT", "LINK/USDT", "ADA/USDT", "BCH/USDT"]
+SYMBOLS = ["BTC/USDT", "ETH/USDT", "SOL/USDT", "XRP/USDT", "SUI/USDT", "LTC/USDT", "AVAX/USDT", "LINK/USDT", "ADA/USDT", "BCH/USDT", "HBAR/USDT", "AAVE/USDT"]
 
 # ----- 2. FASTAPI  (n8n targets this) -----
 router = APIRouter()
@@ -74,7 +74,7 @@ CARD_STYLE = {
 
 layout = dbc.Container([
     html.Div([
-        html.H2("Market Intelligence", className="text-light fw-bold mb-0"),
+        html.H2("Crypto Market Info", className="text-light fw-bold mb-0"),
         html.P(id='metrics-update', className="text-muted small"),
     ], className="mb-4"),
 
@@ -167,7 +167,7 @@ def update_dashboard(n):
     # 3. Crypto Table
     display_df = df.copy()
     display_df.columns = [c.replace('_', ' ').upper() for c in display_df.columns]
-    table = dbc.Table.from_dataframe(display_df[:30], striped=False, hover=True, responsive=True, borderless=True, className="text-light m-0", 
+    table = dbc.Table.from_dataframe(display_df[:120], striped=False, hover=True, responsive=True, borderless=True, className="text-light m-0", 
         style={"backgroundColor": "transparent",  "--bs-table-bg": "transparent", "--bs-table-accent-bg": "transparent", "color": "white"}
     )
 
