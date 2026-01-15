@@ -28,12 +28,10 @@ def get_flight_details(flight_number: str):
     response = requests.get(base_url, headers=headers)
     return response.json()
 
+# --- Dash UI Setup ---
 dash.register_page(__name__, icon="fa-coins", name="Lufthansa")
 
-# --- Dash UI Setup ---
-dash_app = Dash(__name__, requests_pathname_prefix='/dash/', external_stylesheets=[dbc.themes.BOOTSTRAP])
-
-dash_app.layout = dbc.Container([
+layout = dbc.Container([
     html.H1("Lufthansa Flight Tracker", className="mt-4"),
     dbc.Input(id="flight-input", placeholder="Enter Flight Number (e.g., LH400)", type="text"),
     dbc.Button("Search", id="search-btn", color="primary", className="mt-2"),
@@ -41,12 +39,13 @@ dash_app.layout = dbc.Container([
     html.Div(id="flight-output")
 ], fluid=True)
 
-@dash_app.callback(
+@callback(
     Output("flight-output", "children"),
     Input("search-btn", "n_clicks"),
     State("flight-input", "value"),
     prevent_initial_call=True
 )
+
 def update_output(n_clicks, flight_num):
     if not flight_num:
         return "Please enter a flight number."
