@@ -22,10 +22,11 @@ RUN --mount=type=cache,target=/root/.cache/pip \
 # --- Application code (changes frequently, light layer) ---
 COPY main.py .
 COPY pages/home.py        pages/home.py
-COPY pages/home0.py        pages/home0.py
+COPY pages/home0.py       pages/home0.py
 COPY pages/crypto.py      pages/crypto.py
 COPY pages/crypto0.py     pages/crypto0.py
 COPY pages/air_dataset.py pages/air_dataset.py
+COPY pages/lufthansa.py   pages/lufthansa.py
 COPY pages/ml_databricks.py     pages/ml_databricks.py
 
 # ---If you have other runtime files/folders, add them here ---
