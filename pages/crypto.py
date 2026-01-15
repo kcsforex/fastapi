@@ -156,7 +156,7 @@ def update_dashboard(n):
         chart_cols.append(
             dbc.Col([
                 html.Div([
-                    html.H6(symbol, className="text-info mb-1", style={"margin": 0, "padding": 0}),
+                    html.H6(symbol, className="text-info mb-1", style={"padding": 10}),
                     dcc.Graph(figure=fig, config={'displayModeBar': False})
                 ], style=CARD_STYLE) # Applied here!
             ], width=3, className="mb-2")
