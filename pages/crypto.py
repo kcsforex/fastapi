@@ -109,7 +109,7 @@ def update_dashboard(n):
     if df.empty:
         return dash.no_update, "No data found", {}, "No Data"
 
-    df["timestamp"] = pd.to_datetime(df["timestamp"],unit="ms").strftime("%Y-%m-%d %H:%M:%S")
+    df["timestamp"] = pd.to_datetime(df["timestamp"],unit="ms")
         
     latest = df.sort_values("timestamp").groupby("symbol").last().reset_index() 
 
@@ -140,7 +140,7 @@ def update_dashboard(n):
     chart_cols = []
     for symbol in SYMBOLS:
         chart_df = df[df["pair"] == symbol].sort_values("timestamp")
-        chart_df["timestamp"] = pd.to_datetime(chart_df["timestamp"], unit="ms")
+        #chart_df["timestamp"] = pd.to_datetime(chart_df["timestamp"], unit="ms")
         
         if chart_df.empty: continue
 
