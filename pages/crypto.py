@@ -69,7 +69,7 @@ CARD_STYLE = {
     "backdrop-filter": "blur(10px)",
     "border-radius": "15px",
     "border": "1px solid rgba(255, 255, 255, 0.1)",
-    "padding": "10px"
+    "padding": "15px"
 }
 
 layout = dbc.Container([
@@ -82,7 +82,7 @@ layout = dbc.Container([
 
     html.Div(id='metrics-container', className="mb-4"),
 
-    dbc.Row(id='charts-grid', className="g-3 mb-4"),
+    dbc.Row(id='charts-grid', className="g-2 mb-2"),
 
     html.Div([
         html.H5("Execution Logs", className="text-light mb-3"),
