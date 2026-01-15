@@ -89,7 +89,15 @@ layout = dbc.Container([
 
     html.Div([
         html.H5("Execution Logs", className="text-light mb-3"),
-        html.Div(id='status-table-container')
+        html.Div(id='status-table-container', 
+  style={
+        "height": "250px",          # fixed height
+        "overflowY": "auto",        # vertical scrollbar
+        "overflowX": "hidden",      # avoid horizontal bar
+        "paddingRight": "4px",      # small padding to avoid bar overlap
+        "backgroundColor": "transparent",
+    }
+)
     ], style=CARD_STYLE)
 
 ], fluid=True)
@@ -109,8 +117,7 @@ def update_dashboard(n):
     if df.empty:
         return dash.no_update, "No data found", {}, "No Data"
 
-    df["timestamp"] = pd.to_datetime(df["timestamp"],unit="ms").dt.strftime("%Y-%m-%d %H:%M:%S")
-        
+    df["timestamp"] = pd.to_datetime(df["timestamp"],unit="ms").dt.strftime("%Y-%m-%d %H:%M:%S")       
     latest = df.sort_values("timestamp").groupby("symbol").last().reset_index() 
 
     # 0. Update Timestamp
@@ -122,7 +129,7 @@ def update_dashboard(n):
     dbc.Col(
         html.Div([
             html.Small(s, className="text-muted"),
-            html.H5(f"${latest.loc[latest['pair'] == s, 'price'].values[0]:.2f}", className="text-info"),
+            html.H5(f"${latest.loc[latest['pair'] == s, 'price'].values[0]:.2f}", className="text-warning"),
             html.Small("SIGNAL", className="text-muted"),
             html.H6(latest.loc[latest['pair'] == s, 'price_status'].values[0], className=("text-success" if latest.loc[latest['pair'] == s, 'price_status'].values[0] == "ABOVE" else "text-danger"))     
         ]), width=2)
