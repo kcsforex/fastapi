@@ -81,8 +81,11 @@ layout = dbc.Container([
     dcc.Interval(id='refresh', interval=60*1000), 
 
     html.Div(id='metrics-container', className="mb-4"),
+    # gx-1 → small horizontal gutter
+    # gy-2 → moderate vertical gutter
+    # mb-2 → smaller bottom margin
 
-    dbc.Row(id='charts-grid', className="g-3 mb-3"),
+    dbc.Row(id='charts-grid', className="g-3 mb-2"),
 
     html.Div([
         html.H5("Execution Logs", className="text-light mb-3"),
@@ -153,7 +156,7 @@ def update_dashboard(n):
         chart_cols.append(
             dbc.Col([
                 html.Div([
-                    html.H6(symbol, className="text-info mb-1", style={"padding-left": "10px"}),
+                    html.H6(symbol, className="text-info mb-1", style={"margin": 0, "padding": 0}),
                     dcc.Graph(figure=fig, config={'displayModeBar': False})
                 ], style=CARD_STYLE) # Applied here!
             ], width=3, className="mb-2")
