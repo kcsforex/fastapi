@@ -143,12 +143,10 @@ def update_dashboard(n):
         fig.update_layout(
             paper_bgcolor='rgba(0,0,0,0)', 
             plot_bgcolor='rgba(0,0,0,0)',
-            margin=dict(l=5, r=5, t=15, b=5),
-            height=200, # Reduced height to fit 3 rows nicely
-            #title=dict(text=f" {symbol}", font=dict(size=13, color="#00d1ff"), x=0),
+            margin=dict(l=5, r=0, t=10, b=0),
+            height=200,
             xaxis=dict(showgrid=False, title="", showticklabels=False), # Clean look
-            yaxis=dict(showgrid=True, gridcolor='rgba(255,255,255,0.05)', title="", side="right"),
-            hovermode="x unified"
+            yaxis=dict(showgrid=True, gridcolor='rgba(255,255,255,0.05)', title="", side="right")
         )
         
         chart_cols.append(
@@ -157,7 +155,7 @@ def update_dashboard(n):
                     html.H6(symbol, className="text-info mb-1", style={"padding-left": "10px"}),
                     dcc.Graph(figure=fig, config={'displayModeBar': False})
                 ], style=CARD_STYLE) # Applied here!
-            ], width=4, className="mb-2")
+            ], width=3, className="mb-2")
         )
   
     # 3. Crypto Table
