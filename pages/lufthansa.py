@@ -4,20 +4,17 @@ from fastapi.middleware.wsgi import WSGIMiddleware
 from dash import Dash, html, dcc, Input, Output, State
 import dash_bootstrap_components as dbc
 import dash
+import os
 
 router = APIRouter()
-@router.get("/status")
+
 def get_lufthansa_token():
     # Assuming dbutils is available in your environment
-    CLIENT_ID = dbutils.secrets.get(scope='LH_creds', key="LH_CLIENT_ID")
-    CLIENT_SECRET = dbutils.secrets.get(scope='LH_creds', key="LH_CLIENT_SECRET")
+    CLIENT_ID = os.getenv("LH_CLIENT_ID")
+    CLIENT_SECRET = os.getenv("LH_CLIENT_SECRET")
     
     token_url = "https://api.lufthansa.com/v1/oauth/token"
-    payload = {
-        "grant_type": "client_credentials", 
-        "client_id": CLIENT_ID, 
-        "client_secret": CLIENT_SECRET
-    }
+    payload = { "grant_type": "client_credentials", "client_id": CLIENT_ID,  "client_secret": CLIENT_SECRET}
     
     resp = requests.post(token_url, data=payload)
     resp.raise_for_status()
@@ -25,16 +22,13 @@ def get_lufthansa_token():
 
 @router.get("/flight/{flight_number}")
 def get_flight_details(flight_number: str):
-    token = get_lufthansa_token()
+    token = 'vph5p8hm845j9fj5qhvxsr7h' #get_lufthansa_token()
     base_url = f"https://api.lufthansa.com/v1/operations/customerflightinformation/{flight_number}"
-    headers = {
-        "Authorization": f"Bearer {token}",
-        "Accept": "application/json"
-    }
+    headers = {"Authorization": f"Bearer {token}", "Accept": "application/json"}
     response = requests.get(base_url, headers=headers)
     return response.json()
 
-app.include_router(router)
+dash.register_page(__name__, icon="fa-coins", name="Lufthansa")
 
 # --- Dash UI Setup ---
 dash_app = Dash(__name__, requests_pathname_prefix='/dash/', external_stylesheets=[dbc.themes.BOOTSTRAP])
@@ -64,7 +58,3 @@ def update_output(n_clicks, flight_num):
     except Exception as e:
         return f"Error: {str(e)}"
 
-# --- Mounting Dash into FastAPI ---
-app.mount("/dash", WSGIMiddleware(dash_app.server))
-
-# To run: uvicorn filename:app --reload
