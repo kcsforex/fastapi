@@ -1,7 +1,7 @@
 import requests
 from fastapi import FastAPI, APIRouter
 from fastapi.middleware.wsgi import WSGIMiddleware
-from dash import Dash, html, dcc, Input, Output, State
+from dash import Dash, html, dcc, Input, Output, State,  callback
 import dash_bootstrap_components as dbc
 import dash
 import os
