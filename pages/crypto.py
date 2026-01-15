@@ -1,4 +1,4 @@
-# 2025.01.14  18.00
+# 2025.01.15  11.00
 import pandas as pd
 import ccxt
 from datetime import datetime
