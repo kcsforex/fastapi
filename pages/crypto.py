@@ -114,7 +114,7 @@ def update_dashboard(n):
     latest = df.sort_values("timestamp").groupby("symbol").last().reset_index() 
 
     # 0. Update Timestamp
-    metrics_update = f"Updated -> {latest["timestamp"].strftime("%Y-%m-%d %H:%M")}"
+    metrics_update = f"Updated -> {latest["timestamp"]}"
     # metrics_update = pd.to_datetime(latest.loc["btc", "timestamp"],unit="ms").strftime("%Y-%m-%d %H:%M")
              
     # 1. Create Top Metrics (Quick visual check)
