@@ -5,10 +5,8 @@ from dash import Dash, html, dcc, Input, Output, State
 import dash_bootstrap_components as dbc
 import dash
 
-# --- API Configuration & Logic ---
-app = FastAPI()
-router = APIRouter(prefix="/api/v1")
-
+router = APIRouter()
+@router.get("/status")
 def get_lufthansa_token():
     # Assuming dbutils is available in your environment
     CLIENT_ID = dbutils.secrets.get(scope='LH_creds', key="LH_CLIENT_ID")
