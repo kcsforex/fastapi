@@ -109,7 +109,7 @@ def update_dashboard(n):
     if df.empty:
         return dash.no_update, "No data found", {}, "No Data"
 
-    df["timestamp"] = pd.to_datetime(df["timestamp"],unit="ms")
+    df["timestamp"] = pd.to_datetime(df["timestamp"],unit="ms").dt.strftime("%Y-%m-%d %H:%M:%S")
         
     latest = df.sort_values("timestamp").groupby("symbol").last().reset_index() 
 
