@@ -89,7 +89,8 @@ layout = dbc.Container([
 
     html.Div([
         html.H5("Execution Logs", className="text-light mb-3"),
-        html.Div(id='status-table-container', style={"height": "250px", "overflowY": "auto", "overflowX": "hidden", "backgroundColor": "transparent"})
+        html.Div(id='status-table-container', 
+            style={"height": "300px", "overflowY": "auto", "overflowX": "hidden", "backgroundColor": "transparent",  "fontSize": "12px"})
     ], style=CARD_STYLE)
 
 ], fluid=True)
