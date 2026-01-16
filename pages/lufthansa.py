@@ -37,25 +37,10 @@ def get_flightroute_details(flight_date: str):
         ("FRA", "ZRH"),  "FRA", "CPH"), ("FRA", "OSL"), ("FRA", "HEL"), ("FRA", "WAW"), ("FRA", "PRG"),  ("FRA", "BUD"), ("FRA", "MXP"), 
         ("FRA", "TLS"),  ("FRA", "MAN"),  ("FRA", "DUB"),   ("FRA", "CAI"), ("FRA", "TLV"),  ("FRA", "BEY"), ("MUC", "DXB"),  ("MUC", "LHR"), 
         ("MUC", "CDG"),  ("MUC", "AMS"), ("MUC", "MAD"), ("MUC", "BCN"), ("MUC", "LIS"), ("MUC", "ATH"),  ("MUC", "BER"), ("MUC", "HAM"), 
-    ("MUC", "DUS"),   # Düsseldorf
-    ("MUC", "FRA"),   # Frankfurt (hub connector)
-    ("MUC", "VIE"),   # Vienna
-    ("MUC", "ZRH"),   # Zurich
-    ("MUC", "CPH"),   # Copenhagen
-    ("MUC", "OSL"),   # Oslo
-    ("MUC", "WAW"),   # Warsaw
-    ("MUC", "PRG"),   # Prague
-    ("MUC", "BUD"),   # Budapest
-    ("MUC", "FCO"),   # Rome
-    ("MUC", "MXP"),   # Milan
-    ("MUC", "MAN"),   # Manchester
-    ("MUC", "DUB"),   # Dublin
-    ("MUC", "TLV"),   # Tel Aviv
-]             
-                  
-                  
-                  
-
+        ("MUC", "DUS"),   ("MUC", "FRA"),  ("MUC", "VIE"),  ("MUC", "ZRH"), ("MUC", "CPH"),  ("MUC", "OSL"),  ("MUC", "WAW"), ("MUC", "PRG"), 
+        ("MUC", "BUD"),   ("MUC", "FCO"), ("MUC", "MXP"),   ("MUC", "MAN"),  ("MUC", "DUB"), ("MUC", "TLV"), 
+    ]             
+                                                    
     all_dataframes = []
 
     for origin, dest in ROUTES_FULL:
