@@ -31,6 +31,7 @@ async def fetch_route(client, token, origin, dest, flight_date, sem):
 
     async with sem:
         resp = await client.get(url, headers=headers)
+        await asyncio.sleep(0.2)
 
     #if resp.status_code == 200:
     #    json_data = resp.json()
@@ -71,7 +72,7 @@ async def get_flightroute_details(flight_date: str):
         ("MUC", "BUD"),  ("MUC", "FCO"), ("MUC", "MXP"),   ("MUC", "MAN"),  ("MUC", "DUB"), ("MUC", "TLV"), 
     ]             
                                                     
-    sem = asyncio.Semaphore(5)  # rate-limit safety
+    sem = asyncio.Semaphore(3)  # rate-limit safety
     async with httpx.AsyncClient(timeout=30) as client:
         tasks = [fetch_route(client, token, o, d, flight_date, sem) for o, d in ROUTES_FULL]
         results = await asyncio.gather(*tasks)
