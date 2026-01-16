@@ -23,6 +23,21 @@ def get_lufthansa_token():
     resp.raise_for_status()
     return resp.json()["access_token"]
 
+async def fetch_route(client, token, origin, dest, flight_date, sem):
+    url = f"https://api.lufthansa.com/v1/operations/customerflightinformation/route/{origin}/{dest}/{flight_date}"
+    headers = {"Authorization": f"Bearer {token}", "Accept": "application/json"}
+
+    async with sem:
+        resp = await client.get(url, headers=headers)
+
+    if resp.status_code == 200:
+        json_data = resp.json()
+        df = pd.json_normalize(json_data["FlightInformation"]["Flights"]["Flight"])
+        df["route_key"] = f"{origin}-{dest}"
+        return df
+
+    return None
+
 @router.get("/lh_flight/{flight_date}")
 def get_flightroute_details(flight_date: str):
     
@@ -41,39 +56,15 @@ def get_flightroute_details(flight_date: str):
         ("MUC", "BUD"),  ("MUC", "FCO"), ("MUC", "MXP"),   ("MUC", "MAN"),  ("MUC", "DUB"), ("MUC", "TLV"), 
     ]             
                                                     
-    all_dataframes = []
+    sem = asyncio.Semaphore(5)  # rate-limit safety
+    async with httpx.AsyncClient(timeout=30) as client:
+        tasks = [fetch_route(client, token, o, d, flight_date, sem) for o, d in ROUTES_FULL]
+        results = await asyncio.gather(*tasks)
 
-    for origin, dest in ROUTES_FULL:
-        try:
-            base_url = f'https://api.lufthansa.com/v1/operations/customerflightinformation/route/{origin}/{dest}/{flight_date}'
-            headers = {"Authorization": f"Bearer {token}", "Accept": "application/json"}
-            response = requests.get(base_url, headers=headers)
-            time.sleep(0.25)
-       
-            if response.status_code == 200:
-                json_data = response.json()
-                pdf = pd.json_normalize(json_data['FlightInformation']['Flights']['Flight'])
-                pdf['route_key'] = f"{origin}-{dest}"
-                all_dataframes.append(pdf)
+    all_dataframes = [df for df in results if df is not None]
     
-            elif response.status_code == 400:
-                print(f"Bad Request: {response.text}")
-                break
-            elif response.status_code == 401:
-                print(f"Unauthorized API Access: {response.text}")
-                break  
-            elif response.status_code == 403:
-                print(f"API Forbidden: {response.text}")
-                break              
-            elif response.status_code == 404:
-                print(f"Skipping: No data found for {origin}-{dest} on {TARGET_DATE}")
-            else:
-                print(f"API Warning ({response.status_code}): {response.text}")
-                    
-        except Exception as e:
-            print(f"Error {origin}-{dest}: {e}")
-    
-    if all_dataframes:
+    if not all_dataframes:
+        return []
         
         combined_df = pd.concat(all_dataframes, ignore_index=True)
         combined_df.columns = [c.replace('.', '_') for c in combined_df.columns]
@@ -115,8 +106,6 @@ def get_flightroute_details(flight_date: str):
         combined_df = combined_df.rename(columns=rename_map)
         
         return combined_df.to_dict(orient="records")
-    else:
-        return []
 
 # --- Dash UI Setup ---
 dash.register_page(__name__, icon="fa-coins", name="Lufthansa")
