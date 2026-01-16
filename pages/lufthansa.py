@@ -64,7 +64,7 @@ def get_flightroute_details(flight_date: str):
     
     if all_dataframes:
         combined_df = pd.concat(all_dataframes, ignore_index=True)
-        combined_df.columns = [c.replace('.', '_') for c in combined_pdf.columns]
+        combined_df.columns = [c.replace('.', '_') for c in combined_df.columns]
         combined_df["ingested_at"] = pd.Timestamp.now().isoformat()
         
         return combined_df.to_dict(orient="records")
