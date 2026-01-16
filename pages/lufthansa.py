@@ -6,6 +6,7 @@ from dash import Dash, html, dcc, Input, Output, State,  callback
 import dash_bootstrap_components as dbc
 import dash
 import os
+import time
 
 router = APIRouter()
 
