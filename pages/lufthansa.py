@@ -32,11 +32,24 @@ async def fetch_route(client, token, origin, dest, flight_date, sem):
     async with sem:
         resp = await client.get(url, headers=headers)
 
-    if resp.status_code == 200:
-        json_data = resp.json()
-        df = pd.json_normalize(json_data["FlightInformation"]["Flights"]["Flight"])
-        df["route_key"] = f"{origin}-{dest}"
-        return df
+    #if resp.status_code == 200:
+    #    json_data = resp.json()
+    #    df = pd.json_normalize(json_data["FlightInformation"]["Flights"]["Flight"])
+    #    df["route_key"] = f"{origin}-{dest}"
+    #    return df
+
+     if resp.status_code != 200:
+        return None
+
+    json_data = resp.json()
+    flights = (json_data.get("FlightInformation", {}).get("Flights", {}).get("Flight", []))
+
+    if not flights:
+        return None  # ← THIS is important
+
+    df = pd.json_normalize(flights)
+    df["route_key"] = f"{origin}-{dest}"
+    return df
 
     return None
 
