@@ -41,7 +41,7 @@ async def fetch_route(client, token, origin, dest, flight_date, sem):
     return None
 
 @router.get("/lh_flight/{flight_date}")
-def get_flightroute_details(flight_date: str):
+async def get_flightroute_details(flight_date: str):
     
     token = 'vph5p8hm845j9fj5qhvxsr7h' #get_lufthansa_token()
 
