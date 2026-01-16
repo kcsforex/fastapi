@@ -41,7 +41,6 @@ def get_flight_details(flight_number: str):
             if response.status_code == 200:
                 json_data = response.json()
                 pdf = pd.json_normalize(json_data['FlightInformation']['Flights']['Flight'])
-                #pdf.columns = [c.replace('.', '_') for c in pdf.columns]
                 pdf['route_key'] = f"{origin}-{dest}"
                 all_dataframes.append(pdf)
     
