@@ -77,6 +77,32 @@ def get_flightroute_details(flight_date: str):
         
         combined_df["ingested_at"] = pd.Timestamp.now().isoformat()
         combined_df = combined_df.where(pd.notnull(combined_df), None)
+
+        rename_map = {
+            "Departure_AirportCode": "departure_airport_code",
+            "Departure_Scheduled_Date": "departure_scheduled_date",
+            "Departure_Scheduled_Time": "departure_scheduled_time",
+            "Departure_Actual_Date": "departure_actual_date",
+            "Departure_Actual_Time": "departure_actual_time",
+            "Departure_Terminal_Gate": "departure_terminal_gate",
+            "Departure_Status_Code": "departure_status_code",
+            "Arrival_AirportCode": "arrival_airport_code",
+            "Arrival_Scheduled_Date": "arrival_scheduled_date",
+            "Arrival_Scheduled_Time": "arrival_scheduled_time",
+            "Arrival_Actual_Date": "arrival_actual_date",
+            "Arrival_Actual_Time": "arrival_actual_time",
+            "Arrival_Terminal_Gate": "arrival_terminal_gate",
+            "Arrival_Status_Code": "arrival_status_code",
+            "OperatingCarrier_AirlineID": "operatingcarrier_airlineid",
+            "OperatingCarrier_FlightNumber": "operatingcarrier_flightnumber",
+            "Equipment_AircraftCode": "equipment_aircraftcode",
+            "Status_Code": "status_code",
+            "route_key": "route_key",
+            "ingested_at": "ingested_at",
+        }
+
+combined_df = combined_df.rename(columns=rename_map)
+
         
         return combined_df.to_dict(orient="records")
     else:
