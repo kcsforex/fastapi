@@ -69,7 +69,7 @@ def get_flightroute_details(flight_date: str):
 
         combined_df = combined_df.drop(columns=[
             "Departure_Terminal_Name", "Arrival_Terminal_Name", 
-            "Departure_Status_Description", "Arrival_Status_Description", "Status_Description"
+            "Departure_Status_Description", "Arrival_Status_Description", "Status_Description",
             "MarketingCarrierList_MarketingCarrier_AirlineID",
             "MarketingCarrierList_MarketingCarrier_FlightNumber",
             "MarketingCarrierList_MarketingCarrier",
