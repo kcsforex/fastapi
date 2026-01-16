@@ -21,10 +21,10 @@ def get_lufthansa_token():
     resp.raise_for_status()
     return resp.json()["access_token"]
 
-@router.get("/lh_flight/")
-def get_flight_details(flight_number: str):
+@router.get("/lh_flight/{date}")
+def get_flightroute_details(flight_date: str):
     token = 'vph5p8hm845j9fj5qhvxsr7h' #get_lufthansa_token()
-    TARGET_DATE = "2026-01-15"
+    #TARGET_DATE = "2026-01-15"
 
     ROUTES_FULL = [("FRA", "SIN"), ("FRA", "HND"), ("FRA", "LAX"), ("FRA", "SFO"), ("FRA", "JFK"), ("FRA", "LHR"), ("FRA", "CDG"),   
         ("FRA", "MAD"), ("FRA", "MUC"), ("FRA", "AMS"), ("FRA", "BUD")]
@@ -33,7 +33,7 @@ def get_flight_details(flight_number: str):
 
     for origin, dest in ROUTES_FULL:
         try:
-            base_url = f'https://api.lufthansa.com/v1/operations/customerflightinformation/route/{origin}/{dest}/{TARGET_DATE}'
+            base_url = f'https://api.lufthansa.com/v1/operations/customerflightinformation/route/{origin}/{dest}/{flight_date}'
             headers = {"Authorization": f"Bearer {token}", "Accept": "application/json"}
             response = requests.get(base_url, headers=headers)
             time.sleep(0.25)
@@ -88,13 +88,13 @@ layout = dbc.Container([
     prevent_initial_call=True
 )
 
-def update_output(n_clicks, flight_num):
-    if not flight_num:
-        return "Please enter a flight number."
+def update_output(n_clicks, flight_date):
+    if not flight_date:
+        return "Please enter a flight date."
     
     # Internal call to the FastAPI logic
     try:
-        data = get_flight_details(flight_num)
+        data = get_flightroute_details(flight_date)
         return html.Pre(str(data))
     except Exception as e:
         return f"Error: {str(e)}"
