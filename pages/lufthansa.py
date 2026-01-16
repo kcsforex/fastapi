@@ -63,8 +63,18 @@ def get_flightroute_details(flight_date: str):
             print(f"Error {origin}-{dest}: {e}")
     
     if all_dataframes:
+        
         combined_df = pd.concat(all_dataframes, ignore_index=True)
         combined_df.columns = [c.replace('.', '_') for c in combined_df.columns]
+
+        combined_df = combined_df.drop(columns=[
+            "Departure_Terminal_Name", "Departure_Status_Description", 
+            "Arrival_Terminal_Name", "Arrival_Status_Description",
+            "MarketingCarrierList_MarketingCarrier_AirlineID",
+            "MarketingCarrierList_MarketingCarrier_FlightNumber",
+            "MarketingCarrierList_MarketingCarrier",
+        ], errors="ignore")
+        
         combined_df["ingested_at"] = pd.Timestamp.now().isoformat()
         combined_df = combined_df.where(pd.notnull(combined_df), None)
         
