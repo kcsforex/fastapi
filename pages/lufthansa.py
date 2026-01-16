@@ -21,7 +21,7 @@ def get_lufthansa_token():
     resp.raise_for_status()
     return resp.json()["access_token"]
 
-@router.get("/lh_flight/{flight_number}")
+@router.get("/lh_flight/")
 def get_flight_details(flight_number: str):
     token = 'vph5p8hm845j9fj5qhvxsr7h' #get_lufthansa_token()
     TARGET_DATE = "2026-01-15"
