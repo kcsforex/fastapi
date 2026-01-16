@@ -9,3 +9,4 @@ databricks-sql-connector
 pyarrow
 scikit-learn
 psutil
+httpx
