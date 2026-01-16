@@ -8,6 +8,8 @@ import dash
 import pandas as pd
 import os
 import time
+import httpx
+import asyncio
 
 router = APIRouter()
 
