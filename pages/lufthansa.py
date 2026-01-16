@@ -28,7 +28,75 @@ def get_flightroute_details(flight_date: str):
     
     token = 'vph5p8hm845j9fj5qhvxsr7h' #get_lufthansa_token()
 
-    ROUTES_FULL = [("FRA", "SIN"),  ("FRA", "CDG"), ("FRA", "MUC"), ("FRA", "AMS"), ("FRA", "BUD")]
+    ROUTES_FULL = [("FRA", "SIN"), ("FRA", "HND"),   ("FRA", "LAX"),  ("FRA", "JFK"),  ("FRA", "EWR"),  ("FRA", "ORD"),  ("FRA", "IAD"),  ("FRA", "BOS"),   
+                ("FRA", "DEN"),  ("FRA", "SFO"), ("FRA", "MIA"),  ("FRA", "YYZ"),  ("FRA", "MEX"), ("FRA", "DEL"), ("FRA", "BOM"),  ("FRA", "BLR"), 
+                ("FRA", "HYD"),  ("FRA", "ICN"),  ("FRA", "GRU"), ("FRA", "CAI"), ("MUC", "LAX"),  ("MUC", "SFO"), ("MUC", "DEN"), ("MUC", "ORD"),  
+    ("MUC", "EWR"),   # New York Newark
+    ("MUC", "JFK"),   # New York JFK
+    ("MUC", "BOS"),   # Boston
+    ("MUC", "DEL"),   # Delhi
+    ("MUC", "BOM"),   # Mumbai
+    ("MUC", "BLR"),   # Bangalore
+    ("MUC", "BKK"),   # Bangkok
+    ("MUC", "JNB"),   # Johannesburg
+    ("MUC", "CPT"),   # Cape Town
+    ("FRA", "DXB"),   # Dubai (daily direct)
+    ("FRA", "LHR"),   # London Heathrow
+    ("FRA", "LCY"),   # London City
+    ("FRA", "CDG"),   # Paris Charles de Gaulle
+    ("FRA", "AMS"),   # Amsterdam
+    ("FRA", "MAD"),   # Madrid
+    ("FRA", "BCN"),   # Barcelona
+    ("FRA", "LIS"),   # Lisbon
+    ("FRA", "ATH"),   # Athens
+    ("FRA", "IST"),   # Istanbul
+    ("FRA", "BER"),   # Berlin
+    ("FRA", "HAM"),   # Hamburg
+    ("FRA", "DUS"),   # Düsseldorf
+    ("FRA", "MUC"),   # Munich (hub connector)
+    ("FRA", "VIE"),   # Vienna
+    ("FRA", "ZRH"),   # Zurich
+    ("FRA", "CPH"),   # Copenhagen
+    ("FRA", "OSL"),   # Oslo
+    ("FRA", "HEL"),   # Helsinki
+    ("FRA", "WAW"),   # Warsaw
+    ("FRA", "PRG"),   # Prague
+    ("FRA", "BUD"),   # Budapest
+    ("FRA", "MXP"),   # Milan Malpensa
+    ("FRA", "TLS"),   # Toulouse
+    ("FRA", "MAN"),   # Manchester
+    ("FRA", "DUB"),   # Dublin
+    ("FRA", "CAI"),   # Cairo (medium-haul, ~4 hours)
+    ("FRA", "TLV"),   # Tel Aviv
+    ("FRA", "BEY"),   # Beirut
+    ("MUC", "DXB"),   # Dubai (direct)
+    ("MUC", "LHR"),   # London Heathrow
+    ("MUC", "CDG"),   # Paris
+    ("MUC", "AMS"),   # Amsterdam
+    ("MUC", "MAD"),   # Madrid
+    ("MUC", "BCN"),   # Barcelona
+    ("MUC", "LIS"),   # Lisbon
+    ("MUC", "ATH"),   # Athens
+    ("MUC", "BER"),   # Berlin
+    ("MUC", "HAM"),   # Hamburg
+    ("MUC", "DUS"),   # Düsseldorf
+    ("MUC", "FRA"),   # Frankfurt (hub connector)
+    ("MUC", "VIE"),   # Vienna
+    ("MUC", "ZRH"),   # Zurich
+    ("MUC", "CPH"),   # Copenhagen
+    ("MUC", "OSL"),   # Oslo
+    ("MUC", "WAW"),   # Warsaw
+    ("MUC", "PRG"),   # Prague
+    ("MUC", "BUD"),   # Budapest
+    ("MUC", "FCO"),   # Rome
+    ("MUC", "MXP"),   # Milan
+    ("MUC", "MAN"),   # Manchester
+    ("MUC", "DUB"),   # Dublin
+    ("MUC", "TLV"),   # Tel Aviv
+]             
+                  
+                  
+                  
 
     all_dataframes = []
 
