@@ -31,14 +31,14 @@ def get_flightroute_details(flight_date: str):
     ROUTES_FULL = [("FRA", "SIN"), ("FRA", "HND"),   ("FRA", "LAX"),  ("FRA", "JFK"),  ("FRA", "EWR"),  ("FRA", "ORD"),  ("FRA", "IAD"),  ("FRA", "BOS"),   
         ("FRA", "DEN"),  ("FRA", "SFO"), ("FRA", "MIA"),  ("FRA", "YYZ"),  ("FRA", "MEX"), ("FRA", "DEL"), ("FRA", "BOM"),  ("FRA", "BLR"), 
         ("FRA", "HYD"),  ("FRA", "ICN"), ("FRA", "GRU"), ("FRA", "CAI"), ("MUC", "LAX"),  ("MUC", "SFO"), ("MUC", "DEN"), ("MUC", "ORD"),  
-        ("MUC", "EWR"), ("MUC", "JFK"),  ("MUC", "BOS"), ("MUC", "DEL"),  ("MUC", "BOM"),  ("MUC", "BLR"),  ("MUC", "BKK"),  ("MUC", "JNB"), 
-        ("MUC", "CPT"),   ("FRA", "DXB"), ("FRA", "LHR"), ("FRA", "LCY"), ("FRA", "CDG"), ("FRA", "AMS"), ("FRA", "MAD"), ("FRA", "BCN"),  
-        ("FRA", "LIS"), ("FRA", "ATH"),  ("FRA", "IST"),  ("FRA", "BER"), ("FRA", "HAM"), ("FRA", "DUS"),   ("FRA", "MUC"), ("FRA", "VIE"), 
-        ("FRA", "ZRH"),  "FRA", "CPH"), ("FRA", "OSL"), ("FRA", "HEL"), ("FRA", "WAW"), ("FRA", "PRG"),  ("FRA", "BUD"), ("FRA", "MXP"), 
+        ("MUC", "EWR"),  ("MUC", "JFK"),  ("MUC", "BOS"), ("MUC", "DEL"),  ("MUC", "BOM"),  ("MUC", "BLR"),  ("MUC", "BKK"),  ("MUC", "JNB"), 
+        ("MUC", "CPT"),  ("FRA", "DXB"), ("FRA", "LHR"), ("FRA", "LCY"), ("FRA", "CDG"), ("FRA", "AMS"), ("FRA", "MAD"), ("FRA", "BCN"),  
+        ("FRA", "LIS"),  ("FRA", "ATH"),  ("FRA", "IST"),  ("FRA", "BER"), ("FRA", "HAM"), ("FRA", "DUS"),   ("FRA", "MUC"), ("FRA", "VIE"), 
+        ("FRA", "ZRH"),  ("FRA", "CPH"), ("FRA", "OSL"), ("FRA", "HEL"), ("FRA", "WAW"), ("FRA", "PRG"),  ("FRA", "BUD"), ("FRA", "MXP"), 
         ("FRA", "TLS"),  ("FRA", "MAN"),  ("FRA", "DUB"),   ("FRA", "CAI"), ("FRA", "TLV"),  ("FRA", "BEY"), ("MUC", "DXB"),  ("MUC", "LHR"), 
         ("MUC", "CDG"),  ("MUC", "AMS"), ("MUC", "MAD"), ("MUC", "BCN"), ("MUC", "LIS"), ("MUC", "ATH"),  ("MUC", "BER"), ("MUC", "HAM"), 
-        ("MUC", "DUS"),   ("MUC", "FRA"),  ("MUC", "VIE"),  ("MUC", "ZRH"), ("MUC", "CPH"),  ("MUC", "OSL"),  ("MUC", "WAW"), ("MUC", "PRG"), 
-        ("MUC", "BUD"),   ("MUC", "FCO"), ("MUC", "MXP"),   ("MUC", "MAN"),  ("MUC", "DUB"), ("MUC", "TLV"), 
+        ("MUC", "DUS"),  ("MUC", "FRA"),  ("MUC", "VIE"),  ("MUC", "ZRH"), ("MUC", "CPH"),  ("MUC", "OSL"),  ("MUC", "WAW"), ("MUC", "PRG"), 
+        ("MUC", "BUD"),  ("MUC", "FCO"), ("MUC", "MXP"),   ("MUC", "MAN"),  ("MUC", "DUB"), ("MUC", "TLV"), 
     ]             
                                                     
     all_dataframes = []
