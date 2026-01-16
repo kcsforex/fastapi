@@ -101,8 +101,7 @@ def get_flightroute_details(flight_date: str):
             "ingested_at": "ingested_at",
         }
 
-combined_df = combined_df.rename(columns=rename_map)
-
+        combined_df = combined_df.rename(columns=rename_map)
         
         return combined_df.to_dict(orient="records")
     else:
