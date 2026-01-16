@@ -38,7 +38,7 @@ async def fetch_route(client, token, origin, dest, flight_date, sem):
     #    df["route_key"] = f"{origin}-{dest}"
     #    return df
 
-     if resp.status_code != 200:
+    if resp.status_code != 200:
         return None
 
     json_data = resp.json()
