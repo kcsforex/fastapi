@@ -68,21 +68,21 @@ async def get_flightroute_details(flight_date: str):
     if not all_dataframes:
         return []
         
-        combined_df = pd.concat(all_dataframes, ignore_index=True)
-        combined_df.columns = [c.replace('.', '_') for c in combined_df.columns]
+    combined_df = pd.concat(all_dataframes, ignore_index=True)
+    combined_df.columns = [c.replace('.', '_') for c in combined_df.columns]
 
-        combined_df = combined_df.drop(columns=[
+    combined_df = combined_df.drop(columns=[
             "Departure_Terminal_Name", "Arrival_Terminal_Name", 
             "Departure_Status_Description", "Arrival_Status_Description", "Status_Description",
             "MarketingCarrierList_MarketingCarrier_AirlineID",
             "MarketingCarrierList_MarketingCarrier_FlightNumber",
             "MarketingCarrierList_MarketingCarrier",
-        ], errors="ignore")
+    ], errors="ignore")
         
-        combined_df["ingested_at"] = pd.Timestamp.now().isoformat()
-        combined_df = combined_df.where(pd.notnull(combined_df), None)
+    combined_df["ingested_at"] = pd.Timestamp.now().isoformat()
+    combined_df = combined_df.where(pd.notnull(combined_df), None)
 
-        rename_map = {
+    rename_map = {
             "Departure_AirportCode": "departure_airport_code",
             "Departure_Scheduled_Date": "departure_scheduled_date",
             "Departure_Scheduled_Time": "departure_scheduled_time",
@@ -103,11 +103,11 @@ async def get_flightroute_details(flight_date: str):
             "Status_Code": "status_code",
             "route_key": "route_key",
             "ingested_at": "ingested_at",
-        }
+    }
 
-        combined_df = combined_df.rename(columns=rename_map)
+    combined_df = combined_df.rename(columns=rename_map)
         
-        return combined_df.to_dict(orient="records")
+    return combined_df.to_dict(orient="records")
 
 # --- Dash UI Setup ---
 dash.register_page(__name__, icon="fa-coins", name="Lufthansa")
