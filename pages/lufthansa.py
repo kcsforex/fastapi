@@ -29,32 +29,11 @@ def get_flightroute_details(flight_date: str):
     token = 'vph5p8hm845j9fj5qhvxsr7h' #get_lufthansa_token()
 
     ROUTES_FULL = [("FRA", "SIN"), ("FRA", "HND"),   ("FRA", "LAX"),  ("FRA", "JFK"),  ("FRA", "EWR"),  ("FRA", "ORD"),  ("FRA", "IAD"),  ("FRA", "BOS"),   
-                ("FRA", "DEN"),  ("FRA", "SFO"), ("FRA", "MIA"),  ("FRA", "YYZ"),  ("FRA", "MEX"), ("FRA", "DEL"), ("FRA", "BOM"),  ("FRA", "BLR"), 
-                ("FRA", "HYD"),  ("FRA", "ICN"),  ("FRA", "GRU"), ("FRA", "CAI"), ("MUC", "LAX"),  ("MUC", "SFO"), ("MUC", "DEN"), ("MUC", "ORD"),  
-    ("MUC", "EWR"),   # New York Newark
-    ("MUC", "JFK"),   # New York JFK
-    ("MUC", "BOS"),   # Boston
-    ("MUC", "DEL"),   # Delhi
-    ("MUC", "BOM"),   # Mumbai
-    ("MUC", "BLR"),   # Bangalore
-    ("MUC", "BKK"),   # Bangkok
-    ("MUC", "JNB"),   # Johannesburg
-    ("MUC", "CPT"),   # Cape Town
-    ("FRA", "DXB"),   # Dubai (daily direct)
-    ("FRA", "LHR"),   # London Heathrow
-    ("FRA", "LCY"),   # London City
-    ("FRA", "CDG"),   # Paris Charles de Gaulle
-    ("FRA", "AMS"),   # Amsterdam
-    ("FRA", "MAD"),   # Madrid
-    ("FRA", "BCN"),   # Barcelona
-    ("FRA", "LIS"),   # Lisbon
-    ("FRA", "ATH"),   # Athens
-    ("FRA", "IST"),   # Istanbul
-    ("FRA", "BER"),   # Berlin
-    ("FRA", "HAM"),   # Hamburg
-    ("FRA", "DUS"),   # Düsseldorf
-    ("FRA", "MUC"),   # Munich (hub connector)
-    ("FRA", "VIE"),   # Vienna
+        ("FRA", "DEN"),  ("FRA", "SFO"), ("FRA", "MIA"),  ("FRA", "YYZ"),  ("FRA", "MEX"), ("FRA", "DEL"), ("FRA", "BOM"),  ("FRA", "BLR"), 
+        ("FRA", "HYD"),  ("FRA", "ICN"), ("FRA", "GRU"), ("FRA", "CAI"), ("MUC", "LAX"),  ("MUC", "SFO"), ("MUC", "DEN"), ("MUC", "ORD"),  
+        ("MUC", "EWR"), ("MUC", "JFK"),  ("MUC", "BOS"), ("MUC", "DEL"),  ("MUC", "BOM"),  ("MUC", "BLR"),  ("MUC", "BKK"),  ("MUC", "JNB"), 
+        ("MUC", "CPT"),   ("FRA", "DXB"), ("FRA", "LHR"), ("FRA", "LCY"), ("FRA", "CDG"), ("FRA", "AMS"), ("FRA", "MAD"), ("FRA", "BCN"),  
+        ("FRA", "LIS"), ("FRA", "ATH"),  ("FRA", "IST"),  ("FRA", "BER"), ("FRA", "HAM"), ("FRA", "DUS"),   ("FRA", "MUC"), ("FRA", "VIE"), 
     ("FRA", "ZRH"),   # Zurich
     ("FRA", "CPH"),   # Copenhagen
     ("FRA", "OSL"),   # Oslo
