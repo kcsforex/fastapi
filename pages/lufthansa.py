@@ -21,13 +21,55 @@ def get_lufthansa_token():
     resp.raise_for_status()
     return resp.json()["access_token"]
 
-@router.get("/flight/{flight_number}")
+@router.get("/lh_flight/{flight_number}")
 def get_flight_details(flight_number: str):
     token = 'vph5p8hm845j9fj5qhvxsr7h' #get_lufthansa_token()
-    base_url = f"https://api.lufthansa.com/v1/operations/customerflightinformation/{flight_number}/2026-01-14"
-    headers = {"Authorization": f"Bearer {token}", "Accept": "application/json"}
-    response = requests.get(base_url, headers=headers)
-    return response.json()
+    TARGET_DATE = "2026-01-15"
+
+    ROUTES_FULL = [("FRA", "SIN"), ("FRA", "HND"), ("FRA", "LAX"), ("FRA", "SFO"), ("FRA", "JFK"), ("FRA", "LHR"), ("FRA", "CDG"),   
+        ("FRA", "MAD"), ("FRA", "MUC"), ("FRA", "AMS"), ("FRA", "BUD")]
+
+    all_dataframes = []
+
+    for origin, dest in ROUTES_FULL:
+        try:
+            base_url = f'https://api.lufthansa.com/v1/operations/customerflightinformation/route/{origin}/{dest}/{TARGET_DATE}'
+            headers = {"Authorization": f"Bearer {token}", "Accept": "application/json"}
+            response = requests.get(base_url, headers=headers)
+            time.sleep(0.25)
+       
+            if response.status_code == 200:
+                json_data = response.json()
+                pdf = pd.json_normalize(json_data['FlightInformation']['Flights']['Flight'])
+                #pdf.columns = [c.replace('.', '_') for c in pdf.columns]
+                pdf['route_key'] = f"{origin}-{dest}"
+                all_dataframes.append(pdf)
+    
+            elif response.status_code == 400:
+                print(f"Bad Request: {response.text}")
+                break
+            elif response.status_code == 401:
+                print(f"Unauthorized API Access: {response.text}")
+                break  
+            elif response.status_code == 403:
+                print(f"API Forbidden: {response.text}")
+                break              
+            elif response.status_code == 404:
+                print(f"Skipping: No data found for {origin}-{dest} on {TARGET_DATE}")
+            else:
+                print(f"API Warning ({response.status_code}): {response.text}")
+                    
+        except Exception as e:
+            print(f"Error {origin}-{dest}: {e}")
+    
+    if all_dataframes:
+        combined_df = pd.concat(all_dataframes, ignore_index=True)
+        combined_df.columns = [c.replace('.', '_') for c in combined_pdf.columns]
+        combined_df["ingested_at"] = pd.Timestamp.now().isoformat()
+        
+        return combined_df.to_dict(orient="records")
+    else:
+        return []
 
 # --- Dash UI Setup ---
 dash.register_page(__name__, icon="fa-coins", name="Lufthansa")
