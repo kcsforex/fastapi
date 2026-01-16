@@ -30,29 +30,40 @@ async def fetch_route(client, token, origin, dest, flight_date, sem):
     headers = {"Authorization": f"Bearer {token}", "Accept": "application/json"}
 
     async with sem:
-        resp = await client.get(url, headers=headers)
-        await asyncio.sleep(0.25)
+        try:
+            
+            resp = await client.get(url, headers=headers)
+            await asyncio.sleep(0.25)
 
-    #if resp.status_code == 200:
-    #    json_data = resp.json()
-    #    df = pd.json_normalize(json_data["FlightInformation"]["Flights"]["Flight"])
-    #    df["route_key"] = f"{origin}-{dest}"
-    #    return df
+            if resp.status_code == 429:
+                print(f"Route {origin}-{dest}: Rate limited (429)")
+                return None
+            
+            if resp.status_code == 401:
+                print(f"Route {origin}-{dest}: Unauthorized - token may be expired")
+                return None
 
-    if resp.status_code != 200:
-        return None
+            if resp.status_code != 200:
+                return None
 
-    json_data = resp.json()
-    flights = (json_data.get("FlightInformation", {}).get("Flights", {}).get("Flight", []))
+            json_data = resp.json()
+            flights = (json_data.get("FlightInformation", {}).get("Flights", {}).get("Flight", []))
+        
+            if not flights:
+                print(f"Route {origin}-{dest}: No flights available for {flight_date}")
+                return None  # ← THIS is important
 
-    if not flights:
-        return None  # ← THIS is important
+            df = pd.json_normalize(flights)
+            df["route_key"] = f"{origin}-{dest}"
+            return df
 
-    df = pd.json_normalize(flights)
-    df["route_key"] = f"{origin}-{dest}"
-    return df
-
-    return None
+        except httpx.TimeoutException:
+            logger.error(f"Route {origin}-{dest}: Timeout")
+            return None
+        except Exception as e:
+            logger.error(f"Route {origin}-{dest}: Error - {type(e).__name__}: {str(e)}")
+            return None
+            
 
 @router.get("/lh_flight/{flight_date}")
 async def get_flightroute_details(flight_date: str):
