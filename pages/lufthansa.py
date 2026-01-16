@@ -26,8 +26,7 @@ def get_flightroute_details(flight_date: str):
     token = 'vph5p8hm845j9fj5qhvxsr7h' #get_lufthansa_token()
     #TARGET_DATE = "2026-01-15"
 
-    ROUTES_FULL = [("FRA", "SIN"), ("FRA", "HND"), ("FRA", "LAX"), ("FRA", "SFO"), ("FRA", "JFK"), ("FRA", "LHR"), ("FRA", "CDG"),   
-        ("FRA", "MAD"), ("FRA", "MUC"), ("FRA", "AMS"), ("FRA", "BUD")]
+    ROUTES_FULL = [("FRA", "SIN"),  ("FRA", "CDG"), ("FRA", "MUC"), ("FRA", "AMS"), ("FRA", "BUD")]
 
     all_dataframes = []
 
