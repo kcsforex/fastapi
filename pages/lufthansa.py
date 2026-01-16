@@ -34,30 +34,9 @@ def get_flightroute_details(flight_date: str):
         ("MUC", "EWR"), ("MUC", "JFK"),  ("MUC", "BOS"), ("MUC", "DEL"),  ("MUC", "BOM"),  ("MUC", "BLR"),  ("MUC", "BKK"),  ("MUC", "JNB"), 
         ("MUC", "CPT"),   ("FRA", "DXB"), ("FRA", "LHR"), ("FRA", "LCY"), ("FRA", "CDG"), ("FRA", "AMS"), ("FRA", "MAD"), ("FRA", "BCN"),  
         ("FRA", "LIS"), ("FRA", "ATH"),  ("FRA", "IST"),  ("FRA", "BER"), ("FRA", "HAM"), ("FRA", "DUS"),   ("FRA", "MUC"), ("FRA", "VIE"), 
-    ("FRA", "ZRH"),   # Zurich
-    ("FRA", "CPH"),   # Copenhagen
-    ("FRA", "OSL"),   # Oslo
-    ("FRA", "HEL"),   # Helsinki
-    ("FRA", "WAW"),   # Warsaw
-    ("FRA", "PRG"),   # Prague
-    ("FRA", "BUD"),   # Budapest
-    ("FRA", "MXP"),   # Milan Malpensa
-    ("FRA", "TLS"),   # Toulouse
-    ("FRA", "MAN"),   # Manchester
-    ("FRA", "DUB"),   # Dublin
-    ("FRA", "CAI"),   # Cairo (medium-haul, ~4 hours)
-    ("FRA", "TLV"),   # Tel Aviv
-    ("FRA", "BEY"),   # Beirut
-    ("MUC", "DXB"),   # Dubai (direct)
-    ("MUC", "LHR"),   # London Heathrow
-    ("MUC", "CDG"),   # Paris
-    ("MUC", "AMS"),   # Amsterdam
-    ("MUC", "MAD"),   # Madrid
-    ("MUC", "BCN"),   # Barcelona
-    ("MUC", "LIS"),   # Lisbon
-    ("MUC", "ATH"),   # Athens
-    ("MUC", "BER"),   # Berlin
-    ("MUC", "HAM"),   # Hamburg
+        ("FRA", "ZRH"),  "FRA", "CPH"), ("FRA", "OSL"), ("FRA", "HEL"), ("FRA", "WAW"), ("FRA", "PRG"),  ("FRA", "BUD"), ("FRA", "MXP"), 
+        ("FRA", "TLS"),  ("FRA", "MAN"),  ("FRA", "DUB"),   ("FRA", "CAI"), ("FRA", "TLV"),  ("FRA", "BEY"), ("MUC", "DXB"),  ("MUC", "LHR"), 
+        ("MUC", "CDG"),  ("MUC", "AMS"), ("MUC", "MAD"), ("MUC", "BCN"), ("MUC", "LIS"), ("MUC", "ATH"),  ("MUC", "BER"), ("MUC", "HAM"), 
     ("MUC", "DUS"),   # Düsseldorf
     ("MUC", "FRA"),   # Frankfurt (hub connector)
     ("MUC", "VIE"),   # Vienna
