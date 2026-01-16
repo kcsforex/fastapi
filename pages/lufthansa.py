@@ -66,6 +66,7 @@ def get_flightroute_details(flight_date: str):
         combined_df = pd.concat(all_dataframes, ignore_index=True)
         combined_df.columns = [c.replace('.', '_') for c in combined_df.columns]
         combined_df["ingested_at"] = pd.Timestamp.now().isoformat()
+        combined_df = combined_df.where(pd.notnull(combined_df), None)
         
         return combined_df.to_dict(orient="records")
     else:
