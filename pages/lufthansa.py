@@ -193,7 +193,7 @@ def update_dashboard(n_intervals):
     #latest = df.sort_values("timestamp").groupby("symbol").last().reset_index() 
 
     # 0. Update Timestamp
-    metrics_update = f"Updated -> {latest["ingested_at"].iloc[0]}"
+    metrics_update = f"Updated -> {df["ingested_at"].iloc[0]}"
     # metrics_update = pd.to_datetime(latest.loc["btc", "timestamp"],unit="ms").strftime("%Y-%m-%d %H:%M")             
   
     # 3. Crypto Table
