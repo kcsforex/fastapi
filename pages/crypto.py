@@ -110,8 +110,9 @@ def update_dashboard(n_intervals):
         return html.Div("No data found", className="text-light fst-italic")
         #return dash.no_update, "No data found", {}, "No Data"    
 
-    df["timestamp"] = pd.to_datetime(df["timestamp"])
-    df["timestamp"] = df["timestamp"].dt.tz_localize("UTC").dt.tz_convert("Europe/Budapest").dt.strftime("%Y-%m-%d %H:%M:%S")     
+    #df["timestamp"] = pd.to_datetime(df["timestamp"])
+    #df["timestamp"] = df["timestamp"].dt.tz_localize("UTC").dt.tz_convert("Europe/Budapest").dt.strftime("%Y-%m-%d %H:%M:%S") 
+    df["timestamp"] = pd.to_datetime(df["timestamp"],unit="ms", utc=True).dt.tz_convert("Europe/Budapest").dt.strftime("%Y-%m-%d %H:%M:%S")   
     latest = df.sort_values("timestamp").groupby("symbol").last().reset_index() 
 
     # 0. Update Timestamp
