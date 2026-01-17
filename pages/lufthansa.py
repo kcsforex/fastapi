@@ -15,6 +15,7 @@ import asyncio
 
 # ----- 1. CONFIGURATION -----
 DB_CONFIG = "postgresql://sql_admin:sql_pass@72.62.151.169:5432/n8n"
+sql_engine = create_engine(DB_CONFIG, pool_size=10, max_overflow=20)
 
 router = APIRouter()
 
@@ -180,22 +181,17 @@ layout = dbc.Container([
 )
 
 def update_dashboard(n_intervals):
-    conn = psycopg2.connect(DB_CONFIG)
-    engine = create_engine(DB_CONFIG)
-    df = pd.read_sql("SELECT * FROM lh_flights ORDER BY id DESC LIMIT 120", engine)
-    #conn.close()
+    
+    with engine.connect() as conn:
+        df = pd.read_sql("SELECT * FROM lh_flights ORDER BY id DESC LIMIT 120", conn)
+
     if df.empty:
-        return html.Div(
-            "No data found",
-            className="text-light fst-italic"
-        )
+        return html.Div("No data found", className="text-light fst-italic")
 
     df["ingested_at"] = pd.to_datetime(df["ingested_at"],unit="ms", utc=True).dt.tz_convert("Europe/Budapest").dt.strftime("%Y-%m-%d %H:%M:%S")       
-    #latest = df.sort_values("timestamp").groupby("symbol").last().reset_index() 
 
     # 0. Update Timestamp
-    metrics_update = f"Updated -> {df["ingested_at"].iloc[0]}"
-    # metrics_update = pd.to_datetime(latest.loc["btc", "timestamp"],unit="ms").strftime("%Y-%m-%d %H:%M")             
+    metrics_update = f"Updated -> {df["ingested_at"].iloc[0]}"          
   
     # 3. Crypto Table
     display_df = df.copy()
@@ -204,5 +200,4 @@ def update_dashboard(n_intervals):
         style={"backgroundColor": "transparent",  "--bs-table-bg": "transparent", "--bs-table-accent-bg": "transparent", "color": "white"}
     )
 
-    #update_time = f"Last update: {time.strftime('%H:%M:%S')}"
     return metrics_update, table
