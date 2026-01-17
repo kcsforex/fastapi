@@ -159,7 +159,8 @@ CARD_STYLE = {
 layout = dbc.Container([
     
     html.Div([
-        html.H2("Crypto Market Info", className="text-light fw-bold mb-0") 
+        html.H2("Crypto Market Info", className="text-light fw-bold mb-0"),
+        html.P(id='metrics-update', className="text-muted small"),
     ], className="mb-4"),
 
     dcc.Interval(id='refresh', interval=60*1000), 
