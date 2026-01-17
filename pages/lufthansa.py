@@ -162,8 +162,6 @@ layout = dbc.Container([
 
     dcc.Interval(id='refresh', interval=60*1000), 
 
-    dbc.Row(id='charts-grid', className="g-3 mb-3"),
-
     html.Div([
         html.H5("Execution Logs", className="text-light mb-3"),
         html.Div(id='status-table-container', 
@@ -189,7 +187,7 @@ layout = dbc.Container([
 
 def update_flightdata(n_clicks, flight_date):
     conn = psycopg2.connect(DB_CONFIG)
-    df = pd.read_sql("SELECT * FROM status_crypto_logs ORDER BY timestamp DESC LIMIT 120", conn)
+    df = pd.read_sql("SELECT * FROM lh_flights ORDER BY timestamp DESC LIMIT 120", conn)
     conn.close()
     if df.empty:
         return dash.no_update, "No data found", {}, "No Data"
