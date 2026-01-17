@@ -11,6 +11,9 @@ import time
 import httpx
 import asyncio
 
+# ----- 1. CONFIGURATION -----
+DB_CONFIG = "postgresql://sql_admin:sql_pass@72.62.151.169:5432/n8n"
+
 router = APIRouter()
 
 def get_lufthansa_token():
