@@ -173,8 +173,8 @@ layout = dbc.Container([
 ], fluid=True)
 
 @callback(
-    [Output('status-table-container1', 'children')],
-    [Input('refresh', 'n_intervals')]
+    Output('status-table-container1', 'children'),
+    Input('refresh', 'n_intervals')
 )
 
 def update_dashboard(n):
