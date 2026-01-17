@@ -158,76 +158,45 @@ CARD_STYLE = {
 }
 
 # MERGED LAYOUT
-layout = dbc.Container([
-    html.Div([
-        html.H2("Lufthansa Flight Tracker", className="text-light fw-bold mb-0"),
-        html.P("Real-time data from PostgreSQL", className="text-muted small"),
-    ], className="mb-4 mt-4"),
+layout = dbc.Container(
+    [
+        html.H2("Lufthansa Flight Tracker", className="text-light"),
+        dbc.Button("Refresh", id="search-btn", color="primary"),
+        html.Div(id="metrics-update", className="text-info mt-2"),
+        dcc.Loading(html.Div(id="flight-output")),
+        dcc.Interval(id="refresh-interval", interval=60_000),
+    ],
+    fluid=True,
+)
 
-    # Control Section
-    html.Div([
-        dbc.Row([
-            dbc.Col([
-                dbc.Button("Refresh Table Data", id="search-btn", color="primary", className="w-100"),
-            ], width=3),
-            dbc.Col([
-                html.Div(id='metrics-update', className="text-info align-middle")
-            ], width=9)
-        ])
-    ], style=CARD_STYLE),
-
-    # Data Table Section
-    html.Div([
-        html.H5("Live Flight Data (Last 120)", className="text-light mb-3"),
-        dcc.Loading(
-            type="border",
-            children=html.Div(id="flight-output", style={"overflowX": "auto"})
-        )
-    ], style=CARD_STYLE),
-
-    dcc.Interval(id='refresh-interval', interval=60*1000, n_intervals=0), 
-
-], fluid=True)
 
 @callback(
     Output("flight-output", "children"),
     Output("metrics-update", "children"),
     Input("search-btn", "n_clicks"),
     Input("refresh-interval", "n_intervals"),
-    prevent_initial_call=False
 )
 def update_flightdata(n_clicks, n_intervals):
     try:
-        # Use SQLAlchemy or Psycopg2
-        #engine = create_engine(DB_CONFIG)
         conn = psycopg2.connect(DB_CONFIG)
-        # Assuming your table name is 'lh_flight' based on your API endpoint
-        df = pd.read_sql("SELECT * FROM lh_flights ORDER BY ingested_at DESC LIMIT 120", conn)
-        
-        if df.empty:
-            return html.Div("No data found in database.", className="text-warning"), "Last checked: " + time.strftime("%H:%M:%S")
-
-        # Clean up columns for display (optional)
-        display_df = df.copy()
-        
-        # Create Table
-        table = dbc.Table.from_dataframe(
-            display_df, 
-            striped=True, 
-            hover=True, 
-            responsive=True, 
-            borderless=True, 
-            className="text-light m-0", 
-            style={
-                "backgroundColor": "transparent", 
-                "--bs-table-bg": "transparent", 
-                "fontSize": "12px",
-                "color": "white"
-            }
+        df = pd.read_sql(
+            "SELECT * FROM lh_flights ORDER BY ingested_at DESC LIMIT 120",
+            conn,
         )
-        
-        update_time = f"Last update: {time.strftime('%H:%M:%S')}"
-        return table, update_time
+
+        if df.empty:
+            return "No data", f"Checked {time.strftime('%H:%M:%S')}"
+
+        table = dbc.Table.from_dataframe(
+            df,
+            striped=True,
+            hover=True,
+            size="sm",
+            className="text-light",
+        )
+
+        return table, f"Updated {time.strftime('%H:%M:%S')}"
 
     except Exception as e:
-        return html.Div(f"Error: {str(e)}", className="text-danger"), "Error updating"
+        logger.exception("Dash update failed")
+        return f"Error: {e}", "Error"
