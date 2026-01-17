@@ -157,9 +157,9 @@ CARD_STYLE = {
 }
 
 layout = dbc.Container([
+    
     html.Div([
-        html.H2("Crypto Market Info", className="text-light fw-bold mb-0"),
-        html.P(id='metrics-update', className="text-muted small"),
+        html.H2("Crypto Market Info", className="text-light fw-bold mb-0") 
     ], className="mb-4"),
 
     dcc.Interval(id='refresh', interval=60*1000), 
@@ -173,17 +173,16 @@ layout = dbc.Container([
 ], fluid=True)
 
 @callback(
-    [Output('metrics-update', 'children'),
-     Output('status-table-container', 'children')],
+    [Output('status-table-container', 'children')],
     [Input('refresh', 'n_intervals')]
 )
 
 def update_dashboard(n):
-    #conn1 = psycopg2.connect(DB_CONFIG)
-    #df = pd.read_sql("SELECT * FROM lh_flights ORDER BY timestamp DESC LIMIT 120", conn1)
-    #conn1.close()
-    #if df.empty:
-    #    return dash.no_update, "No data found", {}, "No Data"
+    conn1 = psycopg2.connect(DB_CONFIG)
+    df = pd.read_sql("SELECT * FROM lh_flights ORDER BY timestamp DESC LIMIT 120", conn1)
+    conn1.close()
+    if df.empty:
+        return dash.no_update, "No data found", {}, "No Data"
 
     #df["timestamp"] = pd.to_datetime(df["timestamp"],unit="ms", utc=True).dt.tz_convert("Europe/Budapest").dt.strftime("%Y-%m-%d %H:%M:%S")       
     #latest = df.sort_values("timestamp").groupby("symbol").last().reset_index() 
@@ -194,7 +193,7 @@ def update_dashboard(n):
   
     # 3. Crypto Table
     display_df = df.copy()
-    #display_df.columns = [c.replace('_', ' ').upper() for c in display_df.columns]
+    display_df.columns = [c.replace('_', ' ').upper() for c in display_df.columns]
     table = dbc.Table.from_dataframe(display_df[:120], striped=False, hover=True, responsive=True, borderless=True, className="text-light m-0", 
         style={"backgroundColor": "transparent",  "--bs-table-bg": "transparent", "--bs-table-accent-bg": "transparent", "color": "white"}
     )
