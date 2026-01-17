@@ -216,7 +216,6 @@ def update_flightdata(n_intervals):
                 "color": "white"
             }
         )
-        
     update_time = f"Last update: {time.strftime('%H:%M:%S')}"
     return table, update_time
 
