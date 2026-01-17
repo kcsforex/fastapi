@@ -8,7 +8,7 @@ from dash import dcc, html, dash_table, callback
 import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output
 import plotly.express as px
-import psycopg2
+from sqlalchemy import create_engine
 
 # ----- 1. CONFIGURATION -----
 DB_CONFIG = "postgresql://sql_admin:sql_pass@72.62.151.169:5432/n8n"
