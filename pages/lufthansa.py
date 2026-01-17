@@ -1,4 +1,4 @@
-# 2026.01.17  15.00
+# 2026.01.17  17.00
 import requests
 from fastapi import FastAPI, APIRouter
 from fastapi.middleware.wsgi import WSGIMiddleware
@@ -156,7 +156,7 @@ CARD_STYLE = {
 
 layout = dbc.Container([
     html.Div([
-        html.H2("Éufthansa Info", className="text-light fw-bold mb-0"),
+        html.H2("Lufthansa Info", className="text-light fw-bold mb-0"),
         html.P(id='metrics-update', className="text-muted small"),
     ], className="mb-4"),
 
@@ -187,21 +187,19 @@ layout = dbc.Container([
     prevent_initial_call=True
 )
 
-def update_flightdata(n_clicks, flight_date)
-:
+def update_flightdata(n_clicks, flight_date):
     conn = psycopg2.connect(DB_CONFIG)
     df = pd.read_sql("SELECT * FROM status_crypto_logs ORDER BY timestamp DESC LIMIT 120", conn)
     conn.close()
     if df.empty:
         return dash.no_update, "No data found", {}, "No Data"
 
-    df["timestamp"] = pd.to_datetime(df["timestamp"],unit="ms", utc=True).dt.tz_convert("Europe/Budapest").dt.strftime("%Y-%m-%d %H:%M:%S")       
-    latest = df.sort_values("timestamp").groupby("symbol").last().reset_index() 
+    #df["timestamp"] = pd.to_datetime(df["timestamp"],unit="ms", utc=True).dt.tz_convert("Europe/Budapest").dt.strftime("%Y-%m-%d %H:%M:%S")       
+    #latest = df.sort_values("timestamp").groupby("symbol").last().reset_index() 
     
-    # Internal call to the FastAPI logic
-    try:
-        data = get_flightroute_details(flight_date)
-        return html.Pre(str(data))
-    except Exception as e:
-        return f"Error: {str(e)}"
-
+    display_df = df.copy()
+    #display_df.columns = [c.replace('_', ' ').upper() for c in display_df.columns]
+    table = dbc.Table.from_dataframe(display_df[:120], striped=False, hover=True, responsive=True, borderless=True, className="text-light m-0", 
+        style={"backgroundColor": "transparent",  "--bs-table-bg": "transparent", "--bs-table-accent-bg": "transparent", "color": "white"}
+    )
+    return table
