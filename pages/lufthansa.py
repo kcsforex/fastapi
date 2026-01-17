@@ -181,8 +181,9 @@ layout = dbc.Container([
 
 def update_dashboard(n_intervals):
     conn = psycopg2.connect(DB_CONFIG)
-    df = pd.read_sql("SELECT * FROM lh_flights ORDER BY id DESC LIMIT 120", conn)
-    conn.close()
+    engine = create_engine(DB_CONFIG)
+    df = pd.read_sql("SELECT * FROM lh_flights ORDER BY id DESC LIMIT 120", engine)
+    #conn.close()
     if df.empty:
         return html.Div(
             "No data found",
