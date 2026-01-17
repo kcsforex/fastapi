@@ -199,4 +199,4 @@ def update_dashboard(n):
         style={"backgroundColor": "transparent",  "--bs-table-bg": "transparent", "--bs-table-accent-bg": "transparent", "color": "white"}
     )
 
-    return metrics_update, table
+    return table
