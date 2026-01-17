@@ -165,15 +165,7 @@ layout = dbc.Container([
     ], className="mb-4 mt-4"),
 
     # Control Section
-    html.Div([
-        dbc.Row([
-            dbc.Col([
-                dbc.Button("Refresh Table Data", id="search-btn", color="primary", className="w-100"),
-            ], width=3),
-            dbc.Col([
-                html.Div(id='metrics-update', className="text-info align-middle")
-            ], width=9)
-        ])
+    html.Div([id='metrics-update', className="text-info align-middle") 
     ], style=CARD_STYLE),
 
     # Data Table Section
@@ -192,11 +184,10 @@ layout = dbc.Container([
 @callback(
     Output("flight-output", "children"),
     Output("metrics-update", "children"),
-    Input("search-btn", "n_clicks"),
     Input("refresh-interval", "n_intervals"),
     prevent_initial_call=False
 )
-def update_flightdata(n_clicks, n_intervals):
+def update_flightdata(n_intervals):
    
         # Use SQLAlchemy or Psycopg2
         #engine = create_engine(DB_CONFIG)
