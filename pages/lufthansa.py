@@ -153,72 +153,50 @@ CARD_STYLE = {
     "backdrop-filter": "blur(10px)",
     "border-radius": "15px",
     "border": "1px solid rgba(255, 255, 255, 0.1)",
-    "padding": "20px",
-    "marginTop": "20px"
+    "padding": "20px"
 }
 
-# MERGED LAYOUT
 layout = dbc.Container([
     html.Div([
-        html.H2("Lufthansa Flight Tracker", className="text-light fw-bold mb-0"),
-        html.P("Real-time data from PostgreSQL", className="text-muted small"),
-    ], className="mb-4 mt-4"),
+        html.H2("Crypto Market Info", className="text-light fw-bold mb-0"),
+        html.P(id='metrics-update', className="text-muted small"),
+    ], className="mb-4"),
 
-    # Control Section
+    dcc.Interval(id='refresh', interval=60*1000), 
+
     html.Div([
-        html.H3(id='metrics-update', className="text-info align-middle") 
-    ], style=CARD_STYLE),
-
-    # Data Table Section
-    html.Div([
-        html.H5("Live Flight Data (Last 120)", className="text-light mb-3"),
-        dcc.Loading(
-            type="border",
-            children=html.Div(id="flight-output", style={"overflowX": "auto"})
-        )
-    ], style=CARD_STYLE),
-
-    dcc.Interval(id='refresh-interval', interval=60*1000), 
-    #dcc.Interval(id='refresh', interval=60*1000), 
+        html.H5("Execution Logs", className="text-light mb-3"),
+        html.Div(id='status-table-container', 
+            style={"height": "300px", "overflowY": "auto", "overflowX": "hidden", "backgroundColor": "transparent",  "fontSize": "12px"})
+    ], style=CARD_STYLE)
 
 ], fluid=True)
 
 @callback(
-    Output("flight-output", "children"),
-    Output("metrics-update", "children"),
-    Input("refresh-interval", "n_intervals"),
-    prevent_initial_call=False
+    [Output('metrics-update', 'children'),
+     Output('status-table-container', 'children')],
+    [Input('refresh', 'n_intervals')]
 )
-def update_flightdata(n):
-   
-        # Use SQLAlchemy or Psycopg2
-        #engine = create_engine(DB_CONFIG)
+
+def update_dashboard(n):
     conn = psycopg2.connect(DB_CONFIG)
-        # Assuming your table name is 'lh_flight' based on your API endpoint
-    df = pd.read_sql("SELECT * FROM lh_flights ORDER BY ingested_at DESC LIMIT 120", conn)
-        
+    df = pd.read_sql("SELECT * FROM lh_flights ORDER BY timestamp DESC LIMIT 120", conn)
+    conn.close()
     if df.empty:
-        return html.Div("No data found in database.", className="text-warning"), "Last checked: " + time.strftime("%H:%M:%S")
+        return dash.no_update, "No data found", {}, "No Data"
 
-        # Clean up columns for display (optional)
+    df["timestamp"] = pd.to_datetime(df["timestamp"],unit="ms", utc=True).dt.tz_convert("Europe/Budapest").dt.strftime("%Y-%m-%d %H:%M:%S")       
+    latest = df.sort_values("timestamp").groupby("symbol").last().reset_index() 
+
+    # 0. Update Timestamp
+    #metrics_update = f"Updated -> {latest["timestamp"].iloc[0]}"
+    # metrics_update = pd.to_datetime(latest.loc["btc", "timestamp"],unit="ms").strftime("%Y-%m-%d %H:%M")             
+  
+    # 3. Crypto Table
     display_df = df.copy()
-        
-        # Create Table
-    table = dbc.Table.from_dataframe(
-            display_df, 
-            striped=True, 
-            hover=True, 
-            responsive=True, 
-            borderless=True, 
-            className="text-light m-0", 
-            style={
-                "backgroundColor": "transparent", 
-                "--bs-table-bg": "transparent", 
-                "fontSize": "12px",
-                "color": "white"
-            }
-        )
-    update_time = f"Last update: {time.strftime('%H:%M:%S')}"
-    return table, update_time
+    #display_df.columns = [c.replace('_', ' ').upper() for c in display_df.columns]
+    table = dbc.Table.from_dataframe(display_df[:120], striped=False, hover=True, responsive=True, borderless=True, className="text-light m-0", 
+        style={"backgroundColor": "transparent",  "--bs-table-bg": "transparent", "--bs-table-accent-bg": "transparent", "color": "white"}
+    )
 
-
+    return metrics_update, table
