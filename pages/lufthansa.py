@@ -1,5 +1,7 @@
 # 2026.01.17  17.00
 import requests
+import psycopg2
+from sqlalchemy import create_engine
 from fastapi import FastAPI, APIRouter
 from fastapi.middleware.wsgi import WSGIMiddleware
 from dash import Dash, html, dcc, Input, Output, State,  callback
@@ -151,53 +153,80 @@ CARD_STYLE = {
     "backdrop-filter": "blur(10px)",
     "border-radius": "15px",
     "border": "1px solid rgba(255, 255, 255, 0.1)",
-    "padding": "20px"
+    "padding": "20px",
+    "marginTop": "20px"
 }
 
+# MERGED LAYOUT
 layout = dbc.Container([
     html.Div([
-        html.H2("Lufthansa Info", className="text-light fw-bold mb-0"),
-        html.P(id='metrics-update', className="text-muted small"),
-    ], className="mb-4"),
+        html.H2("Lufthansa Flight Tracker", className="text-light fw-bold mb-0"),
+        html.P("Real-time data from PostgreSQL", className="text-muted small"),
+    ], className="mb-4 mt-4"),
 
-    dcc.Interval(id='refresh', interval=60*1000), 
-
+    # Control Section
     html.Div([
-        html.H5("Execution Logs", className="text-light mb-3"),
-        html.Div(id='status-table-container', 
-            style={"height": "300px", "overflowY": "auto", "overflowX": "hidden", "backgroundColor": "transparent",  "fontSize": "12px"})
-    ], style=CARD_STYLE)
+        dbc.Row([
+            dbc.Col([
+                dbc.Button("Refresh Table Data", id="search-btn", color="primary", className="w-100"),
+            ], width=3),
+            dbc.Col([
+                html.Div(id='metrics-update', className="text-info align-middle")
+            ], width=9)
+        ])
+    ], style=CARD_STYLE),
 
-], fluid=True)
+    # Data Table Section
+    html.Div([
+        html.H5("Live Flight Data (Last 120)", className="text-light mb-3"),
+        dcc.Loading(
+            type="border",
+            children=html.Div(id="flight-output", style={"overflowX": "auto"})
+        )
+    ], style=CARD_STYLE),
 
-layout = dbc.Container([
-    html.H1("Lufthansa Flight Tracker", className="mt-4"),
-    dbc.Input(id="flight-input", placeholder="Enter Flight Number (e.g., LH400)", type="text"),
-    dbc.Button("Search", id="search-btn", color="primary", className="mt-2"),
-    html.Hr(),
-    html.Div(id="flight-output")
+    dcc.Interval(id='refresh-interval', interval=60*1000, n_intervals=0), 
+
 ], fluid=True)
 
 @callback(
     Output("flight-output", "children"),
+    Output("metrics-update", "children"),
     Input("search-btn", "n_clicks"),
-    State("flight-input", "value"),
-    prevent_initial_call=True
+    Input("refresh-interval", "n_intervals"),
+    prevent_initial_call=False
 )
+def update_flightdata(n_clicks, n_intervals):
+    try:
+        # Use SQLAlchemy or Psycopg2
+        engine = create_engine(DB_CONFIG)
+        # Assuming your table name is 'lh_flight' based on your API endpoint
+        df = pd.read_sql("SELECT * FROM lh_flight ORDER BY ingested_at DESC LIMIT 120", engine)
+        
+        if df.empty:
+            return html.Div("No data found in database.", className="text-warning"), "Last checked: " + time.strftime("%H:%M:%S")
 
-def update_flightdata(n_clicks, flight_date):
-    conn = psycopg2.connect(DB_CONFIG)
-    df = pd.read_sql("SELECT * FROM lh_flights ORDER BY timestamp DESC LIMIT 120", conn)
-    conn.close()
-    if df.empty:
-        return dash.no_update, "No data found", {}, "No Data"
+        # Clean up columns for display (optional)
+        display_df = df.copy()
+        
+        # Create Table
+        table = dbc.Table.from_dataframe(
+            display_df, 
+            striped=True, 
+            hover=True, 
+            responsive=True, 
+            borderless=True, 
+            className="text-light m-0", 
+            style={
+                "backgroundColor": "transparent", 
+                "--bs-table-bg": "transparent", 
+                "fontSize": "12px",
+                "color": "white"
+            }
+        )
+        
+        update_time = f"Last update: {time.strftime('%H:%M:%S')}"
+        return table, update_time
 
-    #df["timestamp"] = pd.to_datetime(df["timestamp"],unit="ms", utc=True).dt.tz_convert("Europe/Budapest").dt.strftime("%Y-%m-%d %H:%M:%S")       
-    #latest = df.sort_values("timestamp").groupby("symbol").last().reset_index() 
-    
-    display_df = df.copy()
-    #display_df.columns = [c.replace('_', ' ').upper() for c in display_df.columns]
-    table = dbc.Table.from_dataframe(display_df[:120], striped=False, hover=True, responsive=True, borderless=True, className="text-light m-0", 
-        style={"backgroundColor": "transparent",  "--bs-table-bg": "transparent", "--bs-table-accent-bg": "transparent", "color": "white"}
-    )
-    return table
+    except Exception as e:
+        return html.Div(f"Error: {str(e)}", className="text-danger"), "Error updating"
