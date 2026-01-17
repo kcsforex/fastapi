@@ -110,12 +110,11 @@ def update_dashboard(n):
     if df.empty:
         return dash.no_update, "No data found", {}, "No Data"
 
-    df["timestamp"] = pd.to_datetime(df["timestamp"],unit="ms", utc=True).dt.tz_convert("Europe/Budapest").dt.strftime("%Y-%m-%d %H:%M:%S")       
+    df["timestamp"] = df["timestamp"].dt.tz_localize("UTC").dt.tz_convert("Europe/Budapest").dt.strftime("%Y-%m-%d %H:%M:%S")     
     latest = df.sort_values("timestamp").groupby("symbol").last().reset_index() 
 
     # 0. Update Timestamp
     metrics_update = f"Updated -> {latest["timestamp"].iloc[0]}"
-    # metrics_update = pd.to_datetime(latest.loc["btc", "timestamp"],unit="ms").strftime("%Y-%m-%d %H:%M")
              
     # 1. Create Top Metrics (Quick visual check)
     metric_cols = [
@@ -129,13 +128,6 @@ def update_dashboard(n):
     for s in SYMBOLS[:6]
     ]
     metrics = dbc.Row(metric_cols, align="center")
-
-    # 2. Graph Styling
-    #chart_df = df[df["pair"] == "BTC/USDT"].sort_values("timestamp")
-    #fig = px.line(chart_df, x="timestamp", y="price", template="plotly_dark")    
-    #fig.update_traces(line_color='#00d1ff', line_width=3)
-    #fig.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', margin=dict(l=0, r=0, t=10, b=0), height=300,
-    #        xaxis=dict(showgrid=False), yaxis=dict(showgrid=True, gridcolor='rgba(255,255,255,0.05)'))
 
     chart_cols = []
     for symbol in SYMBOLS:
