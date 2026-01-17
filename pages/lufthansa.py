@@ -159,7 +159,7 @@ CARD_STYLE = {
 layout = dbc.Container([
     
     html.Div([
-        html.H2("Crypto Market Info", className="text-light fw-bold mb-0"),
+        html.H2("Lufthansa Flight Info", className="text-light fw-bold mb-0"),
         html.P(id='metrics-update1', className="text-muted small"),
     ], className="mb-4"),
 
@@ -189,7 +189,7 @@ def update_dashboard(n_intervals):
             className="text-light fst-italic"
         )
 
-    #df["timestamp"] = pd.to_datetime(df["timestamp"],unit="ms", utc=True).dt.tz_convert("Europe/Budapest").dt.strftime("%Y-%m-%d %H:%M:%S")       
+    df["ingested_at"] = pd.to_datetime(df["ingested_at"],unit="ms", utc=True).dt.tz_convert("Europe/Budapest").dt.strftime("%Y-%m-%d %H:%M:%S")       
     #latest = df.sort_values("timestamp").groupby("symbol").last().reset_index() 
 
     # 0. Update Timestamp
