@@ -165,7 +165,8 @@ layout = dbc.Container([
     ], className="mb-4 mt-4"),
 
     # Control Section
-    html.Div([id='metrics-update', className="text-info align-middle") 
+    html.Div([
+        html.H3(id='metrics-update', className="text-info align-middle") 
     ], style=CARD_STYLE),
 
     # Data Table Section
