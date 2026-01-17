@@ -166,14 +166,14 @@ layout = dbc.Container([
 
     html.Div([
         html.H5("Execution Logs", className="text-light mb-3"),
-        html.Div(id='status-table-container', 
+        html.Div(id='status-table-container1', 
             style={"height": "300px", "overflowY": "auto", "overflowX": "hidden", "backgroundColor": "transparent",  "fontSize": "12px"})
     ], style=CARD_STYLE)
 
 ], fluid=True)
 
 @callback(
-    [Output('status-table-container', 'children')],
+    [Output('status-table-container1', 'children')],
     [Input('refresh', 'n_intervals')]
 )
 
