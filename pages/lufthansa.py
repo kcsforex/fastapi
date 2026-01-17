@@ -160,7 +160,7 @@ layout = dbc.Container([
     
     html.Div([
         html.H2("Crypto Market Info", className="text-light fw-bold mb-0"),
-        html.P(id='metrics-update', className="text-muted small"),
+        html.P(id='metrics-update1', className="text-muted small"),
     ], className="mb-4"),
 
     dcc.Interval(id='refresh', interval=60*1000), 
@@ -174,7 +174,7 @@ layout = dbc.Container([
 ], fluid=True)
 
 @callback(
-    [Output('metrics-update', 'children'),
+    [Output('metrics-update1', 'children'),
     Output('status-table-container1', 'children')],
     [Input('refresh', 'n_intervals')]
 )
@@ -203,4 +203,5 @@ def update_dashboard(n_intervals):
         style={"backgroundColor": "transparent",  "--bs-table-bg": "transparent", "--bs-table-accent-bg": "transparent", "color": "white"}
     )
 
-    return table
+    update_time = f"Last update: {time.strftime('%H:%M:%S')}"
+    return table, update_time
