@@ -112,6 +112,8 @@ def update_dashboard(n_intervals):
 
     #df["timestamp"] = pd.to_datetime(df["timestamp"])
     #df["timestamp"] = df["timestamp"].dt.tz_localize("UTC").dt.tz_convert("Europe/Budapest").dt.strftime("%Y-%m-%d %H:%M:%S") 
+
+    df["timestamp"] = pd.to_numeric(df["timestamp"], errors='coerce')          
     df["timestamp"] = pd.to_datetime(df["timestamp"],unit="ms", utc=True).dt.tz_convert("Europe/Budapest").dt.strftime("%Y-%m-%d %H:%M:%S")   
     latest = df.sort_values("timestamp").groupby("symbol").last().reset_index() 
 
