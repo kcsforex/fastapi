@@ -1,4 +1,4 @@
-# 2025.01.15  14.00
+# 2025.01.17  18.00
 import pandas as pd
 import ccxt
 from datetime import datetime
@@ -100,16 +100,18 @@ layout = dbc.Container([
     [Output('metrics-update', 'children'),
     Output('metrics-container', 'children'), 
      Output('status-table-container', 'children'), 
-     Output('charts-grid', 'children')], # Changed output to the grid
+     Output('charts-grid', 'children')],
     [Input('refresh', 'n_intervals')]
 )
 
-def update_dashboard(n):
-    conn = psycopg2.connect(DB_CONFIG)
+def update_dashboard(n_intervals):
+
+    with sql_engine.connect() as conn:
     df = pd.read_sql("SELECT * FROM status_crypto_logs ORDER BY timestamp DESC LIMIT 120", conn)
-    conn.close()
+
     if df.empty:
-        return dash.no_update, "No data found", {}, "No Data"
+        return html.Div("No data found", className="text-light fst-italic")
+        #return dash.no_update, "No data found", {}, "No Data"    
 
     df["timestamp"] = df["timestamp"].dt.tz_localize("UTC").dt.tz_convert("Europe/Budapest").dt.strftime("%Y-%m-%d %H:%M:%S")     
     latest = df.sort_values("timestamp").groupby("symbol").last().reset_index() 
