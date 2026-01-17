@@ -82,9 +82,6 @@ layout = dbc.Container([
     dcc.Interval(id='refresh', interval=60*1000), 
 
     html.Div(id='metrics-container', className="mb-4"),
-    # gx-1 → small horizontal gutter
-    # gy-2 → moderate vertical gutter
-    # mb-2 → smaller bottom margin
 
     dbc.Row(id='charts-grid', className="g-3 mb-3"),
 
