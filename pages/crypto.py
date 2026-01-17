@@ -107,7 +107,7 @@ layout = dbc.Container([
 def update_dashboard(n_intervals):
 
     with sql_engine.connect() as conn:
-    df = pd.read_sql("SELECT * FROM status_crypto_logs ORDER BY timestamp DESC LIMIT 120", conn)
+        df = pd.read_sql("SELECT * FROM status_crypto_logs ORDER BY timestamp DESC LIMIT 120", conn)
 
     if df.empty:
         return html.Div("No data found", className="text-light fst-italic")
