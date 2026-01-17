@@ -178,7 +178,8 @@ layout = dbc.Container([
         )
     ], style=CARD_STYLE),
 
-    dcc.Interval(id='refresh-interval', interval=60*1000, n_intervals=0), 
+    dcc.Interval(id='refresh-interval', interval=60*1000), 
+    #dcc.Interval(id='refresh', interval=60*1000), 
 
 ], fluid=True)
 
@@ -188,7 +189,7 @@ layout = dbc.Container([
     Input("refresh-interval", "n_intervals"),
     prevent_initial_call=False
 )
-def update_flightdata(n_intervals):
+def update_flightdata(n):
    
         # Use SQLAlchemy or Psycopg2
         #engine = create_engine(DB_CONFIG)
