@@ -1,6 +1,5 @@
 # 2026.01.17  17.00
 import requests
-import psycopg2
 from sqlalchemy import create_engine
 from fastapi import FastAPI, APIRouter
 from fastapi.middleware.wsgi import WSGIMiddleware
@@ -182,7 +181,7 @@ layout = dbc.Container([
 
 def update_dashboard(n_intervals):
     
-    with engine.connect() as conn:
+    with sql_engine.connect() as conn:
         df = pd.read_sql("SELECT * FROM lh_flights ORDER BY id DESC LIMIT 120", conn)
 
     if df.empty:
@@ -195,7 +194,6 @@ def update_dashboard(n_intervals):
   
     # 3. Crypto Table
     display_df = df.copy()
-    display_df.columns = [c.replace('_', ' ').upper() for c in display_df.columns]
     table = dbc.Table.from_dataframe(display_df[:120], striped=False, hover=True, responsive=True, borderless=True, className="text-light m-0", 
         style={"backgroundColor": "transparent",  "--bs-table-bg": "transparent", "--bs-table-accent-bg": "transparent", "color": "white"}
     )
