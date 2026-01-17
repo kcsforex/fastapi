@@ -187,9 +187,16 @@ layout = dbc.Container([
     prevent_initial_call=True
 )
 
-def update_output(n_clicks, flight_date):
-    if not flight_date:
-        return "Please enter a flight date."
+def update_flightdata(n_clicks, flight_date)
+:
+    conn = psycopg2.connect(DB_CONFIG)
+    df = pd.read_sql("SELECT * FROM status_crypto_logs ORDER BY timestamp DESC LIMIT 120", conn)
+    conn.close()
+    if df.empty:
+        return dash.no_update, "No data found", {}, "No Data"
+
+    df["timestamp"] = pd.to_datetime(df["timestamp"],unit="ms", utc=True).dt.tz_convert("Europe/Budapest").dt.strftime("%Y-%m-%d %H:%M:%S")       
+    latest = df.sort_values("timestamp").groupby("symbol").last().reset_index() 
     
     # Internal call to the FastAPI logic
     try:
