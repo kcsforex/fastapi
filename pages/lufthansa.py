@@ -200,21 +200,21 @@ layout = dbc.Container([
     prevent_initial_call=False
 )
 def update_flightdata(n_clicks, n_intervals):
-    try:
+   
         # Use SQLAlchemy or Psycopg2
         #engine = create_engine(DB_CONFIG)
-        conn = psycopg2.connect(DB_CONFIG)
+    conn = psycopg2.connect(DB_CONFIG)
         # Assuming your table name is 'lh_flight' based on your API endpoint
-        df = pd.read_sql("SELECT * FROM lh_flights ORDER BY ingested_at DESC LIMIT 120", conn)
+    df = pd.read_sql("SELECT * FROM lh_flights ORDER BY ingested_at DESC LIMIT 120", conn)
         
-        if df.empty:
-            return html.Div("No data found in database.", className="text-warning"), "Last checked: " + time.strftime("%H:%M:%S")
+    if df.empty:
+        return html.Div("No data found in database.", className="text-warning"), "Last checked: " + time.strftime("%H:%M:%S")
 
         # Clean up columns for display (optional)
-        display_df = df.copy()
+    display_df = df.copy()
         
         # Create Table
-        table = dbc.Table.from_dataframe(
+    table = dbc.Table.from_dataframe(
             display_df, 
             striped=True, 
             hover=True, 
@@ -229,8 +229,7 @@ def update_flightdata(n_clicks, n_intervals):
             }
         )
         
-        update_time = f"Last update: {time.strftime('%H:%M:%S')}"
-        return table, update_time
+    update_time = f"Last update: {time.strftime('%H:%M:%S')}"
+    return table, update_time
 
-    except Exception as e:
-        return html.Div(f"Error: {str(e)}", className="text-danger"), "Error updating"
+
