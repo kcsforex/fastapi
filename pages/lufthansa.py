@@ -1,4 +1,4 @@
-# 2026.01.16  18.00
+# 2026.01.17  15.00
 import requests
 from fastapi import FastAPI, APIRouter
 from fastapi.middleware.wsgi import WSGIMiddleware
@@ -68,7 +68,7 @@ async def fetch_route(client, token, origin, dest, flight_date, sem):
 @router.get("/lh_flight/{flight_date}")
 async def get_flightroute_details(flight_date: str):
     
-    token = 'vph5p8hm845j9fj5qhvxsr7h' #get_lufthansa_token()
+    token = get_lufthansa_token()
 
     ROUTES_FULL = [
     # FRA Routes - Long Haul
