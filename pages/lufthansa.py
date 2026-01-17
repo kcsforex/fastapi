@@ -178,11 +178,14 @@ layout = dbc.Container([
 )
 
 def update_dashboard(n):
-    conn1 = psycopg2.connect(DB_CONFIG)
-    df = pd.read_sql("SELECT * FROM lh_flights ORDER BY id DESC LIMIT 120", conn1)
-    conn1.close()
+    conn = psycopg2.connect(DB_CONFIG)
+    df = pd.read_sql("SELECT * FROM lh_flights ORDER BY id DESC LIMIT 120", conn)
+    conn.close()
     if df.empty:
-        return dash.no_update, "No data found", {}, "No Data"
+        return html.Div(
+            "No data found",
+            className="text-light fst-italic"
+        )
 
     #df["timestamp"] = pd.to_datetime(df["timestamp"],unit="ms", utc=True).dt.tz_convert("Europe/Budapest").dt.strftime("%Y-%m-%d %H:%M:%S")       
     #latest = df.sort_values("timestamp").groupby("symbol").last().reset_index() 
