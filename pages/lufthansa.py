@@ -171,32 +171,3 @@ layout = dbc.Container([
     ], style=CARD_STYLE)
 
 ], fluid=True)
-
-@callback(
-    [Output('metrics-update', 'children'),
-     Output('status-table-container', 'children')],
-    [Input('refresh', 'n_intervals')]
-)
-
-def update_dashboard(n):
-    conn = psycopg2.connect(DB_CONFIG)
-    df = pd.read_sql("SELECT * FROM lh_flights ORDER BY timestamp DESC LIMIT 120", conn)
-    conn.close()
-    if df.empty:
-        return dash.no_update, "No data found", {}, "No Data"
-
-    df["timestamp"] = pd.to_datetime(df["timestamp"],unit="ms", utc=True).dt.tz_convert("Europe/Budapest").dt.strftime("%Y-%m-%d %H:%M:%S")       
-    latest = df.sort_values("timestamp").groupby("symbol").last().reset_index() 
-
-    # 0. Update Timestamp
-    #metrics_update = f"Updated -> {latest["timestamp"].iloc[0]}"
-    # metrics_update = pd.to_datetime(latest.loc["btc", "timestamp"],unit="ms").strftime("%Y-%m-%d %H:%M")             
-  
-    # 3. Crypto Table
-    display_df = df.copy()
-    #display_df.columns = [c.replace('_', ' ').upper() for c in display_df.columns]
-    table = dbc.Table.from_dataframe(display_df[:120], striped=False, hover=True, responsive=True, borderless=True, className="text-light m-0", 
-        style={"backgroundColor": "transparent",  "--bs-table-bg": "transparent", "--bs-table-accent-bg": "transparent", "color": "white"}
-    )
-
-    return metrics_update, table
