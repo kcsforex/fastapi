@@ -188,8 +188,9 @@ def update_dashboard(n_intervals):
         return html.Div("No data found", className="text-light fst-italic")
 
     #df["ingested_at"] = pd.to_datetime(df["ingested_at"],unit="ms", utc=True).dt.tz_convert("Europe/Budapest").dt.strftime("%Y-%m-%d %H:%M:%S")  
-    df["ingested_at"] = pd.to_datetime(df["ingested_at"])
-    df["ingested_at"] = df["ingested_at"].dt.tz_convert("Europe/Budapest").dt.strftime("%Y-%m-%d %H:%M:%S")
+    #df["ingested_at"] = pd.to_datetime(df["ingested_at"])
+    df["ingested_at"] = df["ingested_at"].dt.tz_localize("UTC").dt.tz_convert("Europe/Budapest").dt.strftime("%Y-%m-%d %H:%M:%S")
+    #df["ingested_at"] = df["ingested_at"].dt.tz_convert("Europe/Budapest").dt.strftime("%Y-%m-%d %H:%M:%S")
 
     # 0. Update Timestamp
     metrics_update = f"Updated -> {df["ingested_at"].iloc[0]}"          
