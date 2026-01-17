@@ -202,9 +202,10 @@ layout = dbc.Container([
 def update_flightdata(n_clicks, n_intervals):
     try:
         # Use SQLAlchemy or Psycopg2
-        engine = create_engine(DB_CONFIG)
+        #engine = create_engine(DB_CONFIG)
+        conn = psycopg2.connect(DB_CONFIG)
         # Assuming your table name is 'lh_flight' based on your API endpoint
-        df = pd.read_sql("SELECT * FROM lh_flights ORDER BY ingested_at DESC LIMIT 120", engine)
+        df = pd.read_sql("SELECT * FROM lh_flights ORDER BY ingested_at DESC LIMIT 120", conn)
         
         if df.empty:
             return html.Div("No data found in database.", className="text-warning"), "Last checked: " + time.strftime("%H:%M:%S")
