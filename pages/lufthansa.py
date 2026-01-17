@@ -145,6 +145,33 @@ async def get_flightroute_details(flight_date: str):
 # --- Dash UI Setup ---
 dash.register_page(__name__, icon="fa-coins", name="Lufthansa")
 
+# Glassmorphism Card Style
+CARD_STYLE = {
+    "background": "rgba(255, 255, 255, 0.03)",
+    "backdrop-filter": "blur(10px)",
+    "border-radius": "15px",
+    "border": "1px solid rgba(255, 255, 255, 0.1)",
+    "padding": "20px"
+}
+
+layout = dbc.Container([
+    html.Div([
+        html.H2("Éufthansa Info", className="text-light fw-bold mb-0"),
+        html.P(id='metrics-update', className="text-muted small"),
+    ], className="mb-4"),
+
+    dcc.Interval(id='refresh', interval=60*1000), 
+
+    dbc.Row(id='charts-grid', className="g-3 mb-3"),
+
+    html.Div([
+        html.H5("Execution Logs", className="text-light mb-3"),
+        html.Div(id='status-table-container', 
+            style={"height": "300px", "overflowY": "auto", "overflowX": "hidden", "backgroundColor": "transparent",  "fontSize": "12px"})
+    ], style=CARD_STYLE)
+
+], fluid=True)
+
 layout = dbc.Container([
     html.H1("Lufthansa Flight Tracker", className="mt-4"),
     dbc.Input(id="flight-input", placeholder="Enter Flight Number (e.g., LH400)", type="text"),
