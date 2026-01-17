@@ -147,9 +147,6 @@ async def get_flightroute_details(flight_date: str):
 # --- Dash UI Setup ---
 dash.register_page(__name__, icon="fa-coins", name="Lufthansa")
 
-# --- Dash UI Setup ---
-dash.register_page(__name__, icon="fa-plane", name="Lufthansa")
-
 # Glassmorphism Card Style
 CARD_STYLE = {
     "background": "rgba(255, 255, 255, 0.03)",
