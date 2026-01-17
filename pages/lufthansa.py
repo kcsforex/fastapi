@@ -174,11 +174,12 @@ layout = dbc.Container([
 ], fluid=True)
 
 @callback(
-    Output('status-table-container1', 'children'),
-    Input('refresh', 'n_intervals')
+    [Output('metrics-update', 'children'),
+    Output('status-table-container1', 'children')],
+    [Input('refresh', 'n_intervals')]
 )
 
-def update_dashboard(n):
+def update_dashboard(n_intervals):
     conn = psycopg2.connect(DB_CONFIG)
     df = pd.read_sql("SELECT * FROM lh_flights ORDER BY id DESC LIMIT 120", conn)
     conn.close()
