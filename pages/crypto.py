@@ -7,7 +7,7 @@ from dash import dcc, html, dash_table, callback
 import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output
 import plotly.express as px
-from apis.crypto_api import sql_engine 
+from apis.crypto_api import sql_engine, SYMBOLS
 
 
 # ----- 3. THE FRONTEND (Dash Sidebar uses this) -----
