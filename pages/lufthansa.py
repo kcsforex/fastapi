@@ -53,7 +53,8 @@ def update_dashboard(n_intervals):
   
     table = dbc.Table.from_dataframe(
         df, striped=False, hover=True, responsive=True, borderless=True, 
-        className="text-light m-0", style={"backgroundColor": "transparent", "color": "white"}
+        className="text-light m-0",  
+        style={"backgroundColor": "transparent",  "--bs-table-bg": "transparent", "--bs-table-accent-bg": "transparent", "color": "white"}
     )
 
     return metrics_update, table
