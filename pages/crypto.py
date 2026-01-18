@@ -1,6 +1,5 @@
 # 2025.01.17  18.00
 import pandas as pd
-import ccxt
 from datetime import datetime
 from fastapi import APIRouter
 import dash
@@ -8,7 +7,7 @@ from dash import dcc, html, dash_table, callback
 import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output
 import plotly.express as px
-from sqlalchemy import create_engine
+from apis.crypto_api import sql_engine 
 
 
 # ----- 3. THE FRONTEND (Dash Sidebar uses this) -----
