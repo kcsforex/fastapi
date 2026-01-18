@@ -20,7 +20,7 @@ router = APIRouter()
 exchange = ccxt.bybit()
 
 @router.get("/bybit")
-def telegram():
+def bybit_data():
     
     timeframe = '5m'  # Match your trigger interval
     limit = 101  # Fetch 101 to get the SMA100 and the current candle   
