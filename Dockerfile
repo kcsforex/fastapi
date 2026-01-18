@@ -38,7 +38,7 @@ COPY pages/ml_databricks.py     pages/ml_databricks.py
 EXPOSE 8000
 
 # --- Try FastAPI /health first, then fallback to root ---
-HEALTHCHECK --interval=30s --timeout=3s --start-period=20s --retries=3 \
+HEALTHCHECK --interval=30s --timeout=3s --start-period=15s --retries=3 \
   CMD curl -fsS http://127.0.0.1:8000/health || curl -fsS http://127.0.0.1:8000/ || exit 1
 
 # --- Entrypoint (Make sure your main.py exposes 'server'---
