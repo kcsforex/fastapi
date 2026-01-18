@@ -59,7 +59,7 @@ def update_dashboard(n_intervals):
 
     # 2. Create the Chart Data (Daily Aggregation)
     # We group by the date part of the localized timestamp and count 'id'
-    daily_counts = df.groupby(df["ingested_at"].dt.date).size().reset_index(name='count')
+    daily_counts = df.groupby(df["departure_scheduled_date"]).size().reset_index(name='count')
     daily_counts.columns = ['Date', 'Flight Count']
 
     # 3. Build the Figure
