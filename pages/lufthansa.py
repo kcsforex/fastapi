@@ -74,7 +74,7 @@ def update_dashboard(n_intervals):
         paper_bgcolor='rgba(0,0,0,0)',
         margin=dict(l=20, r=20, t=10, b=20), height=250)
 
-    metrics_update = f"Updated -> {df["ingested_at"].iloc[0]}"
+    metrics_update = f"Updated -> {df["ingested_at"].iloc[-1]}"
 
     # 4. Table Formatting
     table = dbc.Table.from_dataframe(
