@@ -50,7 +50,7 @@ def update_dashboard(n_intervals):
 
     # 1. Date Processing
     df["ingested_at"] = pd.to_datetime(df["ingested_at"])  
-    df["ingested_at"] = df["ingested_at"].dt.tz_convert("Europe/Budapest").dt.strftime("%Y-%m-%d %H:%M:%S")
+    df["ingested_at"] = df["ingested_at"].dt.tz_convert("Europe/Budapest")
 
     # 2. Create the Chart Data (Daily Aggregation)
     # We group by the date part of the localized timestamp and count 'id'
@@ -65,7 +65,8 @@ def update_dashboard(n_intervals):
         paper_bgcolor='rgba(0,0,0,0)',
         margin=dict(l=20, r=20, t=10, b=20), height=250)
 
-    metrics_update = f"Updated -> {df['ingested_at'].iloc[0]}"          
+    display_time = df["ingested_at_local"].dt.strftime("%Y-%m-%d %H:%M:%S")
+    metrics_update = f"Updated -> {display_time.iloc[0]}"
 
     # 4. Table Formatting
     table = dbc.Table.from_dataframe(
