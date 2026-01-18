@@ -48,7 +48,13 @@ def update_dashboard(n_intervals):
     if df.empty:
         return "No data found", html.Div("No data found", className="text-light fst-italic")
 
-    df["ingested_at"] = pd.to_datetime(df["ingested_at"])    
+    # 1. Date Processing
+    df["ingested_at"] = pd.to_datetime(df["ingested_at"])
+    
+    if df["ingested_at"].dt.tz is None:
+        df["ingested_at"] = df["ingested_at"].dt.tz_localize("UTC")
+    
+    #df["ingested_at_local"] = df["ingested_at"].dt.tz_convert("Europe/Budapest")  
     df["ingested_at"] = df["ingested_at"].dt.tz_convert("Europe/Budapest").dt.strftime("%Y-%m-%d %H:%M:%S")
 
     # 2. Create the Chart Data (Daily Aggregation)
