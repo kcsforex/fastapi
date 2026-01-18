@@ -44,7 +44,7 @@ layout = dbc.Container([
 )
 def update_dashboard(n_intervals):
     with sql_engine.connect() as conn:
-        df = pd.read_sql("SELECT * FROM lh_flights ORDER BY id DESC LIMIT 120", conn)
+        df = pd.read_sql("SELECT * FROM lh_flights ORDER BY id DESC", conn)
 
     if df.empty:
         return "No data found", html.Div("No data found", className="text-light fst-italic")
