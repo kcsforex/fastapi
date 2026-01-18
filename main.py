@@ -9,9 +9,7 @@ from fastapi.middleware.wsgi import WSGIMiddleware
 app = dash.Dash(__name__, use_pages=True, external_stylesheets=[dbc.themes.DARKLY, "https://use.fontawesome.com/releases/v5.15.4/css/all.css"])
 
 # ----- 2. NOW IMPORT YOUR PAGES -----
-# By importing them here, 'app' already exists when dash.register_page is called
 from pages import home, home0, crypto, crypto0,  ml_databricks, air_dataset, lufthansa
-#from apis.lufthansa_api import router as lufthansa_router
 import apis.lufthansa_api as lufthansa
 
 # ----- 3. FASTAPI WRAPPER -----
@@ -27,7 +25,6 @@ server.include_router(crypto.router,        prefix="/api/crypto",  tags=["Crypto
 server.include_router(ml_databricks.router, prefix="/api/ml_db",   tags=["Machine Learning"])
 server.include_router(air_dataset.router,   prefix="/api/flights", tags=["Flights"])
 server.include_router(lufthansa.router,     prefix="/api/lufthansa", tags=["Lufthansa"])
-#server.include_router(lufthansa_router, prefix="/api")
 
 # ----- 4. Mount Dash to FastAPI -----
 server.mount("/", WSGIMiddleware(app.server))
@@ -40,8 +37,7 @@ SIDEBAR_STYLE = {
     "backdrop-filter": "blur(15px)",
     "border-radius": "20px",
     "border": "1px solid rgba(255, 255, 255, 0.1)",
-    "box-shadow": "0 8px 32px 0 rgba(0, 0, 0, 0.5)",
-    "z-index": 1000,
+    "box-shadow": "0 8px 32px 0 rgba(0, 0, 0, 0.5)"
 }
 
 sidebar = html.Div([
