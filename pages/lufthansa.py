@@ -58,11 +58,7 @@ def update_dashboard(n_intervals):
     #df = df.drop_duplicates(subset=["departure_scheduled_date", "departure_scheduled_time", "route_key"], keep="first" )
 
     # 1. Date Processing
-    df["ingested_at"] = pd.to_datetime(df["ingested_at"])
-    
-    #if df["ingested_at"].dt.tz is None:
-    #    df["ingested_at"] = df["ingested_at"].dt.tz_localize("UTC")
-    
+    df["ingested_at"] = pd.to_datetime(df["ingested_at"])       
     df["ingested_at"] = df["ingested_at"].dt.tz_localize("UTC").dt.tz_convert("Europe/Budapest").dt.strftime("%Y-%m-%d %H:%M:%S")
 
     # 2. Create the Chart Data (Daily Aggregation)
@@ -78,7 +74,6 @@ def update_dashboard(n_intervals):
         paper_bgcolor='rgba(0,0,0,0)',
         margin=dict(l=20, r=20, t=10, b=20), height=250)
 
-    #display_time = df["ingested_at"].dt.strftime("%Y-%m-%d %H:%M:%S")
     metrics_update = f"Updated -> {df["ingested_at"].iloc[0]}"
 
     # 4. Table Formatting
