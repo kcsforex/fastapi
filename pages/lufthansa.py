@@ -49,17 +49,12 @@ def update_dashboard(n_intervals):
         return "No data found", html.Div("No data found", className="text-light fst-italic")
 
     # 1. Date Processing
-    df["ingested_at"] = pd.to_datetime(df["ingested_at"])
-    
-    if df["ingested_at"].dt.tz is None:
-        df["ingested_at"] = df["ingested_at"].dt.tz_localize("UTC")
-    
-    #df["ingested_at_local"] = df["ingested_at"].dt.tz_convert("Europe/Budapest")  
+    df["ingested_at"] = pd.to_datetime(df["ingested_at"])  
     df["ingested_at"] = df["ingested_at"].dt.tz_convert("Europe/Budapest").dt.strftime("%Y-%m-%d %H:%M:%S")
 
     # 2. Create the Chart Data (Daily Aggregation)
     # We group by the date part of the localized timestamp and count 'id'
-    daily_counts = df.groupby(df["ingested_at_local"].dt.date).size().reset_index(name='count')
+    daily_counts = df.groupby(df["ingested_at"].dt.date).size().reset_index(name='count')
     daily_counts.columns = ['Date', 'Flight Count']
 
     # 3. Build the Figure
