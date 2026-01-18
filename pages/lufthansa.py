@@ -44,10 +44,18 @@ layout = dbc.Container([
 )
 def update_dashboard(n_intervals):
     with sql_engine.connect() as conn:
-        df = pd.read_sql("SELECT * FROM lh_flights ORDER BY id DESC", conn)
+        #df = pd.read_sql("SELECT * FROM lh_flights ORDER BY id DESC", conn)
+        query = """
+            SELECT DISTINCT ON (departure_scheduled_date, departure_scheduled_time, route_key) * FROM lh_flights 
+            ORDER BY departure_scheduled_date, departure_scheduled_time, route_key, id DESC
+            """
+        df = pd.read_sql(query, conn)
 
     if df.empty:
         return "No data found", html.Div("No data found", className="text-light fst-italic")
+
+    # --- DELETE DUPLICATES HERE with pandas ---
+    #df = df.drop_duplicates(subset=["departure_scheduled_date", "departure_scheduled_time", "route_key"], keep="first" )
 
     # 1. Date Processing
     df["ingested_at"] = pd.to_datetime(df["ingested_at"])
