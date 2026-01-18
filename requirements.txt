@@ -5,6 +5,7 @@ dash-bootstrap-components
 pandas
 ccxt
 SQLAlchemy
+psycopg2-binary
 databricks-sql-connector
 pyarrow
 scikit-learn
