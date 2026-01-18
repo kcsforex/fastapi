@@ -4,7 +4,6 @@ dash
 dash-bootstrap-components
 pandas
 ccxt
-psycopg2-binary
 SQLAlchemy
 databricks-sql-connector
 pyarrow
