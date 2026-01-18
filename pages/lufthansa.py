@@ -3,6 +3,7 @@ import dash
 import pandas as pd
 from dash import html, dcc, Input, Output, callback
 import dash_bootstrap_components as dbc
+import plotly.express as px 
 from apis.lufthansa_api import sql_engine 
 
 dash.register_page(__name__, icon="fa-plane", name="Lufthansa Tracker")
