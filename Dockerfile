@@ -26,7 +26,8 @@ COPY pages/home0.py       pages/home0.py
 COPY pages/crypto.py      pages/crypto.py
 COPY pages/crypto0.py     pages/crypto0.py
 COPY pages/air_dataset.py pages/air_dataset.py
-COPY pages/lufthansa.py   pages/lufthansa.py
+COPY pages/lufthansa_api.py   pages/lufthansa_api.py
+COPY pages/lufthansa_dash.py   pages/lufthansa_dash.py
 COPY pages/ml_databricks.py     pages/ml_databricks.py
 
 # ---If you have other runtime files/folders, add them here ---
