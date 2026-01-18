@@ -78,7 +78,7 @@ def update_dashboard(n_intervals):
 
     # 4. Table Formatting
     table = dbc.Table.from_dataframe(
-        df[:120], striped=False, hover=True, responsive=True, borderless=True, 
+        df.iloc[:120, [1, 2, 3, 4, 6,10, 11, 13], striped=False, hover=True, responsive=True, borderless=True, 
         className="text-light m-0",  
         style={"backgroundColor": "transparent",  "--bs-table-bg": "transparent", "--bs-table-accent-bg": "transparent", "color": "white"}
     )
