@@ -11,7 +11,7 @@ app = dash.Dash(__name__, use_pages=True, external_stylesheets=[dbc.themes.DARKL
 # ----- 2. NOW IMPORT YOUR PAGES -----
 # By importing them here, 'app' already exists when dash.register_page is called
 from pages import home, home0, crypto, crypto0,  ml_databricks, air_dataset, lufthansa
-from ../apis/lufthansa_api import router as lufthansa_router
+from apis.lufthansa_api import router as lufthansa_router
 
 # ----- 3. FASTAPI WRAPPER -----
 server = FastAPI(title="Dash Main App")
