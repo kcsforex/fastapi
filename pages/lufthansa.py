@@ -60,8 +60,8 @@ def update_dashboard(n_intervals):
     # 1. Date Processing
     df["ingested_at"] = pd.to_datetime(df["ingested_at"])
     
-    #if df["ingested_at"].dt.tz is None:
-    #    df["ingested_at"] = df["ingested_at"].dt.tz_localize("UTC")
+    if df["ingested_at"].dt.tz is None:
+        df["ingested_at"] = df["ingested_at"].dt.tz_localize("UTC")
     
     df["ingested_at"] = df["ingested_at"].dt.tz_convert("Europe/Budapest")
 
