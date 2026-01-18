@@ -1,4 +1,4 @@
-# 2026.01.15  18.00
+# 2026.01.18  11.00
 import dash
 from dash import html, dcc
 import dash_bootstrap_components as dbc
@@ -11,6 +11,7 @@ app = dash.Dash(__name__, use_pages=True, external_stylesheets=[dbc.themes.DARKL
 # ----- 2. NOW IMPORT YOUR PAGES -----
 # By importing them here, 'app' already exists when dash.register_page is called
 from pages import home, home0, crypto, crypto0,  ml_databricks, air_dataset, lufthansa
+from lufthansa_api import router as lufthansa_router
 
 # ----- 3. FASTAPI WRAPPER -----
 server = FastAPI(title="Dash Main App")
@@ -24,7 +25,8 @@ def health():
 server.include_router(crypto.router,        prefix="/api/crypto",  tags=["Crypto"])
 server.include_router(ml_databricks.router, prefix="/api/ml_db",   tags=["Machine Learning"])
 server.include_router(air_dataset.router,   prefix="/api/flights", tags=["Flights"])
-server.include_router(lufthansa.router,     prefix="/api/lufthansa", tags=["Lufthansa"])
+#server.include_router(lufthansa.router,     prefix="/api/lufthansa", tags=["Lufthansa"])
+server.include_router(lufthansa_router, prefix="/api")
 
 # ----- 4. Mount Dash to FastAPI -----
 server.mount("/", WSGIMiddleware(app.server))
