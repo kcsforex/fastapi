@@ -22,9 +22,9 @@ def health():
     return {"status": "ok"}
 
 # ----- 3.2. API ROUTERS -----
-server.include_router(crypto.router,        prefix="/api/crypto",  tags=["Crypto"])
-server.include_router(ml_databricks.router, prefix="/api/ml_db",   tags=["Machine Learning"])
-server.include_router(air_dataset.router,   prefix="/api/airdata", tags=["Air Data"])
+server.include_router(crypto.router,        prefix="/api/crypto",    tags=["Crypto"])
+server.include_router(databricks.router,    prefix="/api/dbricks",   tags=["Machine Learning"])
+server.include_router(air_dataset.router,   prefix="/api/airdata",   tags=["Air Data"])
 server.include_router(lufthansa.router,     prefix="/api/lufthansa", tags=["Lufthansa"])
 
 # ----- 4. Mount Dash to FastAPI -----
