@@ -116,7 +116,7 @@ def run_ml_clicks(n, data):
         msg = "No data for ML"
         return msg, "-", "-", "-", "-"
 
-    df = pd.Dataframe(data)
+    df = pd.DataFrame(data)
     data_ml = lh_ml.prepare(df)
 
     # ---- ML PART ----
