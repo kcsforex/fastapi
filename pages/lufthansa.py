@@ -97,8 +97,8 @@ def update_dashboard(_):
 
     # ---- ML PART ----
     d = fml.prepare(df)
-    model, metrics_ml = fml.train_model(d)
-    pred_df = fml.predict_latest(model, d, n=12)
+    model, metrics_ml = lh_ml.train_model(d)
+    pred_df = lh_ml.predict_latest(model, d, n=15)
 
     ml_kpi = html.Div([
         html.Div(f"RMSE: {metrics_ml['rmse']:.1f} min"),
@@ -107,7 +107,7 @@ def update_dashboard(_):
     ])
 
     ml_table = dbc.Table.from_dataframe(pred_df, striped=False, hover=True, responsive=True, borderless=True, className="text-light m-0",
-        style={"height": "300px", "overflowY": "auto", "overflowX": "hidden",  "fontSize": "12px",
+        style={"height": "250px", "overflowY": "auto", "overflowX": "hidden",  "fontSize": "12px",
                "backgroundColor": "transparent",  "--bs-table-bg": "transparent", "--bs-table-accent-bg": "transparent"})
 
     return metrics, table, fig, ml_kpi, ml_table
