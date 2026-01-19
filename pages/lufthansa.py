@@ -93,9 +93,9 @@ def load_data_render(n_intervals):
         df = pd.read_sql(query, conn)
 
     if df.empty:
-        empty = html.Div("No data found", className="text-light fst-italic")
+        empty_div = html.Div("No data found", className="text-light fst-italic")
         empty_fig = go.Figure()
-        return "No data", empty, empty_fig, empty, empty
+        return "No data", empty_div, empty_fig, None
 
     # ---- Convert ingestion time ----
     df["ingested_at"] = pd.to_datetime(df["ingested_at"])
@@ -119,13 +119,13 @@ def load_data_render(n_intervals):
     return metrics_update1, table_logs, fig_daily, df_store
 
 @callback(
-        [Output('ml-status', 'children'),
+        outputs=[Output('ml-status', 'children'),
         Output('ml-kpi-lin', 'children'),
         Output('ml-kpi-log', 'children'),
         Output('ml-table-lin', 'children'),
         Output('ml-table-log', 'children')],
-        [Input('run-ml', 'n_clicks')],
-        [State('df_store','data')],
+        inputs=[Input('run-ml', 'n_clicks')],
+        state=[State('df_store','data')],
         prevent_initial_call=True)
     
 def run_ml_clicks(n_clicks, df_store):  
@@ -133,6 +133,8 @@ def run_ml_clicks(n_clicks, df_store):
         return no_update, no_update, no_update, no_update, no_update
 
     if not df_store:
+        msg = "No data"
+        empty = html.Div("-", classname="text-light")
         return msg, empty, empty,  empty, empty
 
     df = pd.Dataframe(df_store)
@@ -171,6 +173,6 @@ def run_ml_clicks(n_clicks, df_store):
         style={"height": "250px", "overflowY": "auto", "overflowX": "hidden",  "fontSize": "12px",
                "backgroundColor": "transparent",  "--bs-table-bg": "transparent", "--bs-table-accent-bg": "transparent"})
 
-    return ("ML ran just now.", lin_kpi, log_kpi, lin_table, log_table)
+    return "ML ran just now", lin_kpi, log_kpi, lin_table, log_table
 
     #return metrics, table, fig, ml_kpi, ml_table
