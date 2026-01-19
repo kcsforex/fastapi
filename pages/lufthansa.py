@@ -98,11 +98,8 @@ def update_dashboard(_):
     status_cols = [1, 2, 3, 4, 6, 10, 11, 13]
     status_cols = [c for c in status_cols if c < df.shape[1]]
 
-    table = dbc.Table.from_dataframe(
-        df.iloc[-100:, status_cols],
-        striped=False, hover=True, responsive=True, borderless=True,
-        className="text-light m-0"
-    )
+    table = dbc.Table.from_dataframe(df.iloc[-100:, status_cols], striped=False, hover=True, responsive=True, borderless=True,
+        className="text-light m-0", style={"backgroundColor": "transparent",  "--bs-table-bg": "transparent", "--bs-table-accent-bg": "transparent", "color": "white"})
 
     # ---- ML PART ----
     d = fml.prepare(df)
