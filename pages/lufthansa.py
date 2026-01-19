@@ -107,7 +107,7 @@ def load_data_render(_):
         Output('ml-table-lin', 'children'),
         Output('ml-table-log', 'children'),
         Input('run-ml', 'n_clicks'),
-        State('df_store','data'),
+        State('df-store','data'),
         prevent_initial_call=True)
     
 def run_ml_clicks(n_clicks, data):  
