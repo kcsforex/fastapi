@@ -28,6 +28,8 @@ layout = dbc.Container([
 
     dcc.Interval(id='refresh', interval=60000),
 
+    dcc.Store(id="df-store", storage_type="memory"),
+
     # -------- Original content -------
     html.Div([
         html.H5("Daily Ingestion Volume", className="text-light mb-3"),
@@ -75,15 +77,8 @@ layout = dbc.Container([
         Output('metrics-update1', 'children'),
         Output('status-table-container1', 'children'),
         Output('daily-count-chart', 'figure'),
-        Output('ml-status', 'children'),
-        Output('ml-kpi-lin', 'children'),
-        Output('ml-kpi-log', 'children'),
-        Output('ml-table-lin', 'children'),
-        Output('ml-table-log', 'children'),
-
-    ],
-    [Input('refresh', 'n_intervals'),
-     Input('run-ml', 'n_clicks')],
+        Output('df-store', 'data')],
+    [Input('refresh', 'n_intervals')],
     prevent_initial_call=False
 )
 def update_dashboard(_, run_clicks):
@@ -120,6 +115,19 @@ def update_dashboard(_, run_clicks):
     table_logs = dbc.Table.from_dataframe(df.iloc[-100:, status_cols], striped=False, hover=True, responsive=True, borderless=True,
         className="text-light m-0", style={"backgroundColor": "transparent",  "--bs-table-bg": "transparent", "--bs-table-accent-bg": "transparent", "color": "white"})
 
+    df_store = df.to_dict("records")
+    return metrics_update, table_logs, fig_daily, df_store
+
+    @callback(
+        outputs = [
+                    Output('ml-status', 'children'),
+        Output('ml-kpi-lin', 'children'),
+        Output('ml-kpi-log', 'children'),
+        Output('ml-table-lin', 'children'),
+        Output('ml-table-log', 'children')],
+        inputs=[Input('run-ml', 'n_clicks')],
+        state = [State('df_store','data')],
+        prevent_initial_call=False
     
     # 3) Only run ML when button is clicked
     if not run_clicks:
