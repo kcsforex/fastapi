@@ -97,7 +97,7 @@ def predict_linear(model, df: pd.DataFrame, n=15):
     return latest[[c for c in keep if c in latest.columns]]
 
 
-def predict_logistic(model, df: pd.DataFrame, n=15)
+def predict_logistic(model, df: pd.DataFrame, n=15):
     latest = df.sort_values("dep_sched", ascending=False).head(n).copy()
     X = latest[["dep_delay", "dep_hour", "dep_dow"]].copy()
     X = X.fillna({
@@ -110,6 +110,7 @@ def predict_logistic(model, df: pd.DataFrame, n=15)
 
     keep = ["id", "route_key", "dep_sched", "arr_sched", "pred_prob_delay", "pred_flag_delay"]
     return latest[[c for c in keep if c in latest.columns]]
+
 
 
 
