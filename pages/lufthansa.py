@@ -140,7 +140,7 @@ def update_dashboard(_, run_clicks):
     ])
 
 
-    ml_table = dbc.Table.from_dataframe(lin_, striped=False, hover=True, responsive=True, borderless=True, className="text-light m-0",
+    lin_table = dbc.Table.from_dataframe(lin_, striped=False, hover=True, responsive=True, borderless=True, className="text-light m-0",
         style={"height": "250px", "overflowY": "auto", "overflowX": "hidden",  "fontSize": "12px",
                "backgroundColor": "transparent",  "--bs-table-bg": "transparent", "--bs-table-accent-bg": "transparent"})
 
