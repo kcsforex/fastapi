@@ -9,7 +9,7 @@ from fastapi.middleware.wsgi import WSGIMiddleware
 app = dash.Dash(__name__, use_pages=True, external_stylesheets=[dbc.themes.DARKLY, "https://use.fontawesome.com/releases/v5.15.4/css/all.css"])
 
 # ----- 2. NOW IMPORT YOUR PAGES -----
-from pages import home, crypto,  ml_databricks, air_dataset, lufthansa
+from pages import home, crypto,  databricks, air_dataset, lufthansa
 import apis.lufthansa_api as lufthansa
 import apis.crypto_api as crypto
 
