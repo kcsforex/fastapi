@@ -86,7 +86,7 @@ layout = dbc.Container([
      Input('run-ml', 'n_clicks')],
     prevent_initial_call=False
 )
-def update_dashboard(_):
+def update_dashboard(_, run_clicks):
 
     # ---- Load SQL ----
     with sql_engine.connect() as conn:
