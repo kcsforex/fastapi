@@ -112,10 +112,7 @@ def update_dashboard(_):
         html.Div(f"R²:   {metrics_ml['r2']:.3f}"),
     ])
 
-    ml_table = dbc.Table.from_dataframe(
-        pred_df,
-        striped=False, hover=True, responsive=True, borderless=True,
-        className="text-light m-0", style={"fontSize": "12px"}
-    )
+    ml_table = dbc.Table.from_dataframe(pred_df, striped=False, hover=True, responsive=True, borderless=True, className="text-light m-0",
+        style={"height": "300px", "overflowY": "auto", "overflowX": "hidden", "backgroundColor": "transparent",  "fontSize": "12px"}))
 
     return metrics, table, fig, ml_kpi, ml_table
