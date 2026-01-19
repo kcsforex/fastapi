@@ -128,9 +128,9 @@ def update_dashboard(_):
                 no_update, no_update, no_update, no_update)
 
     # ---- ML PART ----
-    d = lh_ml.prepare(df)
-    model, metrics_ml = lh_ml.train_linear(d)
-    pred_lin_df = lh_ml.predict_latest_linear(model, d, n=15)
+    data = lh_ml.prepare(df)
+    model, metrics_ml = lh_ml.train_linear(data)
+    pred_lin_df = lh_ml.predict_linear(model, data, n=15)
 
     
     lin_kpi = html.Div([
@@ -146,8 +146,8 @@ def update_dashboard(_):
 
     
    # Logistic Regression
-    log_model, log_metrics = fml.train_logistic(data)
-    pred_log = fml.predict_latest_logistic(log_model, data, n=12)
+    log_model, log_metrics = lh_ml.train_logistic(data)
+    pred_log = lh_ml.predict_logistic(log_model, data, n=15)
 
     log_kpi = html.Div([
         html.Div(f"Accuracy:  {log_metrics['acc']:.3f}" if pd.notna(log_metrics['acc']) else "Accuracy: n/a"),
