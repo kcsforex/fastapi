@@ -116,7 +116,7 @@ def update_dashboard(_, run_clicks):
         className="text-light m-0", style={"backgroundColor": "transparent",  "--bs-table-bg": "transparent", "--bs-table-accent-bg": "transparent", "color": "white"})
 
     df_store = df.to_dict("records")
-    return metrics_update, table_logs, fig_daily, df_store
+    return metrics_update1, table_logs, fig_daily, df_store
 
 @callback(
         outputs = [
