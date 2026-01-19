@@ -37,15 +37,14 @@ layout = dbc.Container([
     html.Div([
         html.H5("Execution Logs", className="text-light mb-3"),
         html.Div(id='status-table-container1',
-            style={"height": "300px", "overflowY": "auto",
-                   "backgroundColor": "transparent", "fontSize": "12px"})
+            style={"height": "300px", "overflowY": "auto", "fontSize": "12px"})
     ], style=CARD_STYLE, className="mb-4"),
 
     # -------- NEW: ML linear regression -------
     html.Div([
         html.H5("ML Prediction (Linear Regression)", className="text-light mb-3"),
         html.Div(id="ml-kpi", className="text-light mb-3"),
-        html.Div(id="ml-table", className="text-light"),
+        html.Div(id="ml-table", className="text-light", style={"height": "300px", "overflowY": "auto"}),
     ], style=CARD_STYLE, className="mb-4")
 
 ], fluid=True)
