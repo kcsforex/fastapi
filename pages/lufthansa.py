@@ -82,15 +82,12 @@ def update_dashboard(_):
 
     # ---- Convert ingestion time ----
     df["ingested_at"] = pd.to_datetime(df["ingested_at"])
-    df["ingested_at"] = (df["ingested_at"]
-                         .dt.tz_localize("UTC")
-                         .dt.tz_convert("Europe/Budapest")
-                         .dt.strftime("%Y-%m-%d %H:%M:%S"))
+    df["ingested_at"] = (df["ingested_at"].dt.tz_localize("UTC").dt.tz_convert("Europe/Budapest").dt.strftime("%Y-%m-%d %H:%M:%S"))
 
     # ---- Build daily chart ----
     daily_counts = df.groupby(df["departure_scheduled_date"]).size().reset_index(name="count")
     fig = px.bar(daily_counts, x="departure_scheduled_date", y="count", template="plotly_dark")
-    fig.update_layout(height=260, margin=dict(l=20, r=20, t=10, b=10))
+    fig.update_layout(height=250,  plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)', margin=dict(l=20, r=20, t=10, b=10))
 
     metrics = f"Updated → {df['ingested_at'].iloc[-1]}"
 
