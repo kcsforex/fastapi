@@ -108,8 +108,8 @@ def update_dashboard(_, run_clicks):
 
     # ---- Build daily chart ----
     daily_counts = df.groupby(df["departure_scheduled_date"]).size().reset_index(name="count")
-    fig = px.bar(daily_counts, x="departure_scheduled_date", y="count", template="plotly_dark")
-    fig.update_layout(height=250,  plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)', margin=dict(l=20, r=20, t=10, b=10))
+    fig_daily = px.bar(daily_counts, x="departure_scheduled_date", y="count", template="plotly_dark")
+    fig_daily.update_layout(height=250,  plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)', margin=dict(l=20, r=20, t=10, b=10))
 
     metrics_update1 = f"Updated → {df['ingested_at'].iloc[-1]}"
 
@@ -117,7 +117,7 @@ def update_dashboard(_, run_clicks):
     status_cols = [1, 2, 3, 4, 6, 10, 11, 13]
     status_cols = [c for c in status_cols if c < df.shape[1]]
 
-    table = dbc.Table.from_dataframe(df.iloc[-100:, status_cols], striped=False, hover=True, responsive=True, borderless=True,
+    table_logs = dbc.Table.from_dataframe(df.iloc[-100:, status_cols], striped=False, hover=True, responsive=True, borderless=True,
         className="text-light m-0", style={"backgroundColor": "transparent",  "--bs-table-bg": "transparent", "--bs-table-accent-bg": "transparent", "color": "white"})
 
     
