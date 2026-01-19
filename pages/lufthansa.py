@@ -157,7 +157,7 @@ def update_dashboard(_):
     ])
 
     
-     log_table = dbc.Table.from_dataframe(
+    log_table = dbc.Table.from_dataframe(
         pred_log, striped=False, hover=True, responsive=True, borderless=True,
         className="text-light m-0", style={"fontSize": "12px"}
         )
