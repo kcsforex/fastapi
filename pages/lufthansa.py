@@ -1,4 +1,4 @@
-# 2026.01.18  18.00
+# 2026.01.19  12.00
 import dash
 import pandas as pd
 from dash import html, dcc, Input, Output, callback
@@ -23,17 +23,38 @@ layout = dbc.Container([
     ], className="mb-4"),
 
     dcc.Interval(id='refresh', interval=60*1000), 
+    dcc.Store(id='state_store', storage_type='memory'),
 
     html.Div([
         html.H5("Daily Ingestion Volume", className="text-light mb-3"),
         dcc.Graph(id='daily-count-chart', config={'displayModeBar': False})
     ], style=CARD_STYLE, className="mb-4"),
 
+    
+    # --- New: ML Insights ---
+    html.Div([
+        html.H5("ML Insights — Delay Modeling", className="text-light mb-3"),
+
+        dbc.Row([
+            dbc.Col(html.Div(id='reg-kpi', className="text-light"), md=6),
+            dbc.Col(html.Div(id='clf-kpi', className="text-light"), md=6),
+        ], className="mb-3"),
+
+        dbc.Row([
+            dbc.Col(dcc.Graph(id='reg_scatter', config={'displayModeBar': False}), md=6),
+            dbc.Col(dcc.Graph(id='clf_confusion', config={'displayModeBar': False}), md=6),
+        ], className="mb-3"),
+
+        html.Div(id='pred-table-container', className="text-light"),
+        ], style=CARD_STYLE, className="mb-4")
+    ], fluid=True),
+
+
     html.Div([
         html.H5("Execution Logs", className="text-light mb-3"),
         html.Div(id='status-table-container1', 
             style={"height": "300px", "overflowY": "auto", "backgroundColor": "transparent", "fontSize": "12px"})
-    ], style=CARD_STYLE)
+    ], style=CARD_STYLE), className="mb-4"
 ], fluid=True)
 
 @callback(
