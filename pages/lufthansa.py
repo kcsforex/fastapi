@@ -72,7 +72,7 @@ layout = dbc.Container([
 
 @callback(
     [
-        Output('metrics-update', 'children'),
+        Output('metrics-update1', 'children'),
         Output('status-table-container1', 'children'),
         Output('daily-count-chart', 'figure'),
         Output('ml-status', 'children'),
@@ -111,7 +111,7 @@ def update_dashboard(_, run_clicks):
     fig = px.bar(daily_counts, x="departure_scheduled_date", y="count", template="plotly_dark")
     fig.update_layout(height=250,  plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)', margin=dict(l=20, r=20, t=10, b=10))
 
-    metrics_update = f"Updated → {df['ingested_at'].iloc[-1]}"
+    metrics_update1 = f"Updated → {df['ingested_at'].iloc[-1]}"
 
     # ---- Logs table ----
     status_cols = [1, 2, 3, 4, 6, 10, 11, 13]
@@ -161,7 +161,7 @@ def update_dashboard(_, run_clicks):
         style={"height": "250px", "overflowY": "auto", "overflowX": "hidden",  "fontSize": "12px",
                "backgroundColor": "transparent",  "--bs-table-bg": "transparent", "--bs-table-accent-bg": "transparent"})
 
-    return (metrics_update, table_logs, fig_daily, "ML ran just now.",
+    return (metrics_update1, table_logs, fig_daily, "ML ran just now.",
             lin_kpi, log_kpi, lin_table, log_table)
 
     #return metrics, table, fig, ml_kpi, ml_table
