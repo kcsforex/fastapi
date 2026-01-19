@@ -130,7 +130,7 @@ def update_dashboard(_, run_clicks):
     # ---- ML PART ----
     data = lh_ml.prepare(df)
     lin_model, lin_metrics = lh_ml.train_linear(data)
-    pred_lin_df = lh_ml.predict_linear(lin_model, data, n=15)
+    pred_lin = lh_ml.predict_linear(lin_model, data, n=15)
 
     
     lin_kpi = html.Div([
