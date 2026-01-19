@@ -1,7 +1,4 @@
 # 2026.01.19  12.00
-
-# pages/lufthansa.py (simplified with linear regression)
-
 import dash
 import pandas as pd
 from dash import html, dcc, Input, Output, callback
@@ -10,7 +7,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 
 from apis.lufthansa_api import sql_engine
-import pages.flight_ml as fml     # <<--- ML MODULE
+import pages.lufthansa_ml as lh_ml   
 
 dash.register_page(__name__, icon="fa-plane", name="Lufthansa Tracker")
 
