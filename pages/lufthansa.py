@@ -1,7 +1,7 @@
 # 2026.01.19  15.00
 import dash
 import pandas as pd
-from dash import html, dcc, Input, Output, callback
+from dash import html, dcc, Input, Output, State, callback
 import dash_bootstrap_components as dbc
 import plotly.express as px
 import plotly.graph_objects as go
