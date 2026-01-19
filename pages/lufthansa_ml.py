@@ -86,7 +86,7 @@ def train_logistic(df: pd.DataFrame):
     
 
 # ---- Prediction table ----
-def predict_latest(model, df: pd.DataFrame, n=15):
+def predict_linear(model, df: pd.DataFrame, n=15):
     latest = df.sort_values("dep_sched", ascending=False).head(n)
     X = latest[["dep_delay", "dep_hour", "dep_dow"]] 
     X = X.fillna({"dep_delay": 0.0, "dep_hour": X["dep_hour"].median(), "dep_dow":  X["dep_dow"].median() }) 
@@ -97,7 +97,7 @@ def predict_latest(model, df: pd.DataFrame, n=15):
     return latest[[c for c in keep if c in latest.columns]]
 
 
-def predict_latest_logistic(model, df: pd.DataFrame, n: int = 12) -> pd.DataFrame:
+def predict_logistic(model, df: pd.DataFrame, n=15)
     latest = df.sort_values("dep_sched", ascending=False).head(n).copy()
     X = latest[["dep_delay", "dep_hour", "dep_dow"]].copy()
     X = X.fillna({
@@ -110,6 +110,7 @@ def predict_latest_logistic(model, df: pd.DataFrame, n: int = 12) -> pd.DataFram
 
     keep = ["id", "route_key", "dep_sched", "arr_sched", "pred_prob_delay", "pred_flag_delay"]
     return latest[[c for c in keep if c in latest.columns]]
+
 
 
 
