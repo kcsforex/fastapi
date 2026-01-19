@@ -24,6 +24,7 @@ COPY apis/crypto_api.py   apis/crypto_api.py
 COPY pages/air_dataset.py pages/air_dataset.py
 COPY pages/lufthansa.py     pages/lufthansa.py
 COPY apis/lufthansa_api.py  apis/lufthansa_api.py
+COPY pages/flight_ml.py     pages/flight_ml.py
 COPY pages/ml_databricks.py  pages/ml_databricks.py
 
 EXPOSE 8000
