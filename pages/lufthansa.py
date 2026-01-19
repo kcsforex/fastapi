@@ -136,6 +136,8 @@ def run_ml_clicks(n_clicks, df_store):
     if not df_store:
         return msg, empty, empty,  empty, empty
 
+    df = pd.Dataframe(df_store)
+
     # ---- ML PART ----
     data = lh_ml.prepare(df)
     lin_model, lin_metrics = lh_ml.train_linear(data)
@@ -170,7 +172,6 @@ def run_ml_clicks(n_clicks, df_store):
         style={"height": "250px", "overflowY": "auto", "overflowX": "hidden",  "fontSize": "12px",
                "backgroundColor": "transparent",  "--bs-table-bg": "transparent", "--bs-table-accent-bg": "transparent"})
 
-    return (metrics_update1, table_logs, fig_daily, "ML ran just now.",
-            lin_kpi, log_kpi, lin_table, log_table)
+    return ("ML ran just now.", lin_kpi, log_kpi, lin_table, log_table)
 
     #return metrics, table, fig, ml_kpi, ml_table
