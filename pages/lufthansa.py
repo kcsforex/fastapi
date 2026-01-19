@@ -113,6 +113,6 @@ def update_dashboard(_):
     ])
 
     ml_table = dbc.Table.from_dataframe(pred_df, striped=False, hover=True, responsive=True, borderless=True, className="text-light m-0",
-        style={"height": "300px", "overflowY": "auto", "overflowX": "hidden", "backgroundColor": "transparent",  "fontSize": "12px"}))
+        style={"height": "300px", "overflowY": "auto", "overflowX": "hidden", "backgroundColor": "transparent",  "fontSize": "12px"})
 
     return metrics, table, fig, ml_kpi, ml_table
