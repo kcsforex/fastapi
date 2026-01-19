@@ -90,7 +90,7 @@ def load_data_render(_):
     
     # ---- Build daily chart ----
     daily = df.groupby(df["departure_scheduled_date"]).size().reset_index(name="count")
-    fig = px.bar(daily_counts, x="departure_scheduled_date", y="count", template="plotly_dark")
+    fig = px.bar(daily, x="departure_scheduled_date", y="count", template="plotly_dark")
     fig.update_layout(height=250,  plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)', margin=dict(l=20, r=20, t=10, b=10))
 
     # ---- Logs table ----
