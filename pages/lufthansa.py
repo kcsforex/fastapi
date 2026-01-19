@@ -54,7 +54,8 @@ layout = dbc.Container([
         ], className="mb-3"),
 
         html.Div(id='pred-table-container', className="text-light"),
-        ], style=CARD_STYLE, className="mb-4"),
+        ], style=CARD_STYLE, className="mb-4")
+    ], fluid=True),
 
     # --- Your original execution logs ---
     html.Div([
