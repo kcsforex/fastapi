@@ -118,7 +118,7 @@ def update_dashboard(_, run_clicks):
     df_store = df.to_dict("records")
     return metrics_update, table_logs, fig_daily, df_store
 
-    @callback(
+@callback(
         outputs = [
                     Output('ml-status', 'children'),
         Output('ml-kpi-lin', 'children'),
@@ -129,11 +129,12 @@ def update_dashboard(_, run_clicks):
         state = [State('df_store','data')],
         prevent_initial_call=False
     
-    # 3) Only run ML when button is clicked
-    if not run_clicks:
-        # No ML until user presses the button
-        return (metrics_update, table_logs, fig_daily, "Click the button to run ML.",
-                no_update, no_update, no_update, no_update)
+def run_ml_clicks(n_clicks, df_store):  
+    if not n_clicks:
+        return no_update, no_update, no_update, no_update, no_update
+
+    if not df_store:
+        return msg, empty, empty,  empty, empty
 
     # ---- ML PART ----
     data = lh_ml.prepare(df)
