@@ -110,7 +110,7 @@ def load_data_render(_):
         State('df_store','data'),
         prevent_initial_call=True)
     
-def run_ml_clicks(n, data):  
+def run_ml_clicks(n_clicks, data):  
     
     if not data:
         msg = "No data for ML"
