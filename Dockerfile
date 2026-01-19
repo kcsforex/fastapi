@@ -1,4 +1,4 @@
-# 2026.01.15 18.00
+# 2026.01.19 12.00
 # syntax=docker/dockerfile:1.7-labs
 FROM python:3.12-slim
 
@@ -24,8 +24,8 @@ COPY apis/crypto_api.py   apis/crypto_api.py
 COPY pages/air_dataset.py pages/air_dataset.py
 COPY pages/lufthansa.py     pages/lufthansa.py
 COPY apis/lufthansa_api.py  apis/lufthansa_api.py
-COPY pages/flight_ml.py     pages/flight_ml.py
-COPY pages/ml_databricks.py  pages/ml_databricks.py
+COPY pages/lufthansa_ml.py     pages/lufthansa_ml.py
+COPY pages/databricks_ml.py  pages/databricks_ml.py
 
 EXPOSE 8000
 
