@@ -6,7 +6,8 @@ from fastapi import FastAPI
 from fastapi.middleware.wsgi import WSGIMiddleware
 
 # ----- 1. Initalize Dash -----
-app = dash.Dash(__name__, use_pages=True, external_stylesheets=[dbc.themes.DARKLY, "https://use.fontawesome.com/releases/v5.15.4/css/all.css"])
+app = dash.Dash(__name__, use_pages=True, suppress_callback_exceptions=True, 
+    external_stylesheets=[dbc.themes.DARKLY, "https://use.fontawesome.com/releases/v5.15.4/css/all.css"])
 
 # ----- 2. NOW IMPORT YOUR PAGES -----
 from pages import home, crypto,  databricks, air_dataset, lufthansa
