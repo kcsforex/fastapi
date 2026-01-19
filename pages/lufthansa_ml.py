@@ -1,5 +1,5 @@
 
-# flight_ml.py (minimal version)
+# 2026.01.19  12.00
 import pandas as pd
 import numpy as np
 from sklearn.linear_model import LinearRegression
@@ -52,5 +52,6 @@ def predict_latest(model, df: pd.DataFrame, n=15):
     X = latest[["dep_delay", "dep_hour", "dep_dow"]]
     latest["pred_delay"] = model.predict(X)
     return latest[["id", "route_key", "dep_sched", "arr_sched","arrival_delay", "pred_delay"]]
+
 
 
