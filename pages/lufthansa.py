@@ -140,7 +140,7 @@ def update_dashboard(_, run_clicks):
     ])
 
 
-    lin_table = dbc.Table.from_dataframe(lin_, striped=False, hover=True, responsive=True, borderless=True, className="text-light m-0",
+    lin_table = dbc.Table.from_dataframe(pred_lin, striped=False, hover=True, responsive=True, borderless=True, className="text-light m-0",
         style={"height": "250px", "overflowY": "auto", "overflowX": "hidden",  "fontSize": "12px",
                "backgroundColor": "transparent",  "--bs-table-bg": "transparent", "--bs-table-accent-bg": "transparent"})
 
@@ -157,9 +157,9 @@ def update_dashboard(_, run_clicks):
     ])
 
     
-    log_table = dbc.Table.from_dataframe(
-        pred_log, striped=False, hover=True, responsive=True, borderless=True,
-        className="text-light m-0", style={"fontSize": "12px"}
+    log_table = dbc.Table.from_dataframe(pred_log, striped=False, hover=True, responsive=True, borderless=True, className="text-light m-0",      
+        style={"height": "250px", "overflowY": "auto", "overflowX": "hidden",  "fontSize": "12px",
+               "backgroundColor": "transparent",  "--bs-table-bg": "transparent", "--bs-table-accent-bg": "transparent"})
         )
 
     return (metrics_update, table_logs, fig_daily, "ML ran just now.",
