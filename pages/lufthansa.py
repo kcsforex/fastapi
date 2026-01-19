@@ -84,7 +84,7 @@ layout = dbc.Container([
     [Input('refresh', 'n_intervals')],
     [dash.State('state_store', 'data')]
 )
-def update_dashboard(n_intervals):
+def update_dashboard(n_intervals, state):
     with sql_engine.connect() as conn:
         #df = pd.read_sql("SELECT * FROM lh_flights ORDER BY id DESC", conn)
         query = """
