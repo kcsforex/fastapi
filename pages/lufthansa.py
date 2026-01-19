@@ -126,7 +126,7 @@ def load_data_render(n_intervals):
         Output('ml-table-log', 'children')],
         [Input('run-ml', 'n_clicks')],
         [State('df_store','data')],
-        prevent_initial_call=False)
+        prevent_initial_call=True)
     
 def run_ml_clicks(n_clicks, df_store):  
     if not n_clicks:
