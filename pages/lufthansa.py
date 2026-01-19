@@ -127,7 +127,7 @@ def update_dashboard(_, run_clicks):
         Output('ml-table-log', 'children')],
         inputs=[Input('run-ml', 'n_clicks')],
         state = [State('df_store','data')],
-        prevent_initial_call=False
+        prevent_initial_call=False)
     
 def run_ml_clicks(n_clicks, df_store):  
     if not n_clicks:
