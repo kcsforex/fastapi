@@ -56,12 +56,19 @@ layout = dbc.Container([
         html.Div(id='pred-table-container', className="text-light"),
         ], style=CARD_STYLE, className="mb-4"),
 
+    # --- Your original execution logs ---
     html.Div([
         html.H5("Execution Logs", className="text-light mb-3"),
-        html.Div(id='status-table-container1', 
-            style={"height": "300px", "overflowY": "auto", "backgroundColor": "transparent", "fontSize": "12px"})
-    ], style=CARD_STYLE), className="mb-4"
-], fluid=True)
+        html.Div(
+            id='status-table-container1',
+            style={
+                "height": "300px",
+                "overflowY": "auto",
+                "backgroundColor": "transparent",
+                "fontSize": "12px"
+            }
+        )
+    ], style=CARD_STYLE, className="mb-4")
 
 @callback(
     [Output('metrics-update1', 'children'),
