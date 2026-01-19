@@ -95,7 +95,7 @@ def load_data_render(_):
 
     # ---- Logs table ----
     status_cols = [1, 2, 3, 4, 6, 10, 11, 13]
-    table_logs = dbc.Table.from_dataframe(df.iloc[-100:, status_cols], striped=False, hover=True, responsive=True, borderless=True,
+    table = dbc.Table.from_dataframe(df.iloc[-100:, status_cols], striped=False, hover=True, responsive=True, borderless=True,
         className="text-light m-0", style={"backgroundColor": "transparent",  "--bs-table-bg": "transparent", "--bs-table-accent-bg": "transparent", "color": "white"})
 
     return f"Updated → {df['ingested_at'].iloc[-1]}", table, fig, df.to_dict("records")
