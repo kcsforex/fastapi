@@ -78,7 +78,12 @@ def train_logistic(df: pd.DataFrame):
     }
     return model, metrics
 
+    #rmse = float(np.sqrt(mean_squared_error(y_te, pred)))
+    #mae  = float(mean_absolute_error(y_te, pred))
+    #r2   = float(r2_score(y_te, pred))
+    #return model, {"rmse": rmse, "mae": mae, "r2": r2}
 
+    
 
 # ---- Prediction table ----
 def predict_latest(model, df: pd.DataFrame, n=15):
@@ -86,7 +91,25 @@ def predict_latest(model, df: pd.DataFrame, n=15):
     X = latest[["dep_delay", "dep_hour", "dep_dow"]] 
     X = X.fillna({"dep_delay": 0.0, "dep_hour": X["dep_hour"].median(), "dep_dow":  X["dep_dow"].median() }) 
     latest["pred_delay"] = model.predict(X)
-    return latest[["id", "route_key", "dep_sched", "arr_sched","arrival_delay", "pred_delay"]]
+    #return latest[["id", "route_key", "dep_sched", "arr_sched","arrival_delay", "pred_delay"]]
+
+    keep = ["id", "route_key", "dep_sched", "arr_sched", "arrival_delay", "pred_delay"]
+    return latest[[c for c in keep if c in latest.columns]]
+
+
+def predict_latest_logistic(model, df: pd.DataFrame, n: int = 12) -> pd.DataFrame:
+    latest = df.sort_values("dep_sched", ascending=False).head(n).copy()
+    X = latest[["dep_delay", "dep_hour", "dep_dow"]].copy()
+    X = X.fillna({
+        "dep_delay": 0.0,
+        "dep_hour": X["dep_hour"].median(),
+        "dep_dow":  X["dep_dow"].median()
+    })
+    latest["pred_prob_delay"] = model.predict_proba(X)[:, 1]
+    latest["pred_flag_delay"] = (latest["pred_prob_delay"] >= 0.5).astype(int)
+
+    keep = ["id", "route_key", "dep_sched", "arr_sched", "pred_prob_delay", "pred_flag_delay"]
+    return latest[[c for c in keep if c in latest.columns]]
 
 
 
