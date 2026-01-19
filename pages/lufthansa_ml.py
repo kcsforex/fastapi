@@ -35,7 +35,7 @@ def prepare(df: pd.DataFrame) -> pd.DataFrame:
 def train_linear(df: pd.DataFrame):
     df = df.dropna(subset=["arrival_delay"]).copy()
 
-    X = df[["dep_delay", "dep_hour", "dep_dow", "departure_terminal_gate", "equipment_aircraftcode"]]
+    X = df[["dep_delay", "dep_hour", "dep_dow"]] # "departure_terminal_gate", "equipment_aircraftcode"]]
     y = df["arrival_delay"]
 
     X = X.fillna({"dep_delay": 0.0, "dep_hour": X["dep_hour"].median(), "dep_dow": X["dep_dow"].median()})
@@ -110,6 +110,7 @@ def predict_logistic(model, df: pd.DataFrame, n=15):
 
     keep = ["id", "route_key", "dep_sched", "arr_sched", "pred_prob_delay", "pred_flag_delay"]
     return latest[[c for c in keep if c in latest.columns]]
+
 
 
 
