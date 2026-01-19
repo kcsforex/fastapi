@@ -41,10 +41,30 @@ layout = dbc.Container([
     ], style=CARD_STYLE, className="mb-4"),
 
     # -------- NEW: ML linear regression -------
+    #html.Div([
+    #    html.H5("ML Prediction (Linear Regression)", className="text-light mb-3"),
+    #    html.Div(id="ml-kpi", className="text-light mb-3"),
+    #    html.Div(id="ml-table", className="text-light", style={"height": "300px", "overflowY": "auto"}),
+    #], style=CARD_STYLE, className="mb-4")
+
+
+ # New: ML controls + output
     html.Div([
-        html.H5("ML Prediction (Linear Regression)", className="text-light mb-3"),
-        html.Div(id="ml-kpi", className="text-light mb-3"),
-        html.Div(id="ml-table", className="text-light", style={"height": "300px", "overflowY": "auto"}),
+        html.Div([
+            html.H5("ML Modeling", className="text-light mb-2"),
+            dbc.Button("Run ML Prediction", id="run-ml", color="primary", size="sm", n_clicks=0),
+            html.Span(id="ml-status", className="text-muted small ms-2")
+        ], className="mb-3"),
+
+        dbc.Row([
+            dbc.Col(html.Div(id="ml-kpi-lin", className="text-light"), md=6),
+            dbc.Col(html.Div(id="ml-kpi-log", className="text-light"), md=6),
+        ], className="mb-3"),
+       
+        dbc.Row([
+            dbc.Col(html.Div(id="ml-table-lin", className="text-light"), md=6),
+            dbc.Col(html.Div(id="ml-table-log", className="text-light"), md=6),
+        ])
     ], style=CARD_STYLE, className="mb-4")
 
 ], fluid=True)
@@ -55,10 +75,16 @@ layout = dbc.Container([
         Output('metrics-update1', 'children'),
         Output('status-table-container1', 'children'),
         Output('daily-count-chart', 'figure'),
-        Output('ml-kpi', 'children'),
-        Output('ml-table', 'children'),
+        Output('ml-status', 'children'),
+        Output('ml-kpi-lin', 'children'),
+        Output('ml-kpi-log', 'children'),
+        Output('ml-table-lin', 'children'),
+        Output('ml-table-log', 'children'),
+
     ],
-    [Input('refresh', 'n_intervals')]
+    [Input('refresh', 'n_intervals'),
+     Input('run-ml', 'n_clicks')],
+    prevent_initial_call=False
 )
 def update_dashboard(_):
 
@@ -94,19 +120,49 @@ def update_dashboard(_):
     table = dbc.Table.from_dataframe(df.iloc[-100:, status_cols], striped=False, hover=True, responsive=True, borderless=True,
         className="text-light m-0", style={"backgroundColor": "transparent",  "--bs-table-bg": "transparent", "--bs-table-accent-bg": "transparent", "color": "white"})
 
+    
+    # 3) Only run ML when button is clicked
+    if not run_clicks:
+        # No ML until user presses the button
+        return (metrics_update, table_logs, fig_daily, "Click the button to run ML.",
+                no_update, no_update, no_update, no_update)
+
     # ---- ML PART ----
     d = lh_ml.prepare(df)
-    model, metrics_ml = lh_ml.train_model(d)
-    pred_df = lh_ml.predict_latest(model, d, n=15)
+    model, metrics_ml = lh_ml.train_linear(d)
+    pred_lin_df = lh_ml.predict_latest_linear(model, d, n=15)
 
-    ml_kpi = html.Div([
-        html.Div(f"RMSE: {metrics_ml['rmse']:.1f} min"),
-        html.Div(f"MAE:  {metrics_ml['mae']:.1f} min"),
-        html.Div(f"R²:   {metrics_ml['r2']:.3f}"),
+    
+    lin_kpi = html.Div([
+        html.Div(f"RMSE: {lin_metrics['rmse']:.1f} min" if pd.notna(lin_metrics['rmse']) else "RMSE: n/a"),
+        html.Div(f"MAE:  {lin_metrics['mae']:.1f} min" if pd.notna(lin_metrics['mae']) else "MAE: n/a"),
+        html.Div(f"R²:   {lin_metrics['r2']:.3f}" if pd.notna(lin_metrics['r2']) else "R²: n/a"),
     ])
 
-    ml_table = dbc.Table.from_dataframe(pred_df, striped=False, hover=True, responsive=True, borderless=True, className="text-light m-0",
+
+    ml_table = dbc.Table.from_dataframe(lin_, striped=False, hover=True, responsive=True, borderless=True, className="text-light m-0",
         style={"height": "250px", "overflowY": "auto", "overflowX": "hidden",  "fontSize": "12px",
                "backgroundColor": "transparent",  "--bs-table-bg": "transparent", "--bs-table-accent-bg": "transparent"})
 
-    return metrics, table, fig, ml_kpi, ml_table
+    
+   # Logistic Regression
+    log_model, log_metrics = fml.train_logistic(data)
+    pred_log = fml.predict_latest_logistic(log_model, data, n=12)
+
+    log_kpi = html.Div([
+        html.Div(f"Accuracy:  {log_metrics['acc']:.3f}" if pd.notna(log_metrics['acc']) else "Accuracy: n/a"),
+        html.Div(f"Precision: {log_metrics['prec']:.3f}" if pd.notna(log_metrics['prec']) else "Precision: n/a"),
+        html.Div(f"Recall:    {log_metrics['rec']:.3f}" if pd.notna(log_metrics['rec']) else "Recall: n/a"),
+        html.Div(f"F1:        {log_metrics['f1']:.3f}" if pd.notna(log_metrics['f1']) else "F1: n/a"),
+    ])
+
+    
+     log_table = dbc.Table.from_dataframe(
+        pred_log, striped=False, hover=True, responsive=True, borderless=True,
+        className="text-light m-0", style={"fontSize": "12px"}
+        )
+
+    return (metrics_update, table_logs, fig_daily, "ML ran just now.",
+            lin_kpi, log_kpi, lin_table, log_table)
+
+    #return metrics, table, fig, ml_kpi, ml_table
