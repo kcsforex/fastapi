@@ -14,10 +14,10 @@ def prepare(df: pd.DataFrame) -> pd.DataFrame:
     d = d.replace({"null": np.nan})
 
     # datetime parsing
-    d["dep_sched"] = pd.to_datetime(d["departure_scheduled_date"] + " " + d["departure_scheduled_time"], errors="coerce")
-    d["dep_actual"] = pd.to_datetime(d["departure_actual_date"] + " " + d["departure_actual_time"], errors="coerce")
-    d["arr_sched"] = pd.to_datetime(d["arrival_scheduled_date"] + " " + d["arrival_scheduled_time"], errors="coerce")
-    d["arr_actual"] = pd.to_datetime(d["arrival_actual_date"] + " " + d["arrival_actual_time"], errors="coerce")
+    d["dep_sched"] = pd.to_datetime(d["departure_scheduled_date"].astype(str) + " " + d["departure_scheduled_time"].astype(str), errors="coerce")
+    d["dep_actual"] = pd.to_datetime(d["departure_actual_date"].astype(str) + " " + d["departure_actual_time"].astype(str), errors="coerce")
+    d["arr_sched"] = pd.to_datetime(d["arrival_scheduled_date"].astype(str) + " " + d["arrival_scheduled_time"].astype(str), errors="coerce")
+    d["arr_actual"] = pd.to_datetime(d["arrival_actual_date"].astype(str) + " " + d["arrival_actual_time"].astype(str), errors="coerce")
 
     d["arrival_delay"] = (d["arr_actual"] - d["arr_sched"]).dt.total_seconds() / 60
     d["dep_delay"]     = (d["dep_actual"] - d["dep_sched"]).dt.total_seconds() / 60
@@ -63,3 +63,4 @@ def predict_latest(model, df: pd.DataFrame, n=15):
         "id", "route_key", "dep_sched", "arr_sched",
         "arrival_delay", "pred_delay"
     ]]
+
