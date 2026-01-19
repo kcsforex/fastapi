@@ -96,7 +96,7 @@ def update_dashboard(_):
         className="text-light m-0", style={"backgroundColor": "transparent",  "--bs-table-bg": "transparent", "--bs-table-accent-bg": "transparent", "color": "white"})
 
     # ---- ML PART ----
-    d = fml.prepare(df)
+    d = lh_ml.prepare(df)
     model, metrics_ml = lh_ml.train_model(d)
     pred_df = lh_ml.predict_latest(model, d, n=15)
 
