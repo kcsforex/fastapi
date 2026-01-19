@@ -16,10 +16,8 @@ from sklearn.pipeline import Pipeline
 from sklearn.impute import SimpleImputer
 from sklearn.linear_model import LinearRegression, LogisticRegression
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import (
-    mean_absolute_error, mean_squared_error, r2_score,
-    confusion_matrix, roc_auc_score
-)
+from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score, confusion_matrix, roc_auc_score
+
 
 # ---------- Feature config ----------
 FEATURE_COLS = [
@@ -163,7 +161,7 @@ def train_models(
     yr_pred = reg_pipe.predict(Xr_test)
     reg_metrics = RegressionMetrics(
         mae=float(mean_absolute_error(yr_test, yr_pred)),
-        rmse=float(mean_squared_error(yr_test, yr_pred, squared=False)),
+        rmse=float(mean_squared_error(yr_test, yr_pred)),
         r2=float(r2_score(yr_test, yr_pred))
     )
 
@@ -195,3 +193,4 @@ def predict_latest(models: TrainedModels, data: pd.DataFrame, n_rows: int = 20, 
         "pred_delay_min", "pred_delay_prob", "pred_delay_flag"
     ]
     return recent[[c for c in keep if c in recent.columns]]
+
