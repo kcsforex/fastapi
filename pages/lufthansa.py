@@ -84,7 +84,9 @@ def load_data_render(_):
         return "No data", html.Div("No data", className="text-light"), go.Figure(), None
 
     # ---- Convert ingestion time ----
-     df["ingested_at"] = (pd.to_datetime(df["ingested_at"], utc=True).dt.tz_convert("Europe/Budapest").dt.strftime("%Y-%m-%d %H:%M:%S"))
+    df["ingested_at"] = pd.to_datetime(df["ingested_at"])
+    df["ingested_at"] = (df["ingested_at"].dt.tz_localize("UTC").dt.tz_convert("Europe/Budapest").dt.strftime("%Y-%m-%d %H:%M:%S"))
+
     
     # ---- Build daily chart ----
     daily = df.groupby(df["departure_scheduled_date"]).size().reset_index(name="count")
