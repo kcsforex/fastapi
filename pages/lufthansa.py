@@ -119,14 +119,13 @@ def load_data_render(n_intervals):
     return metrics_update1, table_logs, fig_daily, df_store
 
 @callback(
-        outputs = [
-                    Output('ml-status', 'children'),
+        [Output('ml-status', 'children'),
         Output('ml-kpi-lin', 'children'),
         Output('ml-kpi-log', 'children'),
         Output('ml-table-lin', 'children'),
         Output('ml-table-log', 'children')],
-        inputs=[Input('run-ml', 'n_clicks')],
-        state = [State('df_store','data')],
+        [Input('run-ml', 'n_clicks')],
+        [State('df_store','data')],
         prevent_initial_call=False)
     
 def run_ml_clicks(n_clicks, df_store):  
