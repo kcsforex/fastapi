@@ -2,7 +2,7 @@
 # 2026.01.19  15.00
 import pandas as pd
 import numpy as np
-from sklearn.linear_model import LinearRegression
+from sklearn.linear_model import LinearRegression, LogisticRegression
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error,  accuracy_score, precision_score, recall_score, f1_score
 
@@ -110,6 +110,7 @@ def predict_logistic(model, df: pd.DataFrame, n=15):
 
     keep = ["id", "route_key", "dep_sched", "arr_sched", "pred_prob_delay", "pred_flag_delay"]
     return latest[[c for c in keep if c in latest.columns]]
+
 
 
 
