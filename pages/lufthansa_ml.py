@@ -1,5 +1,5 @@
 
-# 2026.01.19  15.00
+# 2026.01.19  18.00
 import pandas as pd
 import numpy as np
 from sklearn.linear_model import LinearRegression, LogisticRegression
@@ -35,7 +35,7 @@ def prepare(df: pd.DataFrame) -> pd.DataFrame:
 def train_linear(df: pd.DataFrame):
     df = df.dropna(subset=["arrival_delay"]).copy()
 
-    X = df[["dep_delay", "dep_hour", "dep_dow"]] # "departure_terminal_gate", "equipment_aircraftcode"]]
+    X = df[["dep_delay", "dep_hour", "dep_dow"]].fillna(0) # "departure_terminal_gate", "equipment_aircraftcode"]]
     y = df["arrival_delay"]
 
     X = X.fillna({"dep_delay": 0.0, "dep_hour": X["dep_hour"].median(), "dep_dow": X["dep_dow"].median()})
@@ -44,77 +44,41 @@ def train_linear(df: pd.DataFrame):
     model = LinearRegression().fit(X_train, y_train)
     pred = model.predict(X_test)
 
-    metrics = {
+    return model, {
         "rmse": float(np.sqrt(mean_squared_error(y_test, pred))),
         "mae":  float(mean_absolute_error(y_test, pred)),
         "r2":   float(r2_score(y_test, pred))
     }
 
-    return model, metrics
-
-
 # --- Train logistic regression (delayed >=15m) ---
 def train_logistic(df: pd.DataFrame):
-    d = df.dropna(subset=["is_delayed"]).copy()
+    d = df.dropna(subset=["is_delayed"])
 
-    X = d[["dep_delay", "dep_hour", "dep_dow"]].copy()
+    #X = X.fillna({"dep_delay": 0.0, "dep_hour": X["dep_hour"].median(), "dep_dow":  X["dep_dow"].median()})
+    X = d[["dep_delay", "dep_hour", "dep_dow"]].fillna(0)
     y = d["is_delayed"].astype(int)
-
-    X = X.fillna({
-        "dep_delay": 0.0,
-        "dep_hour": X["dep_hour"].median(),
-        "dep_dow":  X["dep_dow"].median()
-    })
 
     X_tr, X_te, y_tr, y_te = train_test_split(X, y, test_size=0.25, random_state=42, stratify=y)
     model = LogisticRegression(max_iter=200, class_weight="balanced").fit(X_tr, y_tr)
     y_pred = model.predict(X_te)
 
-    metrics = {
+    return model, {
         "acc":  float(accuracy_score(y_te, y_pred)),
         "prec": float(precision_score(y_te, y_pred, zero_division=0)),
         "rec":  float(recall_score(y_te, y_pred, zero_division=0)),
         "f1":   float(f1_score(y_te, y_pred, zero_division=0)),
     }
-    return model, metrics
-
-    #rmse = float(np.sqrt(mean_squared_error(y_te, pred)))
-    #mae  = float(mean_absolute_error(y_te, pred))
-    #r2   = float(r2_score(y_te, pred))
-    #return model, {"rmse": rmse, "mae": mae, "r2": r2}
-
-    
 
 # ---- Prediction table ----
 def predict_linear(model, df: pd.DataFrame, n=15):
-    latest = df.sort_values("dep_sched", ascending=False).head(n)
-    X = latest[["dep_delay", "dep_hour", "dep_dow"]] 
-    X = X.fillna({"dep_delay": 0.0, "dep_hour": X["dep_hour"].median(), "dep_dow":  X["dep_dow"].median() }) 
+    latest = df.sort_values("dep_sched", ascending=False).head(n).copy()
+    X = latest[["dep_delay", "dep_hour", "dep_dow"]].fillna(0)
     latest["pred_delay"] = model.predict(X)
-    #return latest[["id", "route_key", "dep_sched", "arr_sched","arrival_delay", "pred_delay"]]
-
-    keep = ["id", "route_key", "dep_sched", "arr_sched", "arrival_delay", "pred_delay"]
-    return latest[[c for c in keep if c in latest.columns]]
-
+    return latest[["route_key", "dep_sched", "arrival_delay", "pred_delay"]]
 
 def predict_logistic(model, df: pd.DataFrame, n=15):
     latest = df.sort_values("dep_sched", ascending=False).head(n).copy()
-    X = latest[["dep_delay", "dep_hour", "dep_dow"]].copy()
-    X = X.fillna({
-        "dep_delay": 0.0,
-        "dep_hour": X["dep_hour"].median(),
-        "dep_dow":  X["dep_dow"].median()
-    })
+    X = latest[["dep_delay", "dep_hour", "dep_dow"]].fillna(0)
     latest["pred_prob_delay"] = model.predict_proba(X)[:, 1]
     latest["pred_flag_delay"] = (latest["pred_prob_delay"] >= 0.5).astype(int)
-
-    keep = ["id", "route_key", "dep_sched", "arr_sched", "pred_prob_delay", "pred_flag_delay"]
-    return latest[[c for c in keep if c in latest.columns]]
-
-
-
-
-
-
-
-
+    return latest[["route_key", "dep_sched", "pred_prob_delay", "pred_flag_delay"]]
