@@ -6,7 +6,7 @@ import dash_bootstrap_components as dbc
 import plotly.express as px 
 import plotly.graph_objects as go
 from apis.lufthansa_api import sql_engine 
-import flight_ml as fml
+from pages.flight_ml import fml
 
 dash.register_page(__name__, icon="fa-plane", name="Lufthansa Tracker")
 
