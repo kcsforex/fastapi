@@ -81,7 +81,7 @@ layout = dbc.Container([
     [Input('refresh', 'n_intervals')],
     prevent_initial_call=False
 )
-def update_dashboard(_, run_clicks):
+def load_data_render(n_intervals):
 
     # ---- Load SQL ----
     with sql_engine.connect() as conn:
