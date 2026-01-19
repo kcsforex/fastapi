@@ -1,13 +1,14 @@
 
-# 2026.01.19  12.00
+# 2026.01.19  15.00
 import pandas as pd
 import numpy as np
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
+from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error,  accuracy_score, precision_score, recall_score, f1_score
 
 # ---- Clean + feature engineering ----
 def prepare(df: pd.DataFrame) -> pd.DataFrame:
+    
     d = df.copy()
     d = d.replace({"null": np.nan})
 
@@ -16,26 +17,31 @@ def prepare(df: pd.DataFrame) -> pd.DataFrame:
     d["arr_sched"] = pd.to_datetime(d["arrival_scheduled_date"].astype(str) + " " + d["arrival_scheduled_time"].astype(str), errors="coerce")
     d["arr_actual"] = pd.to_datetime(d["arrival_actual_date"].astype(str) + " " + d["arrival_actual_time"].astype(str), errors="coerce")
 
+    # Targets
     d["arrival_delay"] = (d["arr_actual"] - d["arr_sched"]).dt.total_seconds() / 60
     d["dep_delay"]     = (d["dep_actual"] - d["dep_sched"]).dt.total_seconds() / 60
 
+    # Simple features
     d["dep_hour"] = d["dep_sched"].dt.hour
     d["dep_dow"]  = d["dep_sched"].dt.dayofweek
+    # departure_terminal_gate, equipment_aircraftcode
+
+    # Classification label: delayed >= 15 min
+    d["is_delayed"] = (d["arrival_delay"] >= 15).astype("Int64")  # allow NA
 
     return d
 
 # ---- Train simple linear regression ----
-def train_model(df: pd.DataFrame):
+def train_linear(df: pd.DataFrame):
     df = df.dropna(subset=["arrival_delay"]).copy()
 
-    X = df[["dep_delay", "dep_hour", "dep_dow"]]
+    X = df[["dep_delay", "dep_hour", "dep_dow", "departure_terminal_gate", "equipment_aircraftcode"]]
     y = df["arrival_delay"]
 
+    X = X.fillna({"dep_delay": 0.0, "dep_hour": X["dep_hour"].median(), "dep_dow": X["dep_dow"].median()})
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-    model = LinearRegression()
-    model.fit(X_train, y_train)
-
+    model = LinearRegression().fit(X_train, y_train)
     pred = model.predict(X_test)
 
     metrics = {
@@ -46,12 +52,42 @@ def train_model(df: pd.DataFrame):
 
     return model, metrics
 
+
+# --- Train logistic regression (delayed >=15m) ---
+def train_logistic(df: pd.DataFrame):
+    d = df.dropna(subset=["is_delayed"]).copy()
+
+    X = d[["dep_delay", "dep_hour", "dep_dow"]].copy()
+    y = d["is_delayed"].astype(int)
+
+    X = X.fillna({
+        "dep_delay": 0.0,
+        "dep_hour": X["dep_hour"].median(),
+        "dep_dow":  X["dep_dow"].median()
+    })
+
+    X_tr, X_te, y_tr, y_te = train_test_split(X, y, test_size=0.25, random_state=42, stratify=y)
+    model = LogisticRegression(max_iter=200, class_weight="balanced").fit(X_tr, y_tr)
+    y_pred = model.predict(X_te)
+
+    metrics = {
+        "acc":  float(accuracy_score(y_te, y_pred)),
+        "prec": float(precision_score(y_te, y_pred, zero_division=0)),
+        "rec":  float(recall_score(y_te, y_pred, zero_division=0)),
+        "f1":   float(f1_score(y_te, y_pred, zero_division=0)),
+    }
+    return model, metrics
+
+
+
 # ---- Prediction table ----
 def predict_latest(model, df: pd.DataFrame, n=15):
     latest = df.sort_values("dep_sched", ascending=False).head(n)
-    X = latest[["dep_delay", "dep_hour", "dep_dow"]]
+    X = latest[["dep_delay", "dep_hour", "dep_dow"]] 
+    X = X.fillna({"dep_delay": 0.0, "dep_hour": X["dep_hour"].median(), "dep_dow":  X["dep_dow"].median() }) 
     latest["pred_delay"] = model.predict(X)
     return latest[["id", "route_key", "dep_sched", "arr_sched","arrival_delay", "pred_delay"]]
+
 
 
 
