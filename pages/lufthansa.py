@@ -53,8 +53,7 @@ layout = dbc.Container([
         ], className="mb-3"),
        
         dbc.Row([
-            dbc.Col(html.Div(id="ml-table-lin", className="text-light"), md=6),
-            dbc.Col(html.Div(id="ml-table-log", className="text-light"), md=6),
+            dbc.Col(html.Div(id="lh-ml-table", className="text-light"))
         ])
     ], style=CARD_STYLE, className="mb-4")
 
@@ -103,8 +102,7 @@ def load_data_render(_):
         Output('ml-status', 'children'),
         Output('ml-kpi-lin', 'children'),
         Output('ml-kpi-log', 'children'),
-        Output('ml-table-lin', 'children'),
-        Output('ml-table-log', 'children'),
+        Output('lh-ml-table', 'children'),
         Input('run-ml', 'n_clicks'),
         State('lh-df-store','data'),
         prevent_initial_call=True)
@@ -118,7 +116,7 @@ def run_ml_clicks(n_clicks, data):
     df = pd.DataFrame(data)
     data_ml = lh_ml.prepare(df)
 
-    # ---- ML PART ----
+    # ----- Lin.Regression -----
     lin_model, lin_metrics = lh_ml.train_linear(data_ml)
     pred_lin = lh_ml.predict_linear(lin_model, data_ml)
  
@@ -128,11 +126,11 @@ def run_ml_clicks(n_clicks, data):
         html.Div(f"R²: {lin_metrics['r2']:.3f}")
     ])
 
-    lin_table = dbc.Table.from_dataframe(pred_lin, striped=False, hover=True, responsive=True, borderless=True, className="text-light m-0",
-        style={"height": "250px", "overflowY": "auto", "overflowX": "hidden",  "fontSize": "12px",
-               "backgroundColor": "transparent",  "--bs-table-bg": "transparent", "--bs-table-accent-bg": "transparent"})
+    #lin_table = dbc.Table.from_dataframe(pred_lin, striped=False, hover=True, responsive=True, borderless=True, className="text-light m-0",
+    #    style={"height": "250px", "overflowY": "auto", "overflowX": "hidden",  "fontSize": "12px",
+    #           "backgroundColor": "transparent",  "--bs-table-bg": "transparent", "--bs-table-accent-bg": "transparent"})
   
-   # Logistic Regression
+   # ----- Log.Regression -----
     log_model, log_metrics = lh_ml.train_logistic(data_ml)
     pred_log = lh_ml.predict_logistic(log_model, data_ml)
 
@@ -143,10 +141,17 @@ def run_ml_clicks(n_clicks, data):
         html.Div(f"F1: {log_metrics['f1']:.3f}")
     ])
     
-    log_table = dbc.Table.from_dataframe(pred_log, striped=False, hover=True, responsive=True, borderless=True, className="text-light m-0",      
+    #log_table = dbc.Table.from_dataframe(pred_log, striped=False, hover=True, responsive=True, borderless=True, className="text-light m-0",      
+    #    style={"height": "250px", "overflowY": "auto", "overflowX": "hidden",  "fontSize": "12px",
+    #           "backgroundColor": "transparent",  "--bs-table-bg": "transparent", "--bs-table-accent-bg": "transparent"})
+
+    
+    comp_table = pd.merge(lin_pred, log_pred, on=["route_key", "dep_sched"], how="outer", validate="one_to_one", sort=False)
+    lin_log_table = dbc.Table.from_dataframe(pred_log, striped=False, hover=True, responsive=True, borderless=True, className="text-light m-0",      
         style={"height": "250px", "overflowY": "auto", "overflowX": "hidden",  "fontSize": "12px",
                "backgroundColor": "transparent",  "--bs-table-bg": "transparent", "--bs-table-accent-bg": "transparent"})
+    
 
-    return "ML ran just now", lin_kpi, log_kpi, lin_table, log_table
+    return "ML ran just now", lin_kpi, log_kpi, lin_log_table
 
 
