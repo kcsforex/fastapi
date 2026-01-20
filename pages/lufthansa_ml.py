@@ -32,7 +32,7 @@ def reg_metrics(y_test, y_pred):
     metrics = { "rmse": float(np.sqrt(mean_squared_error(y_test, y_pred))),
                 "mae":  float(mean_absolute_error(y_test, y_pred)),
                 "r2":   float(r2_score(y_test, y_pred)) }   
-    return mertics
+    return metrics
 
 def train_linear(df):
     df = df.dropna(subset=["arrival_delay"]).copy()
@@ -135,6 +135,7 @@ def build_comparison_table(df, lin_model, log_model, n=12):
         comp["pred_prob_delay"] = comp["pred_prob_delay"].round(3)
 
     return comp
+
 
 
 
