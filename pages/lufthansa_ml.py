@@ -1,5 +1,5 @@
 
-# 2026.01.20  15.00
+# 2026.01.20  18.00
 import pandas as pd
 import numpy as np
 from sklearn.linear_model import LinearRegression, LogisticRegression
@@ -34,7 +34,7 @@ def reg_metrics(y_true, y_pred):
                 "r2":   float(r2_score(y_test, y_pred)) }   
     return mertics
 
-def train_reg_linear(df):
+def train_linear(df):
     df = df.dropna(subset=["arrival_delay"]).copy()
     X = df[["dep_delay", "dep_hour", "dep_dow"]].fillna(0)
     y = df["arrival_delay"].astype(float)
@@ -43,13 +43,22 @@ def train_reg_linear(df):
     model = LinearRegression().fit(X_tr, y_tr)
     return model, reg_metrics(y_te, model.predict(X_te))
 
-def train_rf_linear(df):
+def train_tree_linear(df, max_depth=None, random_state=42):
     d = df.dropna(subset=["arrival_delay"]).copy()
     X = d[["dep_delay", "dep_hour", "dep_dow"]].fillna(0)
     y = d["arrival_delay"].astype(float)
     X = X.fillna({"dep_delay": 0.0, "dep_hour": X["dep_hour"].median(), "dep_dow": X["dep_dow"].median()})
     X_tr, X_te, y_tr, y_te = train_test_split(X, y, test_size=0.2, random_state=42)
     model = DecisionTreeRegressor(max_depth=max_depth, random_state=random_state).fit(X_tr, y_tr)
+    return model, reg_metrics(y_te, model.predict(X_te))
+
+def train_rf_linear(df, n_estimators=300, max_depth=None, random_state=42):
+    d = df.dropna(subset=["arrival_delay"]).copy()
+    X = d[["dep_delay", "dep_hour", "dep_dow"]].fillna(0)
+    y = d["arrival_delay"].astype(float)
+    X = X.fillna({"dep_delay": 0.0, "dep_hour": X["dep_hour"].median(), "dep_dow": X["dep_dow"].median()})
+    X_tr, X_te, y_tr, y_te = train_test_split(X, y, test_size=0.2, random_state=42)
+    model = DecisionForestRegressor(n_estimators=n_estimators, max_depth=max_depth, random_state=random_state).fit(X_tr, y_tr)
     return model, reg_metrics(y_te, model.predict(X_te))
 
 
@@ -126,6 +135,7 @@ def build_comparison_table(df, lin_model, log_model, n=12):
         comp["pred_prob_delay"] = comp["pred_prob_delay"].round(3)
 
     return comp
+
 
 
 
