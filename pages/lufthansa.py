@@ -146,10 +146,10 @@ def load_data_render(_):
         Output('ml-kpi-lin', 'children'),
         Output('ml-kpi-log', 'children'),
         Output('lh-ml-table', 'children')],
-        [Input('run-ml', 'n_clicks'),   
-        Input('lh-reg-model', 'value'),
-        Input('lh-clf-model', 'value')],
-        State('lh-df-store','data'),
+        [Input('run-ml', 'n_clicks')],   
+        [State('lh-reg-model', 'value'),
+        State('lh-clf-model', 'value'),
+        State('lh-df-store','data')],
         prevent_initial_call=True)
     
 def run_ml_clicks(n_clicks, reg_choice, clf_choice, data):  
