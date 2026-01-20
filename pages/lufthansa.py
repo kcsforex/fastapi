@@ -147,7 +147,7 @@ def run_ml_clicks(n_clicks, data):
 
     
     comp_table = pd.merge(lin_pred, log_pred, on=["route_key", "dep_sched"], how="outer", validate="one_to_one", sort=False)
-    lin_log_table = dbc.Table.from_dataframe(pred_log, striped=False, hover=True, responsive=True, borderless=True, className="text-light m-0",      
+    lin_log_table = dbc.Table.from_dataframe(comp_table, striped=False, hover=True, responsive=True, borderless=True, className="text-light m-0",      
         style={"height": "250px", "overflowY": "auto", "overflowX": "hidden",  "fontSize": "12px",
                "backgroundColor": "transparent",  "--bs-table-bg": "transparent", "--bs-table-accent-bg": "transparent"})
     
