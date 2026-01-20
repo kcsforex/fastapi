@@ -206,7 +206,7 @@ def run_ml_clicks(n_clicks, reg_choice, clf_choice, data):
 
 
     comp = pd.merge(reg_pred, clf_pred, on=["route_key", "dep_sched"], how="outer", validate="one_to_one", sort=False)
-    comp["arrival_delay","pred_delay"] = comp["arrival_delay","pred_delay"].round(1)
+    comp[["arrival_delay", "pred_delay"]] = comp[["arrival_delay", "pred_delay"]].round(1)
     comp["pred_prob_delay"] = comp["pred_prob_delay"].round(3)
     reg_clf_table = dbc.Table.from_dataframe(comp, striped=False, hover=True, responsive=True, borderless=True, className="text-light m-0",      
         style={"height": "250px", "overflowY": "auto", "overflowX": "hidden",  "fontSize": "12px",
