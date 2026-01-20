@@ -118,7 +118,7 @@ def run_ml_clicks(n_clicks, data):
 
     # ----- Lin.Regression -----
     lin_model, lin_metrics = lh_ml.train_linear(data_ml)
-    pred_lin = lh_ml.predict_linear(lin_model, data_ml)
+    lin_pred = lh_ml.predict_linear(lin_model, data_ml)
  
     lin_kpi = html.Div([
         html.Div(f"RMSE: {lin_metrics['rmse']:.1f} min"),
@@ -132,7 +132,7 @@ def run_ml_clicks(n_clicks, data):
   
    # ----- Log.Regression -----
     log_model, log_metrics = lh_ml.train_logistic(data_ml)
-    pred_log = lh_ml.predict_logistic(log_model, data_ml)
+    log_pred = lh_ml.predict_logistic(log_model, data_ml)
 
     log_kpi = html.Div([
         html.Div(f"Accuracy: {log_metrics['acc']:.3f}"),
