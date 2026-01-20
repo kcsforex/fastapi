@@ -40,22 +40,65 @@ layout = dbc.Container([
             style={"height": "300px", "overflowY": "auto", "fontSize": "12px"})
     ], style=CARD_STYLE, className="mb-4"),
 
+    
+html.Div([
     html.Div([
-        html.Div([
-            html.H5("ML Modeling", className="text-light mb-2"),
-            dbc.Button("Run ML Prediction", id="run-ml", color="primary", size="sm", n_clicks=0),
-            html.Span(id="ml-status", className="text-muted small ms-2")
-        ], className="mb-3"),
+        html.H5("ML Modeling", className="text-light mb-2"),
 
         dbc.Row([
-            dbc.Col(html.Div(id="ml-kpi-lin", className="text-light"), md=6),
-            dbc.Col(html.Div(id="ml-kpi-log", className="text-light"), md=6),
-        ], className="mb-3"),
-       
-        dbc.Row([
-            dbc.Col(html.Div(id="lh-ml-table", className="text-light"))
-        ])
-    ], style=CARD_STYLE, className="mb-4")
+            dbc.Col([
+                html.Label("Regression Model", className="text-light small"),
+                dbc.Select(
+                    id="lh-reg-model",
+                    options=[
+                        {"label": "Linear Regression", "value": "lin"},
+                        {"label": "Decision Tree (Reg)", "value": "tree_reg"},
+                        {"label": "Random Forest (Reg)", "value": "rf_reg"},
+                    ],
+                    value="lin",
+                    size="sm"
+                )
+            ], md=4),
+
+            dbc.Col([
+                html.Label("Classification Model", className="text-light small"),
+                dbc.Select(
+                    id="lh-clf-model",
+                    options=[
+                        {"label": "Logistic Regression", "value": "log"},
+                        {"label": "Decision Tree (Clf)", "value": "tree_clf"},
+                        {"label": "Random Forest (Clf)", "value": "rf_clf"},
+                    ],
+                    value="log",
+                    size="sm"
+                )
+            ], md=4),
+
+            dbc.Col([
+                dbc.Button(
+                    "Run ML Prediction",
+                    id="run-ml",
+                    color="primary",
+                    size="sm",
+                    n_clicks=0,
+                    style={"marginTop": "20px"}
+                )
+            ], md=4),
+        ], className="g-2"),
+
+        html.Span(id="ml-status", className="text-muted small ms-2"),
+    ], className="mb-3"),
+
+    dbc.Row([
+        dbc.Col(html.Div(id="ml-kpi-lin", className="text-light"), md=6),
+        dbc.Col(html.Div(id="ml-kpi-log", className="text-light"), md=6),
+    ], className="mb-3"),
+
+    dbc.Row([
+        dbc.Col(html.Div(id="lh-ml-table", className="text-light"))
+    ])
+], style=CARD_STYLE, className="mb-4")
+
 
 ], fluid=True)
 
@@ -99,11 +142,13 @@ def load_data_render(_):
     return f"Updated → {df['ingested_at'].iloc[-1]}", table, fig, df.to_dict("records")
 
 @callback(
-        Output('ml-status', 'children'),
+        [Output('ml-status', 'children'),
         Output('ml-kpi-lin', 'children'),
         Output('ml-kpi-log', 'children'),
-        Output('lh-ml-table', 'children'),
-        Input('run-ml', 'n_clicks'),
+        Output('lh-ml-table', 'children')],
+        [Input('run-ml', 'n_clicks'),   
+        Input('lh-reg-model', 'value'),
+        Input('lh-clf-model', 'value')],
         State('lh-df-store','data'),
         prevent_initial_call=True)
     
