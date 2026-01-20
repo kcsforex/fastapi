@@ -97,6 +97,30 @@ def train_rf_logistic(df, n_estimators=300, max_depth=None, random_state=42):
     model = RandomForestClassifier(n_estimators=n_estimators,max_depth=max_depth,random_state=random_state,class_weight="balanced").fit(X_tr, y_tr)
     return model, clf_metrics(y_te, model.predict(X_te))
 
+# ======================================================
+#  Predictions
+# ======================================================
+
+def predict_latest_linear(model, df: pd.DataFrame, n=12):
+    latest = df.sort_values("dep_sched", ascending=False).head(n).copy()
+    X = _fill_X(latest[["dep_delay", "dep_hour", "dep_dow"]])
+    latest["pred_delay"] = model.predict(X)
+
+    cols = ["route_key", "dep_sched", "arrival_delay", "pred_delay"]
+    return latest[[c for c in cols if c in latest.columns]]
+
+
+def predict_latest_logistic(model, df: pd.DataFrame, n=12):
+    latest = df.sort_values("dep_sched", ascending=False).head(n).copy()
+    X = _fill_X(latest[["dep_delay", "dep_hour", "dep_dow"]])
+
+    proba = model.predict_proba(X)[:, 1]
+    latest["pred_prob_delay"] = proba
+    latest["pred_flag_delay"] = (proba >= 0.5).astype(int)
+
+    cols = ["route_key", "dep_sched", "pred_prob_delay", "pred_flag_delay"]
+    return latest[[c for c in cols if c in latest.columns]]
+
 
 # ======================================================
 #  Comparison Table (same subset for linear + logistic)
@@ -135,6 +159,7 @@ def build_comparison_table(df, lin_model, log_model, n=12):
         comp["pred_prob_delay"] = comp["pred_prob_delay"].round(3)
 
     return comp
+
 
 
 
