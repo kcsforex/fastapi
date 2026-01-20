@@ -103,7 +103,7 @@ def train_rf_logistic(df, n_estimators=300, max_depth=None, random_state=42):
 
 def predict_latest_linear(model, df: pd.DataFrame, n=12):
     latest = df.sort_values("dep_sched", ascending=False).head(n).copy()
-    X = _fill_X(latest[["dep_delay", "dep_hour", "dep_dow"]])
+    X = latest[["dep_delay", "dep_hour", "dep_dow"]]
     latest["pred_delay"] = model.predict(X)
 
     cols = ["route_key", "dep_sched", "arrival_delay", "pred_delay"]
@@ -112,7 +112,7 @@ def predict_latest_linear(model, df: pd.DataFrame, n=12):
 
 def predict_latest_logistic(model, df: pd.DataFrame, n=12):
     latest = df.sort_values("dep_sched", ascending=False).head(n).copy()
-    X = _fill_X(latest[["dep_delay", "dep_hour", "dep_dow"]])
+    X = latest[["dep_delay", "dep_hour", "dep_dow"]]
 
     proba = model.predict_proba(X)[:, 1]
     latest["pred_prob_delay"] = proba
@@ -127,14 +127,14 @@ def predict_latest_logistic(model, df: pd.DataFrame, n=12):
 # ======================================================
 
 def predict_linear_subset(model, df_subset):
-    X = _fill_X(df_subset[["dep_delay", "dep_hour", "dep_dow"]])
+    X = df_subset[["dep_delay", "dep_hour", "dep_dow"]]
     out = df_subset[["route_key", "dep_sched"]].copy()
     out["arrival_delay"] = df_subset["arrival_delay"]
     out["pred_delay"] = model.predict(X)
     return out
 
 def predict_logistic_subset(model, df_subset):
-    X = _fill_X(df_subset[["dep_delay", "dep_hour", "dep_dow"]])
+    X = df_subset[["dep_delay", "dep_hour", "dep_dow"]]
     out = df_subset[["route_key", "dep_sched"]].copy()
     proba = model.predict_proba(X)[:, 1]
     out["pred_prob_delay"] = proba
@@ -159,6 +159,7 @@ def build_comparison_table(df, lin_model, log_model, n=12):
         comp["pred_prob_delay"] = comp["pred_prob_delay"].round(3)
 
     return comp
+
 
 
 
