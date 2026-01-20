@@ -28,7 +28,7 @@ def prepare(df: pd.DataFrame) -> pd.DataFrame:
     return d
 
 # ========= Regression (arrival_delay minutes) =========
-def reg_metrics(y_true, y_pred):
+def reg_metrics(y_test, y_pred):
     metrics = { "rmse": float(np.sqrt(mean_squared_error(y_test, y_pred))),
                 "mae":  float(mean_absolute_error(y_test, y_pred)),
                 "r2":   float(r2_score(y_test, y_pred)) }   
@@ -63,11 +63,11 @@ def train_rf_linear(df, n_estimators=300, max_depth=None, random_state=42):
 
 
 # ========= Classification (is_delayed >= 15 min) =========
-def clf_metrics(y_true, y_pred):
-    metrics = { "acc":  float(accuracy_score(y_true, y_pred)),
-                "prec": float(precision_score(y_true, y_pred, zero_division=0)),
-                "rec":  float(recall_score(y_true, y_pred, zero_division=0)),
-                "f1":   float(f1_score(y_true, y_pred, zero_division=0)) }
+def clf_metrics(y_test, y_pred):
+    metrics = { "acc":  float(accuracy_score(y_test, y_pred)),
+                "prec": float(precision_score(y_test, y_pred, zero_division=0)),
+                "rec":  float(recall_score(y_test, y_pred, zero_division=0)),
+                "f1":   float(f1_score(y_test, y_pred, zero_division=0)) }
     return metrics
 
 def train_logistic(df):
@@ -135,6 +135,7 @@ def build_comparison_table(df, lin_model, log_model, n=12):
         comp["pred_prob_delay"] = comp["pred_prob_delay"].round(3)
 
     return comp
+
 
 
 
