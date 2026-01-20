@@ -152,7 +152,7 @@ def load_data_render(_):
         State('lh-df-store','data'),
         prevent_initial_call=True)
     
-def run_ml_clicks(n_clicks, data):  
+def run_ml_clicks(n_clicks, reg_choice, clf_choice, data):  
     
     if not data:
         msg = "No data for ML"
@@ -161,42 +161,56 @@ def run_ml_clicks(n_clicks, data):
     df = pd.DataFrame(data)
     data_ml = lh_ml.prepare(df)
 
-    # ----- Lin.Regression -----
-    lin_model, lin_metrics = lh_ml.train_linear(data_ml)
-    lin_pred = lh_ml.predict_linear(lin_model, data_ml)
- 
-    lin_kpi = html.Div([
-        html.Div(f"RMSE: {lin_metrics['rmse']:.1f} min"),
-        html.Div(f"MAE: {lin_metrics['mae']:.1f} min"),
-        html.Div(f"R²: {lin_metrics['r2']:.3f}")
+    # -------------------------
+    #   REGRESSION MODEL SWITCH
+    # -------------------------
+    if reg_choice == "lin":
+        reg_model, reg_metrics = lh_ml.train_linear(data_ml)
+    elif reg_choice == "tree_reg":
+        reg_model, reg_metrics = lh_ml.train_tree_linear(data_ml)
+    elif reg_choice == "rf_reg":
+        reg_model, reg_metrics = lh_ml.train_rf_linear(data_ml)
+    else:
+        reg_model, reg_metrics = lh_ml.train_linear(data_ml)
+
+    reg_kpi = html.Div([
+        html.Div(f"RMSE: {reg_metrics['rmse']:.1f}"),
+        html.Div(f"MAE: {reg_metrics['mae']:.1f}"),
+        html.Div(f"R² : {reg_metrics['r2']:.3f}"),
     ])
 
-    #lin_table = dbc.Table.from_dataframe(pred_lin, striped=False, hover=True, responsive=True, borderless=True, className="text-light m-0",
-    #    style={"height": "250px", "overflowY": "auto", "overflowX": "hidden",  "fontSize": "12px",
-    #           "backgroundColor": "transparent",  "--bs-table-bg": "transparent", "--bs-table-accent-bg": "transparent"})
-  
-   # ----- Log.Regression -----
-    log_model, log_metrics = lh_ml.train_logistic(data_ml)
-    log_pred = lh_ml.predict_logistic(log_model, data_ml)
+    # Predict on latest rows
+    reg_pred = lh_ml.predict_latest_linear(reg_model, data_ml, n=15)
 
-    log_kpi = html.Div([
-        html.Div(f"Accuracy: {log_metrics['acc']:.3f}"),
-        html.Div(f"Precision: {log_metrics['prec']:.3f}"),
-        html.Div(f"Recall: {log_metrics['rec']:.3f}"),
-        html.Div(f"F1: {log_metrics['f1']:.3f}")
+    
+    # -------------------------
+    #   CLASSIFICATION MODEL SWITCH
+    # -------------------------
+    if clf_choice == "log":
+        clf_model, clf_metrics = lh_ml.train_logistic(data_ml)
+    elif clf_choice == "tree_clf":
+        clf_model, clf_metrics = lh_ml.train_tree_logistic(data_ml)
+    elif clf_choice == "rf_clf":
+        clf_model, clf_metrics = lh_ml.train_rf_logistic(data_ml)
+    else:
+        clf_model, clf_metrics = lh_ml.train_logistic(data_ml)
+
+    clf_kpi = html.Div([
+        html.Div(f"Accuracy:  {clf_metrics['acc']:.3f}"),
+        html.Div(f"Precision: {clf_metrics['prec']:.3f}"),
+        html.Div(f"Recall:    {clf_metrics['rec']:.3f}"),
+        html.Div(f"F1-score:  {clf_metrics['f1']:.3f}"),
     ])
-    
-    #log_table = dbc.Table.from_dataframe(pred_log, striped=False, hover=True, responsive=True, borderless=True, className="text-light m-0",      
-    #    style={"height": "250px", "overflowY": "auto", "overflowX": "hidden",  "fontSize": "12px",
-    #           "backgroundColor": "transparent",  "--bs-table-bg": "transparent", "--bs-table-accent-bg": "transparent"})
 
-    
-    comp_table = pd.merge(lin_pred, log_pred, on=["route_key", "dep_sched"], how="outer", validate="one_to_one", sort=False)
-    lin_log_table = dbc.Table.from_dataframe(comp_table, striped=False, hover=True, responsive=True, borderless=True, className="text-light m-0",      
+    clf_pred = lh_ml.predict_latest_logistic(clf_model, data_ml, n=15)
+
+
+    comp_table = pd.merge(reg_pred, clf_pred, on=["route_key", "dep_sched"], how="outer", validate="one_to_one", sort=False)
+    reg_clf_table = dbc.Table.from_dataframe(comp_table, striped=False, hover=True, responsive=True, borderless=True, className="text-light m-0",      
         style={"height": "250px", "overflowY": "auto", "overflowX": "hidden",  "fontSize": "12px",
                "backgroundColor": "transparent",  "--bs-table-bg": "transparent", "--bs-table-accent-bg": "transparent"})
     
+    return "ML ran successfully ✔", reg_kpi, clf_kpi, reg_clf_table
 
-    return "ML ran just now", lin_kpi, log_kpi, lin_log_table
 
 
