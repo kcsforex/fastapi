@@ -141,7 +141,3 @@ def build_comparison_table(df, lin_model, log_model, n=12):
 
 
 
-
-
-
-
