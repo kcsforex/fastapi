@@ -1,4 +1,4 @@
-# 2026.01.19  15.00
+# 2026.01.20  11.00
 import dash
 import pandas as pd
 from dash import html, dcc, Input, Output, State, callback, no_update
@@ -23,21 +23,20 @@ layout = dbc.Container([
 
     html.Div([
         html.H2("Lufthansa Flight Info", className="text-light fw-bold mb-0"),
-        html.P(id='metrics-update1', className="text-muted small"),
+        html.P(id='lh-metrics-update', className="text-muted small"),
     ], className="mb-4"),
 
     dcc.Interval(id='refresh', interval=60000),
-    dcc.Store(id="df-store"),
+    dcc.Store(id="lh-df-store"),
 
-    # -------- Original content -------
     html.Div([
         html.H5("Daily Ingestion Volume", className="text-light mb-3"),
-        dcc.Graph(id='daily-count-chart', config={'displayModeBar': False})
+        dcc.Graph(id='lh-daily-chart', config={'displayModeBar': False})
     ], style=CARD_STYLE, className="mb-4"),
 
     html.Div([
         html.H5("Execution Logs", className="text-light mb-3"),
-        html.Div(id='status-table-container1',
+        html.Div(id='lh-table-container',
             style={"height": "300px", "overflowY": "auto", "fontSize": "12px"})
     ], style=CARD_STYLE, className="mb-4"),
 
@@ -63,10 +62,10 @@ layout = dbc.Container([
 
 
 @callback(
-    Output('metrics-update1', 'children'),
-    Output('status-table-container1', 'children'),
-    Output('daily-count-chart', 'figure'),
-    Output('df-store', 'data'),
+    Output('lh-metrics-update', 'children'),
+    Output('lh-table-container', 'children'),
+    Output('lh-daily-chart', 'figure'),
+    Output('lh-df-store', 'data'),
     Input('refresh', 'n_intervals'),
 
 )
@@ -107,7 +106,7 @@ def load_data_render(_):
         Output('ml-table-lin', 'children'),
         Output('ml-table-log', 'children'),
         Input('run-ml', 'n_clicks'),
-        State('df-store','data'),
+        State('lh-df-store','data'),
         prevent_initial_call=True)
     
 def run_ml_clicks(n_clicks, data):  
