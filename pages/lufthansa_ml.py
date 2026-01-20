@@ -109,7 +109,6 @@ def predict_latest_linear(model, df: pd.DataFrame, n=12):
     cols = ["route_key", "dep_sched", "arrival_delay", "pred_delay"]
     return latest[[c for c in cols if c in latest.columns]]
 
-
 def predict_latest_logistic(model, df: pd.DataFrame, n=12):
     latest = df.sort_values("dep_sched", ascending=False).head(n).copy()
     X = latest[["dep_delay", "dep_hour", "dep_dow"]]
@@ -120,50 +119,3 @@ def predict_latest_logistic(model, df: pd.DataFrame, n=12):
 
     cols = ["route_key", "dep_sched", "pred_prob_delay", "pred_flag_delay"]
     return latest[[c for c in cols if c in latest.columns]]
-
-
-# ======================================================
-#  Comparison Table (same subset for linear + logistic)
-# ======================================================
-
-def predict_linear_subset(model, df_subset):
-    X = df_subset[["dep_delay", "dep_hour", "dep_dow"]]
-    out = df_subset[["route_key", "dep_sched"]].copy()
-    out["arrival_delay"] = df_subset["arrival_delay"]
-    out["pred_delay"] = model.predict(X)
-    return out
-
-def predict_logistic_subset(model, df_subset):
-    X = df_subset[["dep_delay", "dep_hour", "dep_dow"]]
-    out = df_subset[["route_key", "dep_sched"]].copy()
-    proba = model.predict_proba(X)[:, 1]
-    out["pred_prob_delay"] = proba
-    out["pred_flag_delay"] = (proba >= 0.5).astype(int)
-    return out
-
-def build_comparison_table(df, lin_model, log_model, n=12):
-    """Produce a single table showing Linear + Logistic predictions."""
-    subset = df.sort_values("dep_sched", ascending=False).head(n).copy()
-
-    lin = predict_linear_subset(lin_model, subset)
-    log = predict_logistic_subset(log_model, subset)
-
-    comp = pd.merge(lin, log, on=["route_key", "dep_sched"], how="outer")
-
-    # Nice formatting
-    if "arrival_delay" in comp:
-        comp["arrival_delay"] = comp["arrival_delay"].round(1)
-    if "pred_delay" in comp:
-        comp["pred_delay"] = comp["pred_delay"].round(1)
-    if "pred_prob_delay" in comp:
-        comp["pred_prob_delay"] = comp["pred_prob_delay"].round(3)
-
-    return comp
-
-
-
-
-
-
-
-
