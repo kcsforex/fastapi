@@ -27,51 +27,70 @@ def prepare(df: pd.DataFrame) -> pd.DataFrame:
 
     return d
 
-# ---- Train simple linear regression ----
-
-def regfit_and_metrics(model, X_tr, X_te, y_tr, y_te):
+# ========= Regression (arrival_delay minutes) =========
+def regfit_metrics(model, X_tr, X_te, y_tr, y_te):
     model.fit(X_tr, y_tr)
     pred = model.predict(X_te)
-    metrics = {
-        "rmse": float(np.sqrt(mean_squared_error(y_test, pred))),
-        "mae":  float(mean_absolute_error(y_test, pred)),
-        "r2":   float(r2_score(y_test, pred))
-    }   
+    metrics = { "rmse": float(np.sqrt(mean_squared_error(y_test, pred))),
+                "mae":  float(mean_absolute_error(y_test, pred)),
+                "r2":   float(r2_score(y_test, pred)) }   
     return model, mertics
 
-
-def train_linear(df: pd.DataFrame):
+def train_reg_linear(df: pd.DataFrame):
     df = df.dropna(subset=["arrival_delay"]).copy()
-    X = df[["dep_delay", "dep_hour", "dep_dow"]].fillna(0) # "departure_terminal_gate", "equipment_aircraftcode"]]
+    X = df[["dep_delay", "dep_hour", "dep_dow"]].fillna(0)
     y = df["arrival_delay"].astype(float)
     X = X.fillna({"dep_delay": 0.0, "dep_hour": X["dep_hour"].median(), "dep_dow": X["dep_dow"].median()})
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
     return regfit_and_metrics(LinearRegression(), X_tr, X_te, y_tr, y_te)
 
-    return model, {
-        "rmse": float(np.sqrt(mean_squared_error(y_test, pred))),
-        "mae":  float(mean_absolute_error(y_test, pred)),
-        "r2":   float(r2_score(y_test, pred))
-    }
+def train_rf_linear(df: pd.DataFrame, n_estimators: int = 200, max_depth: int | None = None, random_state: int = 42):
+    d = df.dropna(subset=["arrival_delay"]).copy()
+    X = d[["dep_delay", "dep_hour", "dep_dow"]].fillna(0)
+    y = d["arrival_delay"].astype(float)
+    X = X.fillna({"dep_delay": 0.0, "dep_hour": X["dep_hour"].median(), "dep_dow": X["dep_dow"].median()})
+    X_tr, X_te, y_tr, y_te = train_test_split(X, y, test_size=0.2, random_state=42)
+    rf_model = RandomForestRegressor(n_estimators=n_estimators, max_depth=max_depth, random_state=random_state, n_jobs=-1)
+    return _reg_fit_and_metrics(rf_model, X_tr, X_te, y_tr, y_te)
 
-# --- Train logistic regression (delayed >=15m) ---
+
+# ========= Classification (is_delayed >= 15 min) =========
+def clffit_metrics(model, X_tr, X_te, y_tr, y_te):
+    model.fit(X_tr, y_tr)
+    y_pred = model.predict(X_te)
+    metrics = { "acc":  float(accuracy_score(y_te, y_pred)),
+                "prec": float(precision_score(y_te, y_pred, zero_division=0)),
+                "rec":  float(recall_score(y_te, y_pred, zero_division=0)),
+                "f1":   float(f1_score(y_te, y_pred, zero_division=0)) }
+    return model, metrics
+
 def train_logistic(df: pd.DataFrame):
-    d = df.dropna(subset=["is_delayed"])
-
-    #X = X.fillna({"dep_delay": 0.0, "dep_hour": X["dep_hour"].median(), "dep_dow":  X["dep_dow"].median()})
+    d = df.dropna(subset=["is_delayed"]).copy()
     X = d[["dep_delay", "dep_hour", "dep_dow"]].fillna(0)
     y = d["is_delayed"].astype(int)
-
+    X = X.fillna({"dep_delay": 0.0, "dep_hour": X["dep_hour"].median(), "dep_dow": X["dep_dow"].median()})
     X_tr, X_te, y_tr, y_te = train_test_split(X, y, test_size=0.25, random_state=42, stratify=y)
-    model = LogisticRegression(max_iter=200, class_weight="balanced").fit(X_tr, y_tr)
-    y_pred = model.predict(X_te)
+    log_model = LogisticRegression(max_iter=200, class_weight="balanced")
+    return _clf_fit_and_metrics(log_model, X_tr, X_te, y_tr, y_te)
 
-    return model, {
-        "acc":  float(accuracy_score(y_te, y_pred)),
-        "prec": float(precision_score(y_te, y_pred, zero_division=0)),
-        "rec":  float(recall_score(y_te, y_pred, zero_division=0)),
-        "f1":   float(f1_score(y_te, y_pred, zero_division=0)),
-    }
+
+
+def train_tree_logistic(df: pd.DataFrame, max_depth: int | None = None, random_state: int = 42):
+    d = df.dropna(subset=["is_delayed"]).copy()
+    if d["is_delayed"].dropna().nunique() < 2:
+        d = d.dropna(subset=["is_delayed"])
+    X = d[["dep_delay", "dep_hour", "dep_dow"]].copy()
+    y = d["is_delayed"].astype(int)
+    X = X.fillna({"dep_delay": 0.0, "dep_hour": X["dep_hour"].median(), "dep_dow": X["dep_dow"].median()})
+
+    if len(d) < 10 or y.nunique() < 2:
+        model = DecisionTreeClassifier(max_depth=max_depth, random_state=random_state).fit(X, y)
+        return model, {"acc": float("nan"), "prec": float("nan"), "rec": float("nan"), "f1": float("nan")}
+    X_tr, X_te, y_tr, y_te = train_test_split(X, y, test_size=0.25, random_state=42, stratify=y)
+    model = DecisionTreeClassifier(max_depth=max_depth, random_state=random_state)
+    return _clf_fit_and_metrics(model, X_tr, X_te, y_tr, y_te)
+
+
 
 # ---- Prediction table ----
 def predict_linear(model, df: pd.DataFrame, n=15):
@@ -86,4 +105,5 @@ def predict_logistic(model, df: pd.DataFrame, n=15):
     latest["pred_prob_delay"] = model.predict_proba(X)[:, 1]
     latest["pred_flag_delay"] = (latest["pred_prob_delay"] >= 0.5).astype(int)
     return latest[["route_key", "dep_sched", "pred_prob_delay", "pred_flag_delay"]]
+
 
