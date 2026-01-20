@@ -83,14 +83,15 @@ def train_tree_logistic(df, max_depth=None, random_state=42):
 
 
 
-def train_rf_logistic(df: pd.DataFrame, n_estimators: int = 300, max_depth: int | None = None, random_state: int = 42):
+def train_rf_logistic(df, n_estimators=300, max_depth=None, random_state=42):
     d = df.dropna(subset=["is_delayed"]).copy()
     X = d[["dep_delay", "dep_hour", "dep_dow"]].fillna(0)
     y = d["is_delayed"].astype(int)
-    X = X.fillna({"dep_delay": 0.0, "dep_hour": X["dep_hour"].median(), "dep_dow": X["dep_dow"].median()})
-    X_tr, X_te, y_tr, y_te = train_test_split(X, y, test_size=0.25, random_state=42, stratify=y)  
-    rflog_model = RandomForestClassifier(n_estimators=n_estimators, max_depth=max_depth, random_state=random_state, n_jobs=-1, class_weight="balanced")
-    return clffit_metrics(rflog_model, X_tr, X_te, y_tr, y_te)
+    X = X.fillna({"dep_delay": 0.0, "dep_hour": X["dep_hour"].median(), "dep_dow": X["dep_dow"].median()})  
+    X_tr, X_te, y_tr, y_te = train_test_split(X, y, test_size=0.25, random_state=42, stratify=y)
+    model = RandomForestClassifier(n_estimators=n_estimators,max_depth=max_depth,random_state=random_state,class_weight="balanced").fit(X_tr, y_tr)
+    return model, clf_metrics(y_te, model.predict(X_te))
+
 
 
 
@@ -108,6 +109,7 @@ def predict_logistic(model, df: pd.DataFrame, n=15):
     latest["pred_prob_delay"] = model.predict_proba(X)[:, 1]
     latest["pred_flag_delay"] = (latest["pred_prob_delay"] >= 0.5).astype(int)
     return latest[["route_key", "dep_sched", "pred_prob_delay", "pred_flag_delay"]]
+
 
 
 
