@@ -161,8 +161,7 @@ def load_data_render(_):
     return f"Updated → {df['ingested_at'].iloc[-1]}", table, fig, df.to_dict("records")
 
 @callback(
-        [Output('ml-status', 'children'),
-        Output('ml-kpi-lin', 'children'),
+        [Output('ml-kpi-lin', 'children'),
         Output('ml-kpi-log', 'children'),
         Output('lh-ml-table', 'children')],
         [Input('run-ml', 'n_clicks')],   
