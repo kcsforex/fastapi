@@ -1,4 +1,4 @@
-# 2026.01.20  18.00
+# 2026.01.21  12.00
 import dash
 import pandas as pd
 from dash import html, dcc, Input, Output, State, callback, no_update
@@ -170,6 +170,14 @@ def run_ml_clicks(n_clicks, reg_choice, clf_choice, data):
         reg_model, reg_metrics = lh_ml.train_tree_linear(data_ml)
     elif reg_choice == "rf_reg":
         reg_model, reg_metrics = lh_ml.train_rf_linear(data_ml)
+    elif reg_choice == "gbm_reg":
+        reg_model, reg_metrics = lh_ml.train_gbm_linear(data_ml)
+    elif reg_choice == "hgb_reg":
+        reg_model, reg_metrics = lh_ml.train_hgb_linear(data_ml)  # requires modern sklearn
+    elif reg_choice == "xgb_reg":
+        reg_model, reg_metrics = lh_ml.train_xgb_linear(data_ml)  # raises if xgboost not installed
+    elif reg_choice == "cb_reg":
+        reg_model, reg_metrics = lh_ml.train_cb_linear(data_ml)    # raises if catboost not installed
     else:
         reg_model, reg_metrics = lh_ml.train_linear(data_ml)
 
