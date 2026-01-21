@@ -53,7 +53,11 @@ html.Div([
                     options=[
                         {"label": "Linear Regression", "value": "lin"},
                         {"label": "Decision Tree (Reg)", "value": "tree_reg"},
-                        {"label": "Random Forest (Reg)", "value": "rf_reg"},
+                        {"label": "Random Forest (Reg)", "value": "rf_reg"},      
+                        {"label": "GBM (sklearn)", "value": "gbm_reg"},
+                        {"label": "HistGB (sklearn)", "value": "hgb_reg"},
+                        {"label": "XGBoost (Reg)", "value": "xgb_reg"},
+                        {"label": "CatBoost (Reg)", "value": "cb_reg"}
                     ],
                     value="lin",
                     size="sm"
@@ -67,7 +71,11 @@ html.Div([
                     options=[
                         {"label": "Logistic Regression", "value": "log"},
                         {"label": "Decision Tree (Clf)", "value": "tree_clf"},
-                        {"label": "Random Forest (Clf)", "value": "rf_clf"},
+                        {"label": "Random Forest (Clf)", "value": "rf_clf"},         
+                        {"label": "GBM (sklearn)", "value": "gbm_clf"},
+                        {"label": "HistGB (sklearn)", "value": "hgb_clf"},
+                        {"label": "XGBoost (Clf)", "value": "xgb_clf"},
+                        {"label": "CatBoost (Clf)", "value": "cb_clf"}
                     ],
                     value="log",
                     size="sm"
