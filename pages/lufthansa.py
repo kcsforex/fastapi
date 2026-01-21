@@ -174,7 +174,7 @@ def run_ml_clicks(n_clicks, reg_choice, clf_choice, data):
     
     if not data:
         msg = "No data for ML"
-        return msg, "-", "-", "-", "-"
+        return msg, "-", "-", "-"
 
     df = pd.DataFrame(data)
     data_ml = lh_ml.prepare(df)
