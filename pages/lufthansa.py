@@ -41,50 +41,82 @@ layout = dbc.Container([
     ], style=CARD_STYLE, className="mb-4"),
 
     
-html.Div([
+html.Div(
+    [
         html.H5("ML Modeling", className="text-light mb-2"),
 
-        dbc.Row([
-            dbc.Col([
-                html.Label("Regression Model", className="text-light small"),
-                dbc.Select(id="lh-reg-model", options=[
-                        {"label": "Linear Regression", "value": "lin"},
-                        {"label": "Decision Tree (Reg)", "value": "tree_reg"},
-                        {"label": "Random Forest (Reg)", "value": "rf_reg"},      
-                        {"label": "GBM (sklearn)", "value": "gbm_reg"},
-                        {"label": "HistGB (sklearn)", "value": "hgb_reg"},
-                        {"label": "XGBoost (Reg)", "value": "xgb_reg"},
-                        {"label": "CatBoost (Reg)", "value": "cb_reg"}
-                    ], value="lin", size="sm")
-            ], md=2),
+        dbc.Row(
+            [
+                dbc.Col(
+                    [
+                        html.Label("Regression Model", className="text-light small"),
+                        dbc.Select(
+                            id="lh-reg-model",
+                            options=[
+                                {"label": "Linear Regression", "value": "lin"},
+                                {"label": "Decision Tree (Reg)", "value": "tree_reg"},
+                                {"label": "Random Forest (Reg)", "value": "rf_reg"},
+                                {"label": "GBM (sklearn)", "value": "gbm_reg"},
+                                {"label": "HistGB (sklearn)", "value": "hgb_reg"},
+                                {"label": "XGBoost (Reg)", "value": "xgb_reg"},
+                                {"label": "CatBoost (Reg)", "value": "cb_reg"},
+                            ],
+                            value="lin",
+                            size="sm",
+                        ),
+                    ],
+                    md=2,
+                ),
 
-            dbc.Col([
-                html.Label("Classification Model", className="text-light small"),
-                dbc.Select(id="lh-clf-model", options=[
-                        {"label": "Logistic Regression", "value": "log"},
-                        {"label": "Decision Tree (Clf)", "value": "tree_clf"},
-                        {"label": "Random Forest (Clf)", "value": "rf_clf"},         
-                        {"label": "GBM (sklearn)", "value": "gbm_clf"},
-                        {"label": "HistGB (sklearn)", "value": "hgb_clf"},
-                        {"label": "XGBoost (Clf)", "value": "xgb_clf"},
-                        {"label": "CatBoost (Clf)", "value": "cb_clf"}
-                    ], value="log", size="sm")
-            ], md=2),
+                dbc.Col(
+                    [
+                        html.Label("Classification Model", className="text-light small"),
+                        dbc.Select(
+                            id="lh-clf-model",
+                            options=[
+                                {"label": "Logistic Regression", "value": "log"},
+                                {"label": "Decision Tree (Clf)", "value": "tree_clf"},
+                                {"label": "Random Forest (Clf)", "value": "rf_clf"},
+                                {"label": "GBM (sklearn)", "value": "gbm_clf"},
+                                {"label": "HistGB (sklearn)", "value": "hgb_clf"},
+                                {"label": "XGBoost (Clf)", "value": "xgb_clf"},
+                                {"label": "CatBoost (Clf)", "value": "cb_clf"},
+                            ],
+                            value="log",
+                            size="sm",
+                        ),
+                    ],
+                    md=2,
+                ),
 
-            dbc.Col([
-                dbc.Button("Run ML Prediction", id="run-ml", color="primary", size="sm", n_clicks=0, style={"marginTop": "20px"})
-            ], md=2),
+                dbc.Col(
+                    dbc.Button(
+                        "Run ML Prediction",
+                        id="run-ml",
+                        color="primary",
+                        size="sm",
+                        n_clicks=0,
+                        style={"marginTop": "20px"},
+                    ),
+                    md=2,
+                ),
 
+                dbc.Col(html.Div(id="ml-kpi-lin", className="text-light"), md=2),
+                dbc.Col(html.Div(id="ml-kpi-log", className="text-light"), md=2),
+            ]
+        ),
 
-
-        dbc.Col(html.Div(id="ml-kpi-lin", className="text-light"), md=2),
-        dbc.Col(html.Div(id="ml-kpi-log", className="text-light"), md=2),
-
-
-    dbc.Row([
-        dbc.Col(html.Div(id="lh-ml-table", className="text-light"))
-    ])
-], style=CARD_STYLE, className="mb-4")
+        dbc.Row(
+            [
+                dbc.Col(
+                    html.Div(id="lh-ml-table", className="text-light")
+                )
+            ]
+        ),
+    ],
+    style=CARD_STYLE,
+    className="mb-4",
+)
 
 
 ], fluid=True)
