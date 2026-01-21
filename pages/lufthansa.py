@@ -43,8 +43,6 @@ layout = dbc.Container([
     
     html.Div(
     [
-        html.H5("ML Modeling", className="text-light mb-2"),
-
         dbc.Row(
             [
                 dbc.Col(
