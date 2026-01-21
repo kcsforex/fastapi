@@ -83,7 +83,7 @@ def train_hgb_linear(df, learning_rate=0.06, max_depth=None, max_iter=300, rando
 def train_xgb_linear(df, n_estimators=300, learning_rate=0.06, max_depth=6, subsample=0.8, colsample_bytree=0.8, random_state=42):
     d = df.dropna(subset=["arrival_delay"]).copy()
     X = d[["dep_delay", "dep_hour", "dep_dow"]].fillna(0)
-    y = d["arrival_delay"].astype(float).values
+    y = d["arrival_delay"].astype(float)
     X_tr, X_te, y_tr, y_te = train_test_split(X, y, test_size=0.2, random_state=random_state)
     model = xgb.XGBRegressor(n_estimators=n_estimators, learning_rate=learning_rate, max_depth=max_depth,subsample=subsample, colsample_bytree=colsample_bytree, random_state=random_state, objective="reg:squarederror").fit(X_tr, y_tr)
     return model, reg_metrics(y_te, model.predict(X_te))
@@ -150,7 +150,7 @@ def train_hgb_logistic(df, learning_rate=0.06, max_depth=None, max_iter=300, ran
 def train_xgb_logistic(df, n_estimators=400, learning_rate=0.06, max_depth=6, subsample=0.8, colsample_bytree=0.8, random_state=42):
     d = df.dropna(subset=["is_delayed"]).copy()
     X = d[["dep_delay", "dep_hour", "dep_dow"]].fillna(0)
-    y = d["is_delayed"].astype(int).values
+    y = d["is_delayed"].astype(int)
     X_tr, X_te, y_tr, y_te = train_test_split(X, y, test_size=0.25, random_state=random_state, stratify=y)
     model = xgb.XGBClassifier(n_estimators=n_estimators, learning_rate=learning_rate, max_depth=max_depth,subsample=subsample, colsample_bytree=colsample_bytree, random_state=random_state,
         objective="binary:logistic", eval_metric="logloss").fit(X_tr, y_tr)
@@ -186,6 +186,7 @@ def predict_latest_logistic(model, df: pd.DataFrame, n=12):
 
     cols = ["route_key", "dep_sched", "pred_prob_delay", "pred_flag_delay"]
     return latest[[c for c in cols if c in latest.columns]]
+
 
 
 
