@@ -5,7 +5,10 @@ import numpy as np
 from sklearn.linear_model import LinearRegression, LogisticRegression
 from sklearn.tree import DecisionTreeRegressor, DecisionTreeClassifier
 from sklearn.ensemble import RandomForestRegressor, RandomForestClassifier
-
+from sklearn.ensemble import GradientBoostingRegressor, GradientBoostingClassifier
+from sklearn.ensemble import HistGradientBoostingRegressor, HistGradientBoostingClassifier
+import xgboost as xgb
+from catboost import CatBoostRegressor, CatBoostClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error,  accuracy_score, precision_score, recall_score, f1_score
 
@@ -183,3 +186,4 @@ def predict_latest_logistic(model, df: pd.DataFrame, n=12):
 
     cols = ["route_key", "dep_sched", "pred_prob_delay", "pred_flag_delay"]
     return latest[[c for c in cols if c in latest.columns]]
+
