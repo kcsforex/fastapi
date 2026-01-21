@@ -63,7 +63,7 @@ layout = dbc.Container([
                             size="sm",
                         ),
                     ],
-                    md=2,
+                    md=3,
                 ),
 
                 dbc.Col(
@@ -84,7 +84,7 @@ layout = dbc.Container([
                             size="sm",
                         ),
                     ],
-                    md=2,
+                    md=3,
                 ),
 
                 dbc.Col(
