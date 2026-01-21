@@ -229,12 +229,60 @@ def run_ml_clicks(n_clicks, reg_choice, clf_choice, data):
     else:
         clf_model, clf_metrics = lh_ml.train_logistic(data_ml)
 
-    clf_kpi = html.Div([
+    clf_kpi0 = html.Div([
         html.Div(f"Accuracy:  {clf_metrics['acc']:.3f}"),
         html.Div(f"Precision: {clf_metrics['prec']:.3f}"),
         html.Div(f"Recall:    {clf_metrics['rec']:.3f}"),
         html.Div(f"F1-score:  {clf_metrics['f1']:.3f}"),
     ])
+
+    clf_kpi = html.Div(
+    [
+        html.H6("Classification", className="text-light mb-2"),
+
+        html.Div(
+            [
+                html.Div(
+                    [
+                        html.Span("Accuracy", className="text-muted"),
+                        html.Span(f"{clf_metrics['acc']:.3f}", className="fw-bold"),
+                    ],
+                    className="d-flex justify-content-between",
+                ),
+                html.Div(
+                    [
+                        html.Span("Precision", className="text-muted"),
+                        html.Span(f"{clf_metrics['prec']:.3f}", className="fw-bold"),
+                    ],
+                    className="d-flex justify-content-between",
+                ),
+                html.Div(
+                    [
+                        html.Span("Recall", className="text-muted"),
+                        html.Span(f"{clf_metrics['rec']:.3f}", className="fw-bold"),
+                    ],
+                    className="d-flex justify-content-between",
+                ),
+                html.Div(
+                    [
+                        html.Span("F1-score", className="text-muted"),
+                        html.Span(f"{clf_metrics['f1']:.3f}", className="fw-bold"),
+                    ],
+                    className="d-flex justify-content-between",
+                ),
+            ],
+            className="small",
+        ),
+    ],
+    style={
+        "backgroundColor": "#1f2933",   # dark card bg
+        "height": "140px",              # fixed height
+        "padding": "10px 12px",
+        "borderRadius": "8px",
+        "border": "1px solid #2d3748",
+    },
+)
+
 
     clf_pred = lh_ml.predict_latest_logistic(clf_model, data_ml, n=15)
 
