@@ -1,4 +1,4 @@
-# 2026.01.21  12.00
+# 2026.01.21  15.00
 import dash
 import pandas as pd
 from dash import html, dcc, Input, Output, State, callback, no_update
@@ -48,9 +48,7 @@ html.Div([
         dbc.Row([
             dbc.Col([
                 html.Label("Regression Model", className="text-light small"),
-                dbc.Select(
-                    id="lh-reg-model",
-                    options=[
+                dbc.Select(id="lh-reg-model", options=[
                         {"label": "Linear Regression", "value": "lin"},
                         {"label": "Decision Tree (Reg)", "value": "tree_reg"},
                         {"label": "Random Forest (Reg)", "value": "rf_reg"},      
@@ -58,17 +56,12 @@ html.Div([
                         {"label": "HistGB (sklearn)", "value": "hgb_reg"},
                         {"label": "XGBoost (Reg)", "value": "xgb_reg"},
                         {"label": "CatBoost (Reg)", "value": "cb_reg"}
-                    ],
-                    value="lin",
-                    size="sm"
-                )
+                    ], value="lin", size="sm")
             ], md=4),
 
             dbc.Col([
                 html.Label("Classification Model", className="text-light small"),
-                dbc.Select(
-                    id="lh-clf-model",
-                    options=[
+                dbc.Select(id="lh-clf-model", options=[
                         {"label": "Logistic Regression", "value": "log"},
                         {"label": "Decision Tree (Clf)", "value": "tree_clf"},
                         {"label": "Random Forest (Clf)", "value": "rf_clf"},         
@@ -76,22 +69,14 @@ html.Div([
                         {"label": "HistGB (sklearn)", "value": "hgb_clf"},
                         {"label": "XGBoost (Clf)", "value": "xgb_clf"},
                         {"label": "CatBoost (Clf)", "value": "cb_clf"}
-                    ],
-                    value="log",
-                    size="sm"
-                )
+                    ], value="log", size="sm")
             ], md=4),
 
             dbc.Col([
-                dbc.Button(
-                    "Run ML Prediction",
-                    id="run-ml",
-                    color="primary",
-                    size="sm",
-                    n_clicks=0,
-                    style={"marginTop": "20px"}
-                )
+                dbc.Button("Run ML Prediction", id="run-ml", color="primary", size="sm", n_clicks=0, style={"marginTop": "20px"})
             ], md=4),
+
+            
         ], className="g-2"),
 
         html.Span(id="ml-status", className="text-muted small ms-2"),
