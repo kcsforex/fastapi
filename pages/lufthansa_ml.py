@@ -1,5 +1,5 @@
 
-# 2026.01.21  11.00
+# 2026.01.21  12.00
 import pandas as pd
 import numpy as np
 from sklearn.linear_model import LinearRegression, LogisticRegression
@@ -183,6 +183,7 @@ def predict_latest_logistic(model, df: pd.DataFrame, n=12):
 
     cols = ["route_key", "dep_sched", "pred_prob_delay", "pred_flag_delay"]
     return latest[[c for c in cols if c in latest.columns]]
+
 
 
 
