@@ -1,4 +1,4 @@
-# 2026.01.21  15.00
+# 2026.01.21  18.00
 import dash
 import pandas as pd
 from dash import html, dcc, Input, Output, State, callback, no_update
@@ -42,7 +42,6 @@ layout = dbc.Container([
 
     
 html.Div([
-    html.Div([
         html.H5("ML Modeling", className="text-light mb-2"),
 
         dbc.Row([
@@ -57,7 +56,7 @@ html.Div([
                         {"label": "XGBoost (Reg)", "value": "xgb_reg"},
                         {"label": "CatBoost (Reg)", "value": "cb_reg"}
                     ], value="lin", size="sm")
-            ], md=4),
+            ], md=2),
 
             dbc.Col([
                 html.Label("Classification Model", className="text-light small"),
@@ -70,22 +69,17 @@ html.Div([
                         {"label": "XGBoost (Clf)", "value": "xgb_clf"},
                         {"label": "CatBoost (Clf)", "value": "cb_clf"}
                     ], value="log", size="sm")
-            ], md=4),
+            ], md=2),
 
             dbc.Col([
                 dbc.Button("Run ML Prediction", id="run-ml", color="primary", size="sm", n_clicks=0, style={"marginTop": "20px"})
-            ], md=4),
+            ], md=2),
 
-            
-        ], className="g-2"),
 
-        html.Span(id="ml-status", className="text-muted small ms-2"),
-    ], className="mb-3"),
 
-    dbc.Row([
-        dbc.Col(html.Div(id="ml-kpi-lin", className="text-light"), md=6),
-        dbc.Col(html.Div(id="ml-kpi-log", className="text-light"), md=6),
-    ], className="mb-3"),
+        dbc.Col(html.Div(id="ml-kpi-lin", className="text-light"), md=2),
+        dbc.Col(html.Div(id="ml-kpi-log", className="text-light"), md=2),
+
 
     dbc.Row([
         dbc.Col(html.Div(id="lh-ml-table", className="text-light"))
