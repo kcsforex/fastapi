@@ -200,6 +200,14 @@ def run_ml_clicks(n_clicks, reg_choice, clf_choice, data):
         clf_model, clf_metrics = lh_ml.train_tree_logistic(data_ml)
     elif clf_choice == "rf_clf":
         clf_model, clf_metrics = lh_ml.train_rf_logistic(data_ml)
+    elif clf_choice == "gbm_clf":
+        clf_model, clf_metrics = lh_ml.train_gbm_logistic(data_ml)
+    elif clf_choice == "hgb_clf":
+        clf_model, clf_metrics = lh_ml.train_hgb_logistic(data_ml)
+    elif clf_choice == "xgb_clf":
+        clf_model, clf_metrics = lh_ml.train_xgb_logistic(data_ml)
+    elif clf_choice == "cb_clf":
+        clf_model, clf_metrics = lh_ml.train_cb_logistic(data_ml)
     else:
         clf_model, clf_metrics = lh_ml.train_logistic(data_ml)
 
