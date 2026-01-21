@@ -128,6 +128,39 @@ def train_rf_logistic(df, n_estimators=300, max_depth=None, random_state=42):
     model = RandomForestClassifier(n_estimators=n_estimators,max_depth=max_depth,random_state=random_state,class_weight="balanced").fit(X_tr, y_tr)
     return model, clf_metrics(y_te, model.predict(X_te))
 
+def train_gbm_logistic(df, n_estimators=300, learning_rate=0.06, max_depth=3, random_state=42, subsample=1.0):
+    d = df.dropna(subset=["is_delayed"]).copy()  
+    X = d[["dep_delay", "dep_hour", "dep_dow"]].fillna(0)
+    y = d["is_delayed"].astype(int)
+    X_tr, X_te, y_tr, y_te = train_test_split(X, y, test_size=0.25, random_state=random_state, stratify=y)
+    model = GradientBoostingClassifier(n_estimators=n_estimators, learning_rate=learning_rate,max_depth=max_depth, subsample=subsample, random_state=random_state).fit(X_tr, y_tr)
+    return model, _clf_metrics(y_te, model.predict(X_te))
+
+def train_hgb_logistic(df, learning_rate=0.06, max_depth=None, max_iter=300, random_state=42):
+    d = df.dropna(subset=["is_delayed"]).copy()
+    X = d[["dep_delay", "dep_hour", "dep_dow"]].fillna(0)
+    y = d["is_delayed"].astype(int)
+    X_tr, X_te, y_tr, y_te = train_test_split(X, y, test_size=0.25, random_state=random_state, stratify=y)
+    model = HistGradientBoostingClassifier(learning_rate=learning_rate, max_depth=max_depth, max_iter=max_iter, random_state=random_state).fit(X_tr, y_tr)
+    return model, _clf_metrics(y_te, model.predict(X_te))
+
+def train_xgb_logistic(df, n_estimators=400, learning_rate=0.06, max_depth=6, subsample=0.8, colsample_bytree=0.8, random_state=42):
+    d = df.dropna(subset=["is_delayed"]).copy()
+    X = d[["dep_delay", "dep_hour", "dep_dow"]].fillna(0)
+    y = d["is_delayed"].astype(int).values
+    X_tr, X_te, y_tr, y_te = train_test_split(X, y, test_size=0.25, random_state=random_state, stratify=y)
+    model = xgb.XGBClassifier(n_estimators=n_estimators, learning_rate=learning_rate, max_depth=max_depth,subsample=subsample, colsample_bytree=colsample_bytree, random_state=random_state,
+        objective="binary:logistic", eval_metric="logloss",scale_pos_weight=_scale_pos_weight(y_tr)).fit(X_tr, y_tr)
+    return model, _clf_metrics(y_te, model.predict(X_te))
+
+def train_cb_logistic(df, iterations=400, learning_rate=0.06, depth=6, random_state=42):
+    d = df.dropna(subset=["is_delayed"]).copy()
+    X = d[["dep_delay", "dep_hour", "dep_dow"]].fillna(0)
+    y = d["is_delayed"].astype(int)
+    X_tr, X_te, y_tr, y_te = train_test_split(X, y, test_size=0.25, random_state=random_state, stratify=y)
+    model = CatBoostClassifier(iterations=iterations, learning_rate=learning_rate, depth=depth,loss_function="Logloss", random_seed=random_state, verbose=False,allow_writing_files=False, auto_class_weights="Balanced").fit(X_tr, y_tr)
+    return model, _clf_metrics(y_te, model.predict(X_te))
+
 # ======================================================
 #  Predictions
 # ======================================================
@@ -150,5 +183,6 @@ def predict_latest_logistic(model, df: pd.DataFrame, n=12):
 
     cols = ["route_key", "dep_sched", "pred_prob_delay", "pred_flag_delay"]
     return latest[[c for c in cols if c in latest.columns]]
+
 
 
