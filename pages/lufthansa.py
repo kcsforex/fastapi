@@ -246,7 +246,7 @@ def run_ml_clicks(n_clicks, reg_choice, clf_choice, data):
         style={"height": "250px", "overflowY": "auto", "overflowX": "hidden",  "fontSize": "12px",
                "backgroundColor": "transparent",  "--bs-table-bg": "transparent", "--bs-table-accent-bg": "transparent"})
     
-    return "ML ran successfully ✔", reg_kpi, clf_kpi, reg_clf_table
+    return reg_kpi, clf_kpi, reg_clf_table
 
 
 
