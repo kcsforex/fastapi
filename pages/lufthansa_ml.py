@@ -92,8 +92,8 @@ def train_cb_linear(df, iterations=300, learning_rate=0.06, depth=6, random_stat
     d = df.dropna(subset=["arrival_delay"]).copy()
     X = d[["dep_delay", "dep_hour", "dep_dow"]].fillna(0)
     y = d["arrival_delay"].astype(float)
-    model = CatBoostRegressor(iterations=iterations, learning_rate=learning_rate, depth=depth,loss_function="RMSE", random_state=random_state, verbose=False,allow_writing_files=False)
-    X_tr, X_te, y_tr, y_te = train_test_split(X, y, test_size=0.2, random_state=random_state).fit(X_tr, y_tr)
+    X_tr, X_te, y_tr, y_te = train_test_split(X, y, test_size=0.2, random_state=random_state)
+    model = CatBoostRegressor(iterations=iterations, learning_rate=learning_rate, depth=depth,loss_function="RMSE", random_state=random_state, verbose=False,allow_writing_files=False).fit(X_tr, y_tr)
     return model, reg_metrics(y_te, model.predict(X_te))
 
 # ========= Classification (is_delayed >= 15 min) =========
@@ -186,6 +186,7 @@ def predict_latest_logistic(model, df: pd.DataFrame, n=12):
 
     cols = ["route_key", "dep_sched", "pred_prob_delay", "pred_flag_delay"]
     return latest[[c for c in cols if c in latest.columns]]
+
 
 
 
