@@ -61,7 +61,7 @@ def train_rf_linear(df, n_estimators=300, max_depth=None, random_state=42):
     y = d["arrival_delay"].astype(float)
     X = X.fillna({"dep_delay": 0.0, "dep_hour": X["dep_hour"].median(), "dep_dow": X["dep_dow"].median()})
     X_tr, X_te, y_tr, y_te = train_test_split(X, y, test_size=0.2, random_state=42)
-    model = DecisionForestRegressor(n_estimators=n_estimators, max_depth=max_depth, random_state=random_state).fit(X_tr, y_tr)
+    model = RandomForestRegressor(n_estimators=n_estimators, max_depth=max_depth, random_state=random_state).fit(X_tr, y_tr)
     return model, reg_metrics(y_te, model.predict(X_te))
 
 def train_gbm_linear(df, n_estimators=300, learning_rate=0.06, max_depth=3, random_state=42, subsample=1.0):
@@ -186,6 +186,7 @@ def predict_latest_logistic(model, df: pd.DataFrame, n=12):
 
     cols = ["route_key", "dep_sched", "pred_prob_delay", "pred_flag_delay"]
     return latest[[c for c in cols if c in latest.columns]]
+
 
 
 
