@@ -153,7 +153,7 @@ def train_xgb_logistic(df, n_estimators=400, learning_rate=0.06, max_depth=6, su
     y = d["is_delayed"].astype(int).values
     X_tr, X_te, y_tr, y_te = train_test_split(X, y, test_size=0.25, random_state=random_state, stratify=y)
     model = xgb.XGBClassifier(n_estimators=n_estimators, learning_rate=learning_rate, max_depth=max_depth,subsample=subsample, colsample_bytree=colsample_bytree, random_state=random_state,
-        objective="binary:logistic", eval_metric="logloss",scale_pos_weight=_scale_pos_weight(y_tr)).fit(X_tr, y_tr)
+        objective="binary:logistic", eval_metric="logloss").fit(X_tr, y_tr)
     return model, clf_metrics(y_te, model.predict(X_te))
 
 def train_cb_logistic(df, iterations=400, learning_rate=0.06, depth=6, random_state=42):
@@ -186,5 +186,6 @@ def predict_latest_logistic(model, df: pd.DataFrame, n=12):
 
     cols = ["route_key", "dep_sched", "pred_prob_delay", "pred_flag_delay"]
     return latest[[c for c in cols if c in latest.columns]]
+
 
 
