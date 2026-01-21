@@ -325,7 +325,6 @@ def run_ml_clicks(n_clicks, reg_choice, clf_choice, data):
 
     clf_pred = lh_ml.predict_latest_logistic(clf_model, data_ml, n=15)
 
-
     comp = pd.merge(reg_pred, clf_pred, on=["route_key", "dep_sched"], how="outer", validate="one_to_one", sort=False)
     comp[["arrival_delay", "pred_delay"]] = comp[["arrival_delay", "pred_delay"]].round(1)
     comp["pred_prob_delay"] = comp["pred_prob_delay"].astype("float64").round(3)    
@@ -334,6 +333,3 @@ def run_ml_clicks(n_clicks, reg_choice, clf_choice, data):
                "backgroundColor": "transparent",  "--bs-table-bg": "transparent", "--bs-table-accent-bg": "transparent"})
     
     return reg_kpi, clf_kpi, reg_clf_table
-
-
-
