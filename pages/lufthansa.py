@@ -199,11 +199,52 @@ def run_ml_clicks(n_clicks, reg_choice, clf_choice, data):
     else:
         reg_model, reg_metrics = lh_ml.train_linear(data_ml)
 
-    reg_kpi = html.Div([
+    reg_kpi0 = html.Div([
         html.Div(f"RMSE: {reg_metrics['rmse']:.1f}"),
         html.Div(f"MAE: {reg_metrics['mae']:.1f}"),
         html.Div(f"R² : {reg_metrics['r2']:.3f}"),
     ])
+
+    reg_kpi = html.Div(
+    [
+        html.H6("Regression", className="text-light mb-2"),
+
+        html.Div(
+            [
+                html.Div(
+                    [
+                        html.Span("RMSE", className="text-muted"),
+                        html.Span(f"{reg_metrics['rmse']:.1f}", className="fw-bold"),
+                    ],
+                    className="d-flex justify-content-between",
+                ),
+                html.Div(
+                    [
+                        html.Span("MAE", className="text-muted"),
+                        html.Span(f"{reg_metrics['mae']:.1f}", className="fw-bold"),
+                    ],
+                    className="d-flex justify-content-between",
+                ),
+                html.Div(
+                    [
+                        html.Span("R²", className="text-muted"),
+                        html.Span(f"{reg_metrics['r2']:.3f}", className="fw-bold"),
+                    ],
+                    className="d-flex justify-content-between",
+                ),
+            ],
+            className="small",
+        ),
+    ],
+    style={
+        "backgroundColor": "#1f2933",
+        "height": "140px",              # same height as classification card
+        "padding": "10px 12px",
+        "borderRadius": "8px",
+        "border": "1px solid #2d3748",
+    },
+)
+
 
     # Predict on latest rows
     reg_pred = lh_ml.predict_latest_linear(reg_model, data_ml, n=15)
