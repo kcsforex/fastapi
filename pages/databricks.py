@@ -1,4 +1,4 @@
-# 2026.01.24  18.00
+l# 2026.01.24  18.00
 import dash
 from dash import dcc, html, Input, Output, State, callback, dash_table
 from dash.exceptions import PreventUpdate
@@ -65,6 +65,8 @@ layout = dbc.Container([
             ], style=CARD_STYLE)
         ], width=12, lg=4),
 
+        html.Div(id="gbt-metrics-table", style=CARD_STYLE)
+
         # Results Area
         dbc.Col([
             html.Div([
@@ -74,15 +76,17 @@ layout = dbc.Container([
                 )
             ], style=CARD_STYLE),
             
-            html.Div(id="gbt-table-container", style=CARD_STYLE)
+            html.Div(id="gbt-model-table", style=CARD_STYLE)
+            
         ], width=12, lg=8)
     ])
 ], fluid=True)
 
 # --- 4. CALLBACKS ---
 @callback(
-    [Output("gbt-chart", "figure"),
-    Output("gbt-table-container", "children")],
+    [Output("gbt-metrics-table", "children"),
+    Output("gbt-chart", "figure"),
+    Output("gbt-model-table", "children")],
     [Input("run-btn", "n_clicks")],
     [State("maxIter", "value"),
      State("maxDepth", "value")],
