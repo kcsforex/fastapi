@@ -134,7 +134,7 @@ def update_chart(n_clicks, maxIter, maxDepth):
     #    result_df_formatted[col] = pd.to_numeric(result_df_formatted[col], errors='ignore')
     #result_df_formatted = result_df_formatted.round(3)
 
-    table_df = result_df.copy()
+    table_df = model_df.copy()
     numeric_cols = table_df.select_dtypes(include="number").columns
     table_df[numeric_cols] = table_df[numeric_cols].round(3)
 
