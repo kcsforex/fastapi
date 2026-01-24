@@ -51,7 +51,7 @@ layout = dbc.Container([
         # Controls Sidebar
         dbc.Col([
             html.Div([
-                html.Label("Number of Trees", className="text-info small"),
+                html.Label("Max Iteration", className="text-info small"),
                 dcc.Slider(id="maxIter", min=5, max=25, step=5, value=10, 
                            marks={i: {'label': str(i), 'style': {'color': 'white'}} for i in range(5, 26, 5)}),
                 
