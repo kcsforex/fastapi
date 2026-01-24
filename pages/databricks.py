@@ -143,7 +143,7 @@ def update_chart(n_clicks, maxIter, maxDepth):
 
 
     model_num_cols = model_df.select_dtypes(include="number").columns
-    model_df[modeLnum_cols] = model_df[model_num_cols].round(3)
+    model_df[model_num_cols] = model_df[model_num_cols].round(3)
     model_table = dbc.Table.from_dataframe(model_df[:10], striped=False, hover=True, responsive=True, borderless=True, className="text-light m-0", 
         style={"backgroundColor": "transparent", "--bs-table-bg": "transparent", "--bs-table-accent-bg": "transparent", "color": "white"})
 
