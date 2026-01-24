@@ -1,4 +1,4 @@
-# 2026.01.20  10.00
+# 2026.01.24  18.00
 import os
 import httpx
 import asyncio
@@ -9,14 +9,7 @@ from sqlalchemy import create_engine
 
 # ----- CONFIGURATION -----
 DB_CONFIG = "postgresql://sql_admin:sql_pass@72.62.151.169:5432/n8n"
-#sql_engine = create_engine(DB_CONFIG, pool_size=10, max_overflow=20)
-
-sql_engine = create_engine(
-    DB_CONFIG,
-    pool_size=0,
-    max_overflow=0,
-    pool_pre_ping=True
-)
+sql_engine = create_engine(DB_CONFIG, pool_size=0, max_overflow=0, pool_pre_ping=True)
 
 router = APIRouter()
 
