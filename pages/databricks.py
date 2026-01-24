@@ -134,14 +134,13 @@ def update_chart(n_clicks, maxIter, maxDepth):
     fig.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)',font_color="white", margin=dict(t=50, b=0, l=0, r=0))
 
     metrics_table = dbc.Table.from_dataframe(metrics_df[:10], striped=False, hover=True, responsive=True, borderless=True, className="text-light m-0", 
-        style={"backgroundColor": "transparent", "--bs-table-bg": "transparent", "--bs-table-accent-bg": "transparent", "color": "white"}
+        style={"backgroundColor": "transparent", "--bs-table-bg": "transparent", "--bs-table-accent-bg": "transparent", "color": "white"})
 
     table_df = model_df.copy()
     numeric_cols = table_df.select_dtypes(include="number").columns
     table_df[numeric_cols] = table_df[numeric_cols].round(3)
 
     model_table = dbc.Table.from_dataframe(table_df[:10], striped=False, hover=True, responsive=True, borderless=True, className="text-light m-0", 
-        style={"backgroundColor": "transparent", "--bs-table-bg": "transparent", "--bs-table-accent-bg": "transparent", "color": "white"}
-    )
+        style={"backgroundColor": "transparent", "--bs-table-bg": "transparent", "--bs-table-accent-bg": "transparent", "color": "white"})
 
     return metrics_table, fig, model_table
