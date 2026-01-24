@@ -1,4 +1,4 @@
-# 2026.01.12  18.00
+# 2026.01.24  18.00
 import dash
 from dash import dcc, html, Input, Output, State, callback, dash_table
 from dash.exceptions import PreventUpdate
@@ -43,7 +43,7 @@ CARD_STYLE = {
 
 layout = dbc.Container([
     html.Div([
-        html.H2("Random Forest Engine", className="text-light fw-bold mb-0"),
+        html.H2("NYC Yellow Taxi (GBT Engine)", className="text-light fw-bold mb-0"),
         html.P("Remote Execution on Databricks Cluster", className="text-muted small"),
     ], className="mb-4"),
 
@@ -52,11 +52,11 @@ layout = dbc.Container([
         dbc.Col([
             html.Div([
                 html.Label("Number of Trees", className="text-info small"),
-                dcc.Slider(id="numTrees", min=3, max=10, step=1, value=5, 
+                dcc.Slider(id="maxIter", min=5, max=25, step=5, value=10, 
                            marks={i: {'label': str(i), 'style': {'color': 'white'}} for i in range(5, 26, 5)}),
                 
                 html.Label("Max Depth", className="text-info small mt-4"),
-                dcc.Slider(id="maxDepth", min=2, max=5, step=1, value=3,
+                dcc.Slider(id="maxDepth", min=2, max=7, step=1, value=3,
                            marks={i: {'label': str(i), 'style': {'color': 'white'}} for i in range(2, 11, 2)}),
                 
                 dbc.Button([
@@ -69,32 +69,32 @@ layout = dbc.Container([
         dbc.Col([
             html.Div([
                 dcc.Loading(
-                    dcc.Graph(id="rf-chart", config={'displayModeBar': False}),
+                    dcc.Graph(id="gbt-chart", config={'displayModeBar': False}),
                     type="graph", color="#00d1ff"
                 )
             ], style=CARD_STYLE),
             
-            html.Div(id="rf-table-container", style=CARD_STYLE)
+            html.Div(id="gbt-table-container", style=CARD_STYLE)
         ], width=12, lg=8)
     ])
 ], fluid=True)
 
 # --- 4. CALLBACKS ---
 @callback(
-    [Output("rf-chart", "figure"),
-    Output("rf-table-container", "children")],
+    [Output("gbt-chart", "figure"),
+    Output("gbt-table-container", "children")],
     [Input("run-btn", "n_clicks")],
-    [State("numTrees", "value"),
+    [State("maxIter", "value"),
      State("maxDepth", "value")],
     prevent_initial_call=True
 )
-def update_chart(n_clicks, numTrees, maxDepth):
+def update_chart(n_clicks, maxIter, maxDepth):
     if not n_clicks:
         raise PreventUpdate
 
     # ----- A. Trigger Databricks job -----
     run_now_url = f"https://{DBX_HOST}/api/2.2/jobs/run-now"
-    payload = { "job_id": DBX_JOB_ID, "notebook_params": {"numTrees": str(numTrees), "maxDepth": str(maxDepth)}}
+    payload = { "job_id": DBX_JOB_ID, "notebook_params": {"maxIter": str(maxIter), "maxDepth": str(maxDepth)}}
 
     response = requests.post(run_now_url, headers=headers, json=payload)
     if response.status_code != 200:
@@ -115,13 +115,17 @@ def update_chart(n_clicks, numTrees, maxDepth):
     try:
         connection = sql.connect(server_hostname=DBX_HOST, http_path=DBX_HTTP_PATH, access_token=DBX_TOKEN)
         with connection.cursor() as cursor:
-            cursor.execute("SELECT age, sex, bmi, bp, target, prediction FROM test_cat.test_db.diab_pred LIMIT 15")
-            result_df = cursor.fetchall_arrow().to_pandas()
+            cursor.execute("SELECT trip_distance, passenger_count, pickup_hour, duration_mins, prediction FROM test_cat.test_db.nyctaxi_model_pred LIMIT 100")
+            model_df = cursor.fetchall_arrow().to_pandas()
+
+            cursor.execute("SELECT trip_distance, passenger_count, pickup_hour, duration_mins, prediction FROM test_cat.test_db.nyctaxi_model_metrics LIMIT 100")
+            metrics_df = cursor.fetchall_arrow().to_pandas()
         connection.close()
+        
     except Exception as e:
         return px.scatter(title=f"SQL Error: {e}"), html.Div(f"Query Error: {e}", className="text-danger")
 
-    fig = px.scatter(result_df, x="target", y="prediction", title=f"RF Results: Trees={numTrees} | Depth={maxDepth}", template="plotly_dark")
+    fig = px.scatter(model_df, x="duration_mins", y="prediction", title=f"RF Results: Iter={maxIter} | Depth={maxDepth}", template="plotly_dark")
     
     fig.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)',font_color="white", margin=dict(t=50, b=0, l=0, r=0))
 
