@@ -65,7 +65,7 @@ layout = dbc.Container([
             ], style=CARD_STYLE)
         ], width=12, lg=4),
 
-        html.Div(id="gbt-metrics-table", style=CARD_STYLE)
+        html.Div(id="gbt-metrics-table", style=CARD_STYLE),
 
         # Results Area
         dbc.Col([
