@@ -138,7 +138,7 @@ def update_chart(n_clicks, maxIter, maxDepth):
     numeric_cols = table_df.select_dtypes(include="number").columns
     table_df[numeric_cols] = table_df[numeric_cols].round(3)
 
-    table = dbc.Table.from_dataframe(table_df, striped=False, hover=True, responsive=True, borderless=True, className="text-light m-0", 
+    table = dbc.Table.from_dataframe(table_df[:10], striped=False, hover=True, responsive=True, borderless=True, className="text-light m-0", 
         style={"backgroundColor": "transparent", "--bs-table-bg": "transparent", "--bs-table-accent-bg": "transparent", "color": "white"}
     )
 
