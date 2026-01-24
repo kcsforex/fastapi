@@ -136,7 +136,7 @@ def update_chart(n_clicks, maxIter, maxDepth):
     
     fig.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)',font_color="white", margin=dict(t=50, b=0, l=0, r=0))
 
-    metrics_num_cols = model_df.select_dtypes(include="number").columns
+    metrics_num_cols = metrics_df.select_dtypes(include="number").columns
     metrics_df[metrics_num_cols] = metrics_df[metrics_num_cols].round(3)
     metrics_table = dbc.Table.from_dataframe(metrics_df[:10], striped=False, hover=True, responsive=True, borderless=True, className="text-light m-0", 
         style={"backgroundColor": "transparent", "--bs-table-bg": "transparent", "--bs-table-accent-bg": "transparent", "color": "white"})
