@@ -62,10 +62,13 @@ layout = dbc.Container([
                 dbc.Button([
                     html.I(className="fas fa-play me-2"), "Run Model"
                 ], id="run-btn", color="info", className="w-100 mt-5 fw-bold", style={"borderRadius": "10px"})
-            ], style=CARD_STYLE)
+            ], style=CARD_STYLE),
+
+            html.Div(id="gbt-metrics-table", style=CARD_STYLE)
+            
         ], width=12, lg=4),
 
-        html.Div(id="gbt-metrics-table", style=CARD_STYLE),
+        
 
         # Results Area
         dbc.Col([
