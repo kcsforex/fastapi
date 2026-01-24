@@ -118,7 +118,7 @@ def update_chart(n_clicks, maxIter, maxDepth):
             cursor.execute("SELECT trip_distance, passenger_count, pickup_hour, duration_mins, prediction FROM test_cat.test_db.nyctaxi_model_pred LIMIT 100")
             model_df = cursor.fetchall_arrow().to_pandas()
 
-            cursor.execute("SELECT trip_distance, passenger_count, pickup_hour, duration_mins, prediction FROM test_cat.test_db.nyctaxi_model_metrics LIMIT 100")
+            cursor.execute("SELECT * FROM test_cat.test_db.nyctaxi_model_metrics LIMIT 100")
             metrics_df = cursor.fetchall_arrow().to_pandas()
         connection.close()
         
