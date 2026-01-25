@@ -9,10 +9,6 @@ import shutil
 import psutil
 from importlib.metadata import version, PackageNotFoundError
 
-# =========================
-# Styling
-# =========================
-
 CARD_STYLE = {
     "background": "rgba(255, 255, 255, 0.03)",
     "backdropFilter": "blur(10px)",
@@ -21,32 +17,12 @@ CARD_STYLE = {
     "padding": "20px"
 }
 
-TABLE_STYLE = {
-    "backgroundColor": "transparent",
-    "--bs-table-bg": "transparent",
-    "--bs-table-accent-bg": "transparent",
-    "color": "white",
-}
+TABLE_STYLE = { "backgroundColor": "transparent", "--bs-table-bg": "transparent", "--bs-table-accent-bg": "transparent", "color": "white",}
 
-# =========================
-# Packages to inspect
-# =========================
-
-PACKAGES = [
-    "fastapi", "psycopg", "dash", "selenium", "ccxt",
-    "pandas", "numpy", "SQLAlchemy", "scikit-learn", "databricks-sql-connector"
-]
-
-# =========================
-# Runtime info
-# =========================
+PACKAGES = ["fastapi", "psycopg", "dash", "selenium", "ccxt", "pandas", "numpy", "SQLAlchemy", "scikit-learn", "databricks-sql-connector"]
 
 def get_runtime_info():
-    info_header = [
-        ("Python Version", sys.version.split()[0]),
-        ("OS Platform", platform.platform()[:11]),
-    ]
-
+    info_header = [("Python Version", sys.version.split()[0]), ("OS Platform", platform.platform()[:11])]
     pkg_rows = []
     for p in PACKAGES:
         try:
@@ -56,36 +32,17 @@ def get_runtime_info():
 
     return info_header, pkg_rows
 
-# =========================
-# Host metrics
-# =========================
-
 def get_host_metrics():
     cpu = psutil.cpu_percent(interval=0.5)
     cpu_freq = psutil.cpu_freq()
     mem = psutil.virtual_memory()
     disk = shutil.disk_usage("/")
 
-    return [
-        ("CPU Usage", f"{cpu} %"),
-        ("CPU Cores", psutil.cpu_count(logical=True)),
-        ("CPU Frequency", f"{cpu_freq.current:.0f} MHz"),
-        ("Memory Usage", f"{mem.percent} %"),
-        ("Memory Total", f"{mem.total / (1024**3):.1f} GB"),
-        ("Disk Usage", f"{disk.used / disk.total * 100:.1f} %"),
-        ("Disk Total", f"{disk.total / (1024**3):.1f} GB"),
-    ]
-
-
-# =========================
-# Page registration
-# =========================
+    return [ ("CPU Usage", f"{cpu} %"), ("CPU Cores", psutil.cpu_count(logical=True)), ("CPU Frequency", f"{cpu_freq.current:.0f} MHz"),
+        ("Memory Usage", f"{mem.percent} %"), ("Memory Total", f"{mem.total / (1024**3):.1f} GB"),
+        ("Disk Usage", f"{disk.used / disk.total * 100:.1f} %"), ("Disk Total", f"{disk.total / (1024**3):.1f} GB")]
 
 dash.register_page( __name__, path="/", name="Overview", icon="fa-home")
-
-# =========================
-# Layout
-# =========================
 
 layout = dbc.Container([
 
