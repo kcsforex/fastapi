@@ -39,7 +39,7 @@ def get_host_metrics():
         ("Memory Usage", f"{mem.percent} %"), ("Memory Total", f"{mem.total / (1024**3):.1f} GB"),
         ("Disk Usage", f"{disk.used / disk.total * 100:.1f} %"), ("Disk Total", f"{disk.total / (1024**3):.1f} GB")]
 
-dash.register_page( __name__, path="/", name="Overview", icon="fa-home")
+dash.register_page( __name__, path="/", name="Overview", icon="fa-home", order=0)
 
 layout = dbc.Container([
 
