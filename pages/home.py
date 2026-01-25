@@ -1,3 +1,4 @@
+# 2026.01.25  11.00
 import dash
 from dash import html, callback, Output, Input
 import dash_bootstrap_components as dbc
@@ -10,12 +11,8 @@ import psutil
 from importlib.metadata import version, PackageNotFoundError
 
 CARD_STYLE = {
-    "background": "rgba(255, 255, 255, 0.03)",
-    "backdropFilter": "blur(10px)",
-    "borderRadius": "15px",
-    "border": "1px solid rgba(255, 255, 255, 0.1)",
-    "padding": "20px"
-}
+    "background": "rgba(255, 255, 255, 0.03)", "backdropFilter": "blur(10px)",
+    "borderRadius": "15px", "border": "1px solid rgba(255, 255, 255, 0.1)", "padding": "20px"}
 
 TABLE_STYLE = { "backgroundColor": "transparent", "--bs-table-bg": "transparent", "--bs-table-accent-bg": "transparent", "color": "white",}
 
@@ -52,7 +49,7 @@ layout = dbc.Container([
         html.P("Monitoring 4 Data Grabbers & 1 ML Engine", className="text-muted"),
     ], className="mb-5"),
 
-    # Status cards
+    # ----- Status cards -----
     dbc.Row([
         dbc.Col(dbc.Card(
             dbc.CardBody([
@@ -80,10 +77,7 @@ layout = dbc.Container([
         
     ], className="mb-5"),
 
-    # Runtime environment card
     dbc.Row([
-
-    # Runtime Environment (LEFT)
     dbc.Col(
         dbc.Card(
             dbc.CardBody([
@@ -92,33 +86,19 @@ layout = dbc.Container([
                  dbc.Col(dbc.Button("Refresh", id="refresh-btn", color="info", outline=True, size="sm", className="mt-3"), width="auto")
                 ],   align="center", justify="between", className="mb-3"),
                 html.Div(id="env-table")
-            ]),
-            style=CARD_STYLE
-        ),
-        width=6
-    ),
+            ]), style=CARD_STYLE), width=6),
 
-    # Package Versions (RIGHT)
     dbc.Col(
         dbc.Card(
             dbc.CardBody([
                 html.H4("Package Versions", className="text-info fw-semibold"),
                 html.Div(id="packages-table"),
-            ]),
-            style=CARD_STYLE
-        ),
-        width=6
-    ),
+            ]), style=CARD_STYLE), width=6),
 
-], className="mb-4")
-
+    ], className="mb-4")
 
 ], fluid=True)
 
-
-# =========================
-# Callback
-# =========================
 
 @callback(
     Output("env-table", "children"),
@@ -130,33 +110,12 @@ def render_tables(_):
     runtime_info, pkg_rows = get_runtime_info()
     host_metrics = get_host_metrics()
 
-    # =========================
-    # ENV TABLE (DataFrame)
-    # =========================
+    env_df = pd.DataFrame(runtime_info + host_metrics, columns=["Metric", "Value"])
 
-    env_df = pd.DataFrame(
-        runtime_info + host_metrics,
-        columns=["Metric", "Value"]
-    )
+    env_tbl = dbc.Table.from_dataframe(env_df, striped=False, hover=True, responsive=True, borderless=True, className="text-light table-sm m-0",
+        style=TABLE_STYLE)
 
-    env_tbl = dbc.Table.from_dataframe(
-        env_df,
-        striped=False,
-        hover=True,
-        responsive=True,
-        borderless=True,
-        className="text-light table-sm m-0",
-        style=TABLE_STYLE
-    )
-
-    # =========================
-    # PACKAGE TABLE (DataFrame)
-    # =========================
-
-    pkg_df = pd.DataFrame(
-        pkg_rows,
-        columns=["Package", "Version"]
-    )
+    pkg_df = pd.DataFrame(pkg_rows, columns=["Package", "Version"])
 
     pkg_tbl = dbc.Table.from_dataframe(
         pkg_df,
