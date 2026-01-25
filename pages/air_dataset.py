@@ -27,7 +27,7 @@ KEEPALIVE_INTERVAL = int(os.getenv("DBX_KEEPALIVE_INTERVAL", "180"))  # seconds
 #ACCESS_TOKEN = 'dapi1f9b22f7d04f82f65f64f4b6957b8f7c'
 delta_path = '/Volumes/test_cat/test_db/test_vol/bronze/kg_airdelay_bronze/'
 
-dash.register_page(__name__, icon="fa-brain", name="Air Dataset")
+dash.register_page(__name__, icon="fa-brain", name="Air Dataset", order=4)
 
 CARD_STYLE = {
     "background": "rgba(255, 255, 255, 0.03)",
