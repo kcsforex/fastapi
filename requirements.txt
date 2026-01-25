@@ -6,7 +6,7 @@ pandas
 ccxt
 SQLAlchemy
 selenium
-psycopg
+psycopg[binary]
 databricks-sql-connector
 pyarrow
 scikit-learn
