@@ -11,7 +11,7 @@ from apis.crypto_api import sql_engine, SYMBOLS
 
 
 # ----- 3. THE FRONTEND (Dash Sidebar uses this) -----
-dash.register_page(__name__, icon="fa-coins", name="Crypto Dash")
+dash.register_page(__name__, icon="fa-coins", name="Crypto Dash", order=1)
 
 # Glassmorphism Card Style
 CARD_STYLE = {
