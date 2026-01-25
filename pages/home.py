@@ -59,9 +59,8 @@ layout = dbc.Container([
                 html.H5("Crypto Engine", className="text-info"),
                 html.P("Status: Active", className="small"),
                 html.Div("BTC: $96,432", className="h4"),
-            ]),
-            style={"background": "rgba(255,255,255,0.05)"}
-        ), width=4),
+                dbc.Button("Logs", href="/flights", size="sm", color="warning", outline=True)
+            ]), style={"background": "rgba(255,255,255,0.05)"}), width=4),
 
         dbc.Col(dbc.Card(
             dbc.CardBody([
