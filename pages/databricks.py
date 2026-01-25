@@ -29,8 +29,7 @@ DBX_JOB_ID = os.getenv("DBX_JOB_ID")
 headers = {"Authorization": f"Bearer {DBX_TOKEN}", "Content-Type": "application/json"}
 
 # --- 3. DASH REGISTRATION & UI ---
-dash.register_page(__name__, icon="fa-brain", name="ML Databricks")
-#dash.register_page( __name__, name="ML Databricks", icon="fa-brain", path="/databricks")
+dash.register_page(__name__, icon="fa-brain", name="ML Databricks", order=3)
 
 CARD_STYLE = {
     "background": "rgba(255, 255, 255, 0.03)",
