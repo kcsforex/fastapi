@@ -64,7 +64,7 @@ layout = dbc.Container([
                 html.H5("Lufthansa API", className="text-warning"),
                 html.P("Status: Syncing", className="small"),
                 html.Div("Last: 2m ago", className="h4"),
-                dbc.Button("Flifght", href="/lufthansa", size="sm", color="warning", outline=True) 
+                dbc.Button("Lufthansa", href="/lufthansa", size="sm", color="warning", outline=True) 
             ]), style={"background": "rgba(255,255,255,0.05)"}), width=4),
 
         dbc.Col(dbc.Card(
@@ -117,14 +117,7 @@ def render_tables(_):
 
     pkg_df = pd.DataFrame(pkg_rows, columns=["Package", "Version"])
 
-    pkg_tbl = dbc.Table.from_dataframe(
-        pkg_df,
-        striped=False,
-        hover=True,
-        responsive=True,
-        borderless=True,
-        className="text-light table-sm m-0", #font-monospace"
-        style=TABLE_STYLE
-    )
+    pkg_tbl = dbc.Table.from_dataframe(pkg_df, striped=False, hover=True, responsive=True, borderless=True, className="text-light table-sm m-0", #font-monospace"
+        style=TABLE_STYLE)
 
     return env_tbl, pkg_tbl
