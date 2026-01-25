@@ -59,7 +59,7 @@ layout = dbc.Container([
                 html.H5("Crypto Engine", className="text-info"),
                 html.P("Status: Active", className="small"),
                 html.Div("BTC: $96,432", className="h4"),
-                dbc.Button("Logs", href="/flights", size="sm", color="warning", outline=True)
+                dbc.Button("Crypto", href="/crypto", size="sm", color="info", outline=True)
             ]), style={"background": "rgba(255,255,255,0.05)"}), width=4),
 
         dbc.Col(dbc.Card(
@@ -67,18 +67,17 @@ layout = dbc.Container([
                 html.H5("Lufthansa API", className="text-warning"),
                 html.P("Status: Syncing", className="small"),
                 html.Div("Last: 2m ago", className="h4"),
-            ]),
-            style={"background": "rgba(255,255,255,0.05)"}
-        ), width=4),
+                dbc.Button("Flifght", href="/lufthansa", size="sm", color="warning", outline=True) 
+            ]), style={"background": "rgba(255,255,255,0.05)"}), width=4),
 
         dbc.Col(dbc.Card(
             dbc.CardBody([
                 html.H5("ML Engine", className="text-success"),
                 html.P("Backend: Databricks", className="small"),
                 html.Div("98% Acc", className="h4"),
-            ]),
-            style={"background": "rgba(255,255,255,0.05)"}
-        ), width=4),
+                dbc.Button("DatabrickML", href="/databricks", size="sm", color="success", outline=True)
+            ]), style={"background": "rgba(255,255,255,0.05)"}), width=4)
+        
     ], className="mb-5"),
 
     # Runtime environment card
