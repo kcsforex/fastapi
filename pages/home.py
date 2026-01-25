@@ -34,7 +34,7 @@ TABLE_STYLE = {
 
 PACKAGES = [
     "fastapi", "psycopg", "dash", "selenium", "ccxt",
-    "pandas", "numpy", "scipy", "scikit-learn", "databricks-sql-connector"
+    "pandas", "numpy", "SQLAlchemy", "scikit-learn", "databricks-sql-connector"
 ]
 
 # =========================
