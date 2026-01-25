@@ -6,6 +6,7 @@ pandas
 ccxt
 SQLAlchemy
 selenium
+psycopg2-binary
 databricks-sql-connector
 pyarrow
 scikit-learn
