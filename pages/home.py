@@ -33,7 +33,7 @@ TABLE_STYLE = {
 # =========================
 
 PACKAGES = [
-    "fastapi", "uvicorn", "dash", "dash-bootstrap-components", "ccxt",
+    "fastapi", "psycopg", "dash", "selenium", "ccxt",
     "pandas", "numpy", "scipy", "scikit-learn", "databricks-sql-connector"
 ]
 
