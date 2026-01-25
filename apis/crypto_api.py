@@ -11,7 +11,7 @@ import plotly.express as px
 from sqlalchemy import create_engine
 
 # ----- 1. CONFIGURATION -----
-DB_CONFIG = "postgresql://sql_admin:sql_pass@72.62.151.169:5432/n8n"
+DB_CONFIG = "postgresql+psycopg://sql_admin:sql_pass@72.62.151.169:5432/n8n"
 sql_engine = create_engine(DB_CONFIG, pool_size=0, max_overflow=0, pool_pre_ping=True)
 SYMBOLS = ["BTC/USDT", "ETH/USDT", "SOL/USDT", "XRP/USDT", "ZEN/USDT", "LTC/USDT", "AVAX/USDT", "LINK/USDT", "HYPE/USDT", "BCH/USDT", "BNB/USDT", "AAVE/USDT"]
 
