@@ -1,6 +1,9 @@
-# 2025.01.25  11.00
+# 2025.01.27  15.00
 import pandas as pd
 import ccxt
+import asyncio
+from crawl4ai import AsyncCrawler
+from bs4 import BeautifulSoup
 from datetime import datetime
 from fastapi import APIRouter
 import dash
@@ -17,13 +20,33 @@ SYMBOLS = ["BTC/USDT", "ETH/USDT", "SOL/USDT", "XRP/USDT", "ZEN/USDT", "LTC/USDT
 
 # ----- 2. FASTAPI  (n8n targets this) -----
 router = APIRouter()
-exchange = ccxt.bybit()
+
+
+
+
+URL = "https://www.cryptocompare.com/news/list/latest/?categories=AAVE"
+@router.get("/cryptonews")
+async def main():
+    
+    async with AsyncCrawler() as crawler:
+        response = await crawler.get(URL, render_js=True, wait_until="networkidle", wait_for_selector="a", timeout=30)
+        html = response.text
+        soup = BeautifulSoup(html, "html.parser")
+
+        for a in soup.select("a"):
+            href = a.get("href", "")
+            if "/news/" in href:
+                print(a.get_text(strip=True), "=>", "https://www.cryptocompare.com" + href)
+
+asyncio.run(main())
+
 
 @router.get("/bybit")
 def bybit_data():
-    
-    timeframe = '5m'  # Match your trigger interval
-    limit = 101  # Fetch 101 to get the SMA100 and the current candle   
+
+    exchange = ccxt.bybit()  
+    timeframe = '5m' 
+    limit = 101   
     results = []
     timestamp = exchange.milliseconds()
     
