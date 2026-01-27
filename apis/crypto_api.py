@@ -19,35 +19,8 @@ DB_CONFIG = "postgresql+psycopg://sql_admin:sql_pass@72.62.151.169:5432/n8n"
 sql_engine = create_engine(DB_CONFIG, pool_size=0, max_overflow=0, pool_pre_ping=True)
 SYMBOLS = ["BTC/USDT", "ETH/USDT", "SOL/USDT", "XRP/USDT", "ZEN/USDT", "LTC/USDT", "AVAX/USDT", "LINK/USDT", "HYPE/USDT", "BCH/USDT", "BNB/USDT", "AAVE/USDT"]
 
-# ----- 2. FASTAPI  (n8n targets this) -----
+# ----- 2. FASTAPI -----
 router = APIRouter()
-
-@router.get("/newsapi")
-async def fetch_news():
-    URL = "https://www.cryptocompare.com/news/list/latest/?categories=AAVE"
-    browser_cfg = BrowserConfig(browser_type="chromium", headless=True, verbose=False)
-    
-    run_cfg = CrawlerRunConfig(page_timeout=30000,    wait_until="networkidle", cache_mode=CacheMode.BYPASS)
-
-    async with AsyncWebCrawler(config=browser_cfg) as crawler:
-        result = await crawler.arun(url=URL, config=run_cfg)
-        
-        if not result or result.status_code != 200:
-            return {"error": f"status {getattr(result, 'status_code', 'unknown')}"}
-
-        soup = BeautifulSoup(result.html or "", "html.parser")
-
-        articles = []
-        for a in soup.select("a"):
-            href = a.get("href", "")
-            if "/news/" in href:
-                title = a.get_text(strip=True)
-                link = href if href.startswith("http") else f"https://www.cryptocompare.com{href}"
-                if title:
-                    articles.append({"title": title, "link": link})
-
-        return {"articles": articles}
-
 
 @router.get("/bybit")
 def bybit_data():
