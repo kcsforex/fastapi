@@ -2,7 +2,7 @@
 import pandas as pd
 import ccxt
 import asyncio
-from crawl4ai import AsyncCrawler
+from crawl4ai import AsyncWebCrawler
 from bs4 import BeautifulSoup
 from datetime import datetime
 from fastapi import APIRouter
@@ -26,7 +26,7 @@ URL = "https://www.cryptocompare.com/news/list/latest/?categories=AAVE"
 @router.get("/newsapi")
 async def fetch_news():
     
-    async with AsyncCrawler() as crawler:
+    async with AsyncWebCrawler() as crawler:
         response = await crawler.get(URL, render_js=True, wait_until="networkidle", wait_for_selector="a", timeout=30)
 
         
