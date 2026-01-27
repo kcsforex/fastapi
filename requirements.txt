@@ -14,3 +14,5 @@ xgboost
 catboost
 psutil
 httpx
+crawl4ai
+bs4
