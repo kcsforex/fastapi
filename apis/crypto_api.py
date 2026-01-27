@@ -12,6 +12,7 @@ import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output
 import plotly.express as px
 from sqlalchemy import create_engine
+import json
 
 # ----- 1. CONFIGURATION -----
 DB_CONFIG = "postgresql+psycopg://sql_admin:sql_pass@72.62.151.169:5432/n8n"
@@ -21,18 +22,7 @@ SYMBOLS = ["BTC/USDT", "ETH/USDT", "SOL/USDT", "XRP/USDT", "ZEN/USDT", "LTC/USDT
 # ----- 2. FASTAPI  (n8n targets this) -----
 router = APIRouter()
 
-
-
-
 URL = "https://www.cryptocompare.com/news/list/latest/?categories=AAVE"
-@router.get("/cryptonews")
-import asyncio
-import json
-from crawl4ai import AsyncCrawler
-from bs4 import BeautifulSoup
-
-URL = "https://www.cryptocompare.com/news/list/latest/?categories=AAVE"
-
 @router.get("/newsapi")
 async def fetch_news():
     
