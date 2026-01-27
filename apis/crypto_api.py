@@ -27,9 +27,8 @@ URL = "https://www.cryptocompare.com/news/list/latest/?categories=AAVE"
 async def fetch_news():
     
     async with AsyncWebCrawler() as crawler:
-        response = await crawler.get(URL, render_js=True, wait_until="networkidle", wait_for_selector="a", timeout=30)
-
         
+        response = await crawler.get(URL, render_js=True, wait_until="networkidle", wait_for_selector="a", timeout=30)   
         html = response.text
         soup = BeautifulSoup(html, "html.parser")
         results = []
@@ -37,17 +36,14 @@ async def fetch_news():
             href = a.get("href", "")
             if "/news/" in href:
                 title = a.get_text(strip=True)
-                link = "https://www.cryptocompare.com" + href
-    
+                link = "https://www.cryptocompare.com" + href 
                 if title:
                     results.append({"title": title, "link": link})
-                print(a.get_text(strip=True), "=>", "https://www.cryptocompare.com" + href)
         
         if response.status != 200:
             return {"error": f"status {response.status}"}
         return {"articles": results}
         # print(json.dumps(data, indent=2, ensure_ascii=False))
-
 
 
 @router.get("/bybit")
