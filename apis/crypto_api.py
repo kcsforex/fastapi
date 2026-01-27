@@ -1,8 +1,8 @@
-# 2025.01.27  15.00
+# 2025.01.27  18.00
 import pandas as pd
 import ccxt
 import asyncio
-from crawl4ai import AsyncWebCrawler, BrowserConfig, CrawlerRunConfig
+from crawl4ai import AsyncWebCrawler, BrowserConfig, CrawlerRunConfig, CacheMode
 from bs4 import BeautifulSoup
 from datetime import datetime
 from fastapi import APIRouter
@@ -25,10 +25,9 @@ router = APIRouter()
 @router.get("/newsapi")
 async def fetch_news():
     URL = "https://www.cryptocompare.com/news/list/latest/?categories=AAVE"
-    browser_cfg = BrowserConfig(browser_type="chromium", headless=True, verbose=False, wait_until="networkidle",  
-        wait_for_selector="a", js_enabled=True)
+    browser_cfg = BrowserConfig(browser_type="chromium", headless=True, verbose=False, js_enabled=True)
     
-    run_cfg = CrawlerRunConfig(page_timeout=30000,  cache_mode=None)
+    run_cfg = CrawlerRunConfig(page_timeout=30000,    wait_until="networkidle", cache_mode=CacheMode.BYPASS)
 
     async with AsyncWebCrawler(config=browser_cfg) as crawler:
         result = await crawler.arun(url=URL, config=run_cfg)
@@ -36,8 +35,7 @@ async def fetch_news():
         if not result or result.status_code != 200:
             return {"error": f"status {getattr(result, 'status_code', 'unknown')}"}
 
-        html = result.html or ""
-        soup = BeautifulSoup(html, "html.parser")
+        soup = BeautifulSoup(result.html or "", "html.parser")
 
         articles = []
         for a in soup.select("a"):
