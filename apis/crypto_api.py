@@ -26,8 +26,6 @@ router = APIRouter()
 async def fetch_news():
 URL = "https://www.cryptocompare.com/news/list/latest/?categories=AAVE"
 
-async def fetch_news():
-
     browser_cfg = BrowserConfig(browser_type="chromium", headless=True, verbose=False)
     run_cfg = CrawlerRunConfig(wait_until="networkidle", wait_for_selector="a", page_timeout=30000)
 
