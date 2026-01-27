@@ -26,19 +26,38 @@ router = APIRouter()
 
 URL = "https://www.cryptocompare.com/news/list/latest/?categories=AAVE"
 @router.get("/cryptonews")
-async def main():
+import asyncio
+import json
+from crawl4ai import AsyncCrawler
+from bs4 import BeautifulSoup
+
+URL = "https://www.cryptocompare.com/news/list/latest/?categories=AAVE"
+
+@router.get("/newsapi")
+async def fetch_news():
     
     async with AsyncCrawler() as crawler:
         response = await crawler.get(URL, render_js=True, wait_until="networkidle", wait_for_selector="a", timeout=30)
+
+        
         html = response.text
         soup = BeautifulSoup(html, "html.parser")
-
+        results = []
         for a in soup.select("a"):
             href = a.get("href", "")
             if "/news/" in href:
+                title = a.get_text(strip=True)
+                link = "https://www.cryptocompare.com" + href
+    
+                if title:
+                    results.append({"title": title, "link": link})
                 print(a.get_text(strip=True), "=>", "https://www.cryptocompare.com" + href)
+        
+        if response.status != 200:
+            return {"error": f"status {response.status}"}
+        return {"articles": results}
+        # print(json.dumps(data, indent=2, ensure_ascii=False))
 
-asyncio.run(main())
 
 
 @router.get("/bybit")
