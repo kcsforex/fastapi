@@ -25,11 +25,14 @@ router = APIRouter()
 @router.get("/newsapi")
 async def fetch_news():
     URL = "https://www.cryptocompare.com/news/list/latest/?categories=AAVE"
-    browser_cfg = BrowserConfig(browser_type="chromium", headless=True, verbose=False)
-    run_cfg = CrawlerRunConfig(wait_until="networkidle", wait_for_selector="a", page_timeout=30000)
+    browser_cfg = BrowserConfig(browser_type="chromium", headless=True, verbose=False, wait_until="networkidle",  
+        wait_for_selector="a", js_enabled=True)
+    
+    run_cfg = CrawlerRunConfig(page_timeout=30000,  cache_mode=None)
 
     async with AsyncWebCrawler(config=browser_cfg) as crawler:
         result = await crawler.arun(url=URL, config=run_cfg)
+        
         if not result or result.status_code != 200:
             return {"error": f"status {getattr(result, 'status_code', 'unknown')}"}
 
@@ -41,7 +44,6 @@ async def fetch_news():
             href = a.get("href", "")
             if "/news/" in href:
                 title = a.get_text(strip=True)
-                # normalize relative links
                 link = href if href.startswith("http") else f"https://www.cryptocompare.com{href}"
                 if title:
                     articles.append({"title": title, "link": link})
