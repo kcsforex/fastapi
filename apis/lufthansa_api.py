@@ -1,4 +1,4 @@
-# 2026.01.25  11.00
+# 2026.01.27  12.00
 import os
 import httpx
 import asyncio
@@ -28,7 +28,7 @@ async def fetch_route(client, token, origin, dest, flight_date, sem):
     async with sem:
         try:
             resp = await client.get(url, headers=headers)
-            await asyncio.sleep(0.25)
+            await asyncio.sleep(0.5)
             if resp.status_code != 200: return None
             
             json_data = resp.json()
@@ -63,7 +63,7 @@ async def get_flightroute_details(flight_date: str):
     ("MUC", "MAN"), ("MUC", "DUB"), ("MUC", "TLV"),
     ]   
     
-    sem = asyncio.Semaphore(4)
+    sem = asyncio.Semaphore(3)
     async with httpx.AsyncClient(timeout=45) as client:
         tasks = [fetch_route(client, token, o, d, flight_date, sem) for o, d in ROUTES_FULL]
         results = await asyncio.gather(*tasks)
