@@ -2,7 +2,7 @@
 import pandas as pd
 import ccxt
 import asyncio
-from crawl4ai import AsyncWebCrawler
+from crawl4ai import AsyncWebCrawler, BrowserConfig, CrawlerRunConfig
 from bs4 import BeautifulSoup
 from datetime import datetime
 from fastapi import APIRouter
@@ -22,28 +22,34 @@ SYMBOLS = ["BTC/USDT", "ETH/USDT", "SOL/USDT", "XRP/USDT", "ZEN/USDT", "LTC/USDT
 # ----- 2. FASTAPI  (n8n targets this) -----
 router = APIRouter()
 
-URL = "https://www.cryptocompare.com/news/list/latest/?categories=AAVE"
 @router.get("/newsapi")
 async def fetch_news():
-    
-    async with AsyncWebCrawler() as crawler:
-        
-        response = await crawler.get(URL, render_js=True, wait_until="networkidle", wait_for_selector="a", timeout=30)   
-        html = response.text
+URL = "https://www.cryptocompare.com/news/list/latest/?categories=AAVE"
+
+async def fetch_news():
+
+    browser_cfg = BrowserConfig(browser_type="chromium", headless=True, verbose=False)
+    run_cfg = CrawlerRunConfig(wait_until="networkidle", wait_for_selector="a", page_timeout=30000)
+
+    async with AsyncWebCrawler(config=browser_cfg) as crawler:
+        result = await crawler.arun(url=URL, config=run_cfg)
+        if not result or result.status_code != 200:
+            return {"error": f"status {getattr(result, 'status_code', 'unknown')}"}
+
+        html = result.html or ""
         soup = BeautifulSoup(html, "html.parser")
-        results = []
+
+        articles = []
         for a in soup.select("a"):
             href = a.get("href", "")
             if "/news/" in href:
                 title = a.get_text(strip=True)
-                link = "https://www.cryptocompare.com" + href 
+                # normalize relative links
+                link = href if href.startswith("http") else f"https://www.cryptocompare.com{href}"
                 if title:
-                    results.append({"title": title, "link": link})
-        
-        if response.status != 200:
-            return {"error": f"status {response.status}"}
-        return {"articles": results}
-        # print(json.dumps(data, indent=2, ensure_ascii=False))
+                    articles.append({"title": title, "link": link})
+
+        return {"articles": articles}
 
 
 @router.get("/bybit")
