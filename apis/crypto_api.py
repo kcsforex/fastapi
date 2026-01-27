@@ -48,6 +48,8 @@ async def fetch_news():
                 if title:
                     articles.append({"title": title, "link": link})
 
+        return {"articles": articles}
+
         # --------------------------------------------------------
         
         articles = soup.select("a")  # Grab all anchors first, filter later
@@ -80,7 +82,7 @@ async def fetch_news():
 
         # --------------------------------------------------------
 
-        return {"articles": articles}
+        
 
 
 @router.get("/bybit")
