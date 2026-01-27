@@ -48,6 +48,38 @@ async def fetch_news():
                 if title:
                     articles.append({"title": title, "link": link})
 
+        # --------------------------------------------------------
+        
+        articles = soup.select("a")  # Grab all anchors first, filter later
+        news_items = []
+        for a in articles:
+            href = a.get("href", "")
+            # CryptoCompare news links usually contain "/news/"
+            if "/news/" in href:
+                title = a.get_text(strip=True)
+                link = "https://www.cryptocompare.com" + href
+    
+                if title and link:   
+                    news_items.append({"title": title, "link": link})
+
+        print("\n=== Extracted News ===")
+        for item in news_items:
+            print(f"- {item['title']}\n  {item['link']}\n")
+     
+        news_blocks = soup.select(".news-item")  # adjust based on live HTML
+        for block in news_blocks:
+            title = block.select_one(".news-title")
+            summary = block.select_one(".news-description")
+            time = block.select_one("time")
+        
+            print({
+                "title": title.get_text(strip=True) if title else None,
+                "summary": summary.get_text(strip=True) if summary else None,
+                "time": time.get("datetime") if time else None,
+            })
+
+        # --------------------------------------------------------
+
         return {"articles": articles}
 
 
