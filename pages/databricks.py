@@ -1,6 +1,6 @@
-# 2026.01.24  18.00
+# 2026.01.27  18.00
 import dash
-from dash import dcc, html, Input, Output, State, callback, dash_table
+from dash import dcc, html, Input, Output, State, callback, dash_table, no_update
 from dash.exceptions import PreventUpdate
 import dash_bootstrap_components as dbc
 import plotly.express as px
@@ -104,7 +104,12 @@ def update_chart(n_clicks, maxIter, maxDepth):
 
     response = requests.post(run_now_url, headers=headers, json=payload)
     if response.status_code != 200:
-        return px.scatter(title=f"Error: {response.text}"), html.Div("Job Trigger Failed", className="text-danger")
+        error_fig = px.scatter(title=f"Error: {response.text}")
+        return (
+            html.Div("Job Trigger Failed", className="text-danger"),
+            error_fig,
+            no_update,
+        )
 
     run_id = response.json().get("run_id")
 
@@ -129,7 +134,12 @@ def update_chart(n_clicks, maxIter, maxDepth):
         connection.close()
         
     except Exception as e:
-        return px.scatter(title=f"SQL Error: {e}"), html.Div(f"Query Error: {e}", className="text-danger")
+        error_fig = px.scatter(title=f"SQL Error: {e}")
+        return (
+            html.Div(f"Query Error: {e}", className="text-danger"),
+            error_fig,
+            no_update,
+        )
 
     fig = px.scatter(model_df, x="duration_mins", y="prediction", title=f"RF Results: Iter={maxIter} | Depth={maxDepth}", template="plotly_dark")
     
