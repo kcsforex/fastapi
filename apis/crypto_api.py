@@ -1,4 +1,4 @@
-# 2025.01.27  18.00
+# 2025.02.02  18.00
 import pandas as pd
 import ccxt
 import asyncio
@@ -26,7 +26,7 @@ router = APIRouter()
 def bybit_data():
 
     exchange = ccxt.bybit()  
-    timeframe = '5m' 
+    timeframe = '15m' 
     limit = 101   
     results = []
     timestamp = exchange.milliseconds()
