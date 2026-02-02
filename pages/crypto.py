@@ -1,4 +1,4 @@
-# 2025.01.17  18.00
+# 2025.02.02  18.00
 import pandas as pd
 from datetime import datetime
 from fastapi import APIRouter
@@ -24,7 +24,7 @@ CARD_STYLE = {
 
 layout = dbc.Container([
     html.Div([
-        html.H2("Crypto Market Info", className="text-light fw-bold mb-0"),
+        html.H2("ByBit Crypto Market", className="text-light fw-bold mb-0"),
         html.P(id='metrics-update', className="text-muted small"),
     ], className="mb-4"),
 
