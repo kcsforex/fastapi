@@ -1,11 +1,12 @@
-from fastapi import FastAPI
+# 2026.02.04  18.00
+from fastapi import APIRouter
 import requests
 
-app = FastAPI()
+router = FastAPI()
 
 last_known_prices = {}
 
-@app.get("/check-stocks")
+@router.get("/check-stocks")
 def check_stocks():
     url = "https://api.kraken.com/0/public/Ticker"
     pairs = ["TSLAXUSD", "NVDAXUSD", "AAPLXUSD", "SPYXUSD"]
