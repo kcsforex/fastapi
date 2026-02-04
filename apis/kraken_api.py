@@ -1,16 +1,13 @@
-from fastapi import FastAPI
+from fastapi import APIRouter
 import requests
 
-app = FastAPI()
+router = APIRouter()
 last_known_prices = {}
 
-@app.get("/check-stocks")
+@router.get("/check-stocks")
 def check_stocks():
     # 2026 Public Ticker Endpoint
     url = "https://api.kraken.com/0/public/Ticker"
-    
-    # Try the most common 2026 ID. 
-    # If this fails, replace 'TSLAXUSD' with the key you found in the link above.
     params = {
         "pair": "TSLAXUSD,NVDAXUSD,AAPLXUSD,SPYXUSD",
         "aclass_base": "tokenized_asset" 
@@ -46,7 +43,3 @@ def check_stocks():
         return {"status": "success", "data": results}
     except Exception as e:
         return {"status": "error", "message": str(e)}
-
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
