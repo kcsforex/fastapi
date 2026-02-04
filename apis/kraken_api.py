@@ -13,7 +13,7 @@ def check_stocks():
     # Try the most common 2026 ID. 
     # If this fails, replace 'TSLAXUSD' with the key you found in the link above.
     params = {
-        "pair": "TSLAXUSD,NVDAXUSD,AAPLXUSD",
+        "pair": "TSLAxUSD,NVDAxUSD,AAPLxUSD",
         "aclass_base": "tokenized_asset" 
     }
     
