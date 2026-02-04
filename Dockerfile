@@ -1,4 +1,4 @@
-# 2026.01.21 11.00
+# 2026.02.04 18.00
 # syntax=docker/dockerfile:1.7-labs
 FROM python:3.12-slim
 
@@ -19,13 +19,14 @@ RUN --mount=type=cache,target=/root/.cache/pip \
 
 COPY main.py .
 COPY pages/home.py    pages/home.py
-COPY pages/crypto.py  pages/crypto.py
-COPY apis/crypto_api.py   apis/crypto_api.py
-COPY pages/air_dataset.py pages/air_dataset.py
+COPY pages/bybit.py   pages/bybit.py
+COPY apis/bybit_api.py   apis/bybit_api.py
+COPY apis/kraken_api.py   apis/kraken_api.py
 COPY pages/lufthansa.py     pages/lufthansa.py
 COPY apis/lufthansa_api.py  apis/lufthansa_api.py
 COPY pages/lufthansa_ml.py     pages/lufthansa_ml.py
 COPY pages/databricks.py  pages/databricks.py
+COPY pages/air_dataset.py pages/air_dataset.py
 
 EXPOSE 8000
 
