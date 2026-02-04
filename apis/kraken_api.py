@@ -5,7 +5,7 @@ import requests
 router = APIRouter()
 last_known_prices = {}
 
-@app.get("/check-stocks")
+@router.get("/check-stocks")
 def check_stocks():
     # 2026 Public Ticker Endpoint
     url = "https://api.kraken.com/0/public/Ticker"
