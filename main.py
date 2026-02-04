@@ -11,8 +11,9 @@ app = dash.Dash(__name__, use_pages=True, suppress_callback_exceptions=True,
 
 # ----- 2. NOW IMPORT YOUR PAGES -----
 from pages import home, bybit,  databricks, air_dataset, lufthansa
+import apis.bybit_api as bybit
+import apis.kraken_api as kraken
 import apis.lufthansa_api as lufthansa
-import apis.crypto_api as crypto
 
 # ----- 3. FASTAPI WRAPPER -----
 server = FastAPI(title="Dash Main App")
