@@ -5,10 +5,13 @@ import requests
 router = APIRouter()
 last_known_prices = {}
 
-@router.get("/check-stocks")
+@app.get("/check-stocks")
 def check_stocks():
     # 2026 Public Ticker Endpoint
     url = "https://api.kraken.com/0/public/Ticker"
+    
+    # Try the most common 2026 ID. 
+    # If this fails, replace 'TSLAXUSD' with the key you found in the link above.
     params = {
         "pair": "TSLAXUSD,NVDAXUSD,AAPLXUSD,SPYXUSD",
         "aclass_base": "tokenized_asset" 
