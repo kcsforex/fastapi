@@ -2,7 +2,7 @@
 from fastapi import APIRouter
 import requests
 
-router = FastAPI()
+router = APIRouter()
 
 last_known_prices = {}
 
