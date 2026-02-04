@@ -6,13 +6,8 @@ router = APIRouter()
 
 @router.get("/check-stocks")
 def check_stocks():
-    url = "https://api.kraken.com/0/public/Ticker"
-    
-    # Standardized parameters for xStocks
-    params = {
-        "pair": "TSLAxUSD,NVDAxUSD,AAPLxUSD,SPYxUSD",
-        "asset_class": "tokenized_asset" 
-    }
+    url = "https://api.kraken.com/0/public/Ticker"    
+    params = {"pair": "TSLAxUSD,NVDAxUSD,AAPLxUSD,SPYxUSD", "asset_class": "tokenized_asset" }
     
     try:
         response = requests.get(url, params=params).json()
