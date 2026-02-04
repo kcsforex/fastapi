@@ -1,4 +1,4 @@
-# 2026.01.25  11.00
+# 2026.02.04  18.00
 import dash
 from dash import html, dcc
 import dash_bootstrap_components as dbc
@@ -10,7 +10,7 @@ app = dash.Dash(__name__, use_pages=True, suppress_callback_exceptions=True,
     external_stylesheets=[dbc.themes.DARKLY, "https://use.fontawesome.com/releases/v5.15.4/css/all.css"])
 
 # ----- 2. NOW IMPORT YOUR PAGES -----
-from pages import home, crypto,  databricks, air_dataset, lufthansa
+from pages import home, bybit,  databricks, air_dataset, lufthansa
 import apis.lufthansa_api as lufthansa
 import apis.crypto_api as crypto
 
@@ -23,7 +23,8 @@ def health():
     return {"status": "ok"}
 
 # ----- 3.2. API ROUTERS -----
-server.include_router(crypto.router,        prefix="/api/crypto",    tags=["Crypto"])
+server.include_router(bybit.router,        prefix="/api/bybit",    tags=["Bybit"])
+server.include_router(kraken.router,        prefix="/api/kraken",    tags=["Kraken"])
 server.include_router(databricks.router,    prefix="/api/dbricks",   tags=["Machine Learning"])
 server.include_router(air_dataset.router,   prefix="/api/airdata",   tags=["Air Data"])
 server.include_router(lufthansa.router,     prefix="/api/lufthansa", tags=["Lufthansa"])
