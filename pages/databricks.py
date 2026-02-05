@@ -54,7 +54,7 @@ layout = dbc.Container([
                 html.Label("Max Iteration", className="text-info small"),
                 html.Div([
                     dcc.Slider(id="maxIter", min=5, max=25, step=5, value=10, 
-                               marks={i: {'label': str(i), 'style': {'color': 'blue, 'marginTop': '5px'}} for i in range(5, 26, 5)})
+                               marks={i: {'label': str(i), 'style': {'color': 'blue', 'marginTop': '5px'}} for i in range(5, 26, 5)})
                 ], style={'backgroundColor': 'white', 'padding': '10px 15px 20px 15px', 'borderRadius': '5px', 'marginTop': '5px'}),
                 
                 html.Label("Max Depth", className="text-info small mt-4"),
