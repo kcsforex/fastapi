@@ -1,4 +1,4 @@
-# 2026.01.27  18.00
+# 2026.02.05  8.00
 import dash
 from dash import dcc, html, Input, Output, State, callback, dash_table, no_update
 from dash.exceptions import PreventUpdate
@@ -50,17 +50,19 @@ layout = dbc.Container([
         # Controls Sidebar
         dbc.Col([
             html.Div([
+
                 html.Label("Max Iteration", className="text-info small"),
-                dcc.Slider(id="maxIter", min=5, max=25, step=5, value=10, 
-                           marks={i: {'label': str(i), 'style': {'color': 'white'}} for i in range(5, 26, 5)}),
+                dcc.Slider(id="maxIter", min=5, max=25, step=5, value=10, className="custom-slider",
+                    marks={i: {'label': str(i)} for i in range(5, 26, 5)}),
                 
                 html.Label("Max Depth", className="text-info small mt-4"),
-                dcc.Slider(id="maxDepth", min=2, max=7, step=1, value=3,
-                           marks={i: {'label': str(i), 'style': {'color': 'white'}} for i in range(2, 11, 2)}),
+                dcc.Slider( id="maxDepth", min=2, max=7, step=1, value=3, className="custom-slider",
+                    marks={i: {'label': str(i)} for i in range(2, 8)}),
                 
                 dbc.Button([
                     html.I(className="fas fa-play me-2"), "Run Model"
                 ], id="run-btn", color="info", className="w-100 mt-5 fw-bold", style={"borderRadius": "10px"})
+                
             ], style=CARD_STYLE),
 
             html.Div(id="gbt-metrics-table", style=CARD_STYLE)
