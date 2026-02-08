@@ -56,8 +56,6 @@ layout = dbc.Container([
                                 {"label": "Random Forest (Reg)", "value": "rf_reg"},
                                 {"label": "GBM (sklearn)", "value": "gbm_reg"},
                                 {"label": "HistGB (sklearn)", "value": "hgb_reg"},
-                                {"label": "XGBoost (Reg)", "value": "xgb_reg"},
-                                {"label": "CatBoost (Reg)", "value": "cb_reg"},
                             ],
                             value="lin",
                             size="sm",
@@ -77,8 +75,6 @@ layout = dbc.Container([
                                 {"label": "Random Forest (Clf)", "value": "rf_clf"},
                                 {"label": "GBM (sklearn)", "value": "gbm_clf"},
                                 {"label": "HistGB (sklearn)", "value": "hgb_clf"},
-                                {"label": "XGBoost (Clf)", "value": "xgb_clf"},
-                                {"label": "CatBoost (Clf)", "value": "cb_clf"},
                             ],
                             value="log",
                             size="sm",
@@ -188,11 +184,7 @@ def run_ml_clicks(n_clicks, reg_choice, clf_choice, data):
     elif reg_choice == "gbm_reg":
         reg_model, reg_metrics = lh_ml.train_gbm_linear(data_ml)
     elif reg_choice == "hgb_reg":
-        reg_model, reg_metrics = lh_ml.train_hgb_linear(data_ml)  # requires modern sklearn
-    elif reg_choice == "xgb_reg":
-        reg_model, reg_metrics = lh_ml.train_xgb_linear(data_ml)  # raises if xgboost not installed
-    elif reg_choice == "cb_reg":
-        reg_model, reg_metrics = lh_ml.train_cb_linear(data_ml)    # raises if catboost not installed
+        reg_model, reg_metrics = lh_ml.train_hgb_linear(data_ml) 
     else:
         reg_model, reg_metrics = lh_ml.train_linear(data_ml)
 
@@ -260,10 +252,6 @@ def run_ml_clicks(n_clicks, reg_choice, clf_choice, data):
         clf_model, clf_metrics = lh_ml.train_gbm_logistic(data_ml)
     elif clf_choice == "hgb_clf":
         clf_model, clf_metrics = lh_ml.train_hgb_logistic(data_ml)
-    elif clf_choice == "xgb_clf":
-        clf_model, clf_metrics = lh_ml.train_xgb_logistic(data_ml)
-    elif clf_choice == "cb_clf":
-        clf_model, clf_metrics = lh_ml.train_cb_logistic(data_ml)
     else:
         clf_model, clf_metrics = lh_ml.train_logistic(data_ml)
 
@@ -320,7 +308,6 @@ def run_ml_clicks(n_clicks, reg_choice, clf_choice, data):
         "border": "1px solid #2d3748",
     },
 )
-
 
     clf_pred = lh_ml.predict_latest_logistic(clf_model, data_ml, n=15)
 
