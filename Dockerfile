@@ -12,9 +12,7 @@ WORKDIR /wheels
 
 # System deps needed ONLY for building
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential \
-    curl \
-    && rm -rf /var/lib/apt/lists/*
+    build-essential curl && rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt .
 
@@ -33,8 +31,7 @@ WORKDIR /app
 
 # Runtime-only system deps
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    curl \
-    && rm -rf /var/lib/apt/lists/*
+    curl && rm -rf /var/lib/apt/lists/*
 
 # Install wheels from builder
 COPY --from=builder /wheels /wheels
