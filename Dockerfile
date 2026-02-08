@@ -34,6 +34,13 @@ WORKDIR /app
 # Runtime-only system deps
 RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
+    libstdc++6 \
+    liblzma5 \
+    libzstd1 \
+    libsnappy1v5 \
+    libbz2-1.0 \
+    libssl3 \
+    libsqlite3-0 \
     && rm -rf /var/lib/apt/lists/*
 
 # Install wheels from builder
