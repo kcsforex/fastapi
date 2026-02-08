@@ -34,14 +34,30 @@ WORKDIR /app
 # Runtime-only system deps
 RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
+    ca-certificates \
+    \
+    # C / C++ runtime
     libstdc++6 \
+    libgomp1 \
+    \
+    # Compression (pyarrow / pandas)
+    zlib1g \
     liblzma5 \
     libzstd1 \
     libsnappy1v5 \
     libbz2-1.0 \
+    \
+    # DB / crypto
     libssl3 \
+    libpq5 \
+    libffi8 \
     libsqlite3-0 \
+    \
+    # Databricks SQL (Kerberos deps)
+    libkrb5-3 \
+    \
     && rm -rf /var/lib/apt/lists/*
+
 
 # Install wheels from builder
 COPY --from=builder /wheels /wheels
