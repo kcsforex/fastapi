@@ -34,6 +34,19 @@ WORKDIR /app
 # Runtime-only system deps
 RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
+    libgomp1 \
+    libstdc++6 \
+    libglib2.0-0 \
+    libnss3 \
+    libx11-6 \
+    libxcomposite1 \
+    libxrandr2 \
+    libxi6 \
+    libatk1.0-0 \
+    libatk-bridge2.0-0 \
+    libdrm2 \
+    libgbm1 \
+    ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
 # Install wheels from builder
