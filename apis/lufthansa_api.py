@@ -1,4 +1,4 @@
-# 2026.02.03  15.00
+# 2026.02.08  18.00
 import os
 import httpx
 import asyncio
@@ -8,9 +8,24 @@ from fastapi import APIRouter
 from sqlalchemy import create_engine
 
 # ----- CONFIGURATION -----
-DB_CONFIG = "postgresql+psycopg://sql_admin:sql_pass@72.62.151.169:5432/n8n"
-#DB_CONFIG = "postgresql+psycopg://sql_admin:sql_pass@postgresql:5432/n8n"
-sql_engine = create_engine(DB_CONFIG, pool_size=0, max_overflow=0, pool_pre_ping=True)
+#DB_CONFIG = "postgresql+psycopg://sql_admin:sql_pass@72.62.151.169:5432/n8n"
+DB_CONFIG = "postgresql+psycopg://sql_admin:sql_pass@postgresql:5432/n8n"
+#sql_engine = create_engine(DB_CONFIG, pool_size=0, max_overflow=0, pool_pre_ping=True)
+
+sql_engine = create_engine(
+    DB_CONFIG,
+    pool_size=5,              # Keep 5 connections alive
+    max_overflow=10,          # Allow up to 10 additional connections when needed
+    pool_pre_ping=True,       # Test connections before using (good!)
+    pool_recycle=3600,        # Recycle connections after 1 hour
+    connect_args={
+        'connect_timeout': 10,
+        'keepalives': 1,
+        'keepalives_idle': 30,
+        'keepalives_interval': 10,
+        'keepalives_count': 5
+    }
+)
 
 router = APIRouter()
 
