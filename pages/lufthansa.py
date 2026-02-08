@@ -133,7 +133,7 @@ def load_data_render(_):
     with sql_engine.connect() as conn:
         query = """
             SELECT DISTINCT ON (departure_scheduled_date, departure_scheduled_time, route_key) *
-            FROM lh_flights
+            FROM lufthansa
             ORDER BY departure_scheduled_date, departure_scheduled_time, route_key, id DESC
         """
         df = pd.read_sql(query, conn)
