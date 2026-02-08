@@ -1,6 +1,6 @@
 # 2026.02.08  18.00
 # syntax=docker/dockerfile:1.7-labs
-FROM python:3.12
+FROM python:3.12.2
 
 # -------------------------
 # Python defaults
@@ -14,8 +14,6 @@ WORKDIR /app
 # -------------------------
 # System dependencies
 # -------------------------
-# python:3.12 already includes most native libs needed by:
-# pandas, pyarrow, scikit-learn, psycopg[binary], databricks
 RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     ca-certificates \
