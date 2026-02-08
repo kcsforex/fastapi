@@ -1,4 +1,4 @@
-# 2026.02.08  12.00
+# 2026.02.08  18.00
 import dash
 import pandas as pd
 from dash import html, dcc, Input, Output, State, callback, no_update
@@ -143,8 +143,7 @@ def load_data_render(_):
 
     # ---- Convert ingestion time ----
     df["ingested_at"] = pd.to_datetime(df["ingested_at"])
-    df["ingested_at"] = (df["ingested_at"].dt.tz_localize("UTC").dt.tz_convert("Europe/Budapest").dt.strftime("%Y-%m-%d %H:%M:%S"))
-
+    df["ingested_at"] = (df["ingested_at"].dt.tz_convert("Europe/Budapest").dt.strftime("%Y-%m-%d %H:%M:%S"))
     
     # ---- Build daily chart ----
     daily = df.groupby(df["departure_scheduled_date"]).size().reset_index(name="count")
