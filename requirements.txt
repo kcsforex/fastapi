@@ -5,13 +5,10 @@ dash-bootstrap-components
 pandas
 ccxt
 SQLAlchemy
-selenium
 psycopg[binary]
 databricks-sql-connector
 pyarrow
 scikit-learn
-xgboost
-catboost
 psutil
 httpx
 crawl4ai
