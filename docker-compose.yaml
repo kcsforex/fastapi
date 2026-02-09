@@ -58,9 +58,10 @@ services:
       N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS: ${N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS:-true}
       N8N_PROXY_HOPS: ${N8N_PROXY_HOPS:-1}
 
-      # --- 🔥 IMPORTANT FIX ---
+      # --- IMPORTANT FIX ---
       # Disable Python task runner (recommended for prod)
       N8N_TASK_RUNNERS_ENABLED: false
+      N8N_TASK_RUNNERS_MODE: internal
 
     volumes:
       - n8n-data:/home/node/.n8n
