@@ -60,8 +60,7 @@ services:
 
       # --- IMPORTANT FIX ---
       # Disable Python task runner (recommended for prod)
-      N8N_TASK_RUNNERS_ENABLED: false
-      N8N_TASK_RUNNERS_MODE: internal
+      N8N_TASK_RUNNERS_ENABLED: "false"
 
     volumes:
       - n8n-data:/home/node/.n8n
