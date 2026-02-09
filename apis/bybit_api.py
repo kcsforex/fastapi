@@ -24,9 +24,9 @@ sql_engine = create_engine(
     pool_size=5,              # Keep 5 connections alive
     max_overflow=10,          # Allow up to 10 additional connections when needed
     pool_pre_ping=True,       # Test connections before using (good!)
-    pool_recycle=3600,        # Recycle connections after 1 hour
+    pool_recycle=1800,        # Recycle connections after 1 hour
     connect_args={
-        'connect_timeout': 10,
+        'connect_timeout': 5,
         'keepalives': 1,
         'keepalives_idle': 30,
         'keepalives_interval': 10,
