@@ -1,4 +1,4 @@
-# 2025.02.08  18.00
+# 2025.02.09  15.00
 import pandas as pd
 import ccxt
 import asyncio
@@ -15,8 +15,8 @@ from sqlalchemy import create_engine
 import json
 
 # ----- 1. CONFIGURATION -----
-DB_CONFIG = "postgresql+psycopg://sql_admin:sql_pass@72.62.151.169:5432/n8n"
-#DB_CONFIG = "postgresql+psycopg://sql_admin:sql_pass@postgresql:5432/n8n"
+#DB_CONFIG = "postgresql+psycopg://sql_admin:sql_pass@72.62.151.169:5432/n8n"
+DB_CONFIG = "postgresql+psycopg://sql_admin:sql_pass@postgresql:5432/n8n"
 #sql_engine = create_engine(DB_CONFIG, pool_size=0, max_overflow=0, pool_pre_ping=True)
 
 sql_engine = create_engine(
