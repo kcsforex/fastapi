@@ -70,6 +70,7 @@ services:
 
       # --- IMPORTANT ---
       N8N_TASK_RUNNERS_ENABLED: "false"
+      N8N_TASK_RUNNERS_MODE: internal
 
     volumes:
       - n8n-data:/home/node/.n8n
