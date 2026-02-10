@@ -36,10 +36,6 @@ services:
       postgresql:
         condition: service_healthy
 
-    dns:
-      - 8.8.8.8
-      - 1.1.1.1
-
     environment:
       # --- Core ---
       N8N_PORT: 5678
@@ -70,7 +66,6 @@ services:
 
       # --- IMPORTANT ---
       N8N_TASK_RUNNERS_ENABLED: "false"
-      N8N_TASK_RUNNERS_MODE: internal
 
     volumes:
       - n8n-data:/home/node/.n8n
