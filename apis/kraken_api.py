@@ -40,7 +40,7 @@ def check_stocks():
                 "volume24h": volume
             })
 
-        return {"status": "success", "data": results}
+        return results
         
     except Exception as e:
-        return {"status": "error", "message": str(e)}
+        return str(e)
