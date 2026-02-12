@@ -2,8 +2,6 @@
 from fastapi import APIRouter
 import requests
 
-router = APIRouter()
-
 xstocks_list = [
     'AAPLxUSD', 'ABBVxUSD', 'ABTxUSD', 'ACNxUSD', 'AMBRxUSD', 'AMDxUSD', 'AMZNxUSD', 'APPxUSD', 'AVGOxUSD', 'AZNxUSD',
     'BACxUSD', 'BMNRxUSD', 'BTBTxUSD', 'BTGOxUSD', 'CMCSAxUSD', 'COINxUSD', 'COPXxUSD', 'CRCLxUSD', 'CRMxUSD', 
@@ -14,6 +12,8 @@ xstocks_list = [
     'PPLTxUSD', 'QQQxUSD', 'SCHFxUSD', 'SLVxUSD', 'SPYxUSD', 'STRCxUSD', 'TBLLxUSD', 'TMOxUSD', 'TONXxUSD', 'TQQQxUSD',
     'TSLAxUSD', 'UNHxUSD', 'VxUSD', 'VTIxUSD', 'VTxUSD', 'XOMxUSD'
 ]
+
+router = APIRouter()
 
 @router.get("/check-stocks")
 def check_stocks():
