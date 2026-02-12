@@ -32,12 +32,14 @@ def check_stocks():
 
         for pair_name, info in data.items():
             current_price = float(info["c"][0])
-            volume = float(info["v"][1])
+            volume = float(info["v"][0])
+            trade_count = float(info["t"][0])
             
             results.append({
                 "ticker": pair_name, #.replace("XUSD", "x"),
                 "price": current_price,
-                "volume24h": volume
+                "volume": volume,
+                "trade_count": trade_count
             })
 
         return results
