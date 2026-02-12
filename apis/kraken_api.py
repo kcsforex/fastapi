@@ -8,7 +8,7 @@ router = APIRouter()
 
 xstocks_list = [
     'AAPLxUSD', 'ABBVxUSD', 'ABTxUSD', 'ACNxUSD', 'AMBRxUSD', 'AMDxUSD', 'AMZNxUSD', 'APPxUSD', 'AVGOxUSD', 'AZNxUSD',
-    'BACxUSD', 'BMNRxUSD', 'BRKBxUSD', 'BTBTxUSD', 'BTGOxUSD', 'CMCSAxUSD', 'COINxUSD', 'COPXxUSD', 'CRCLxUSD', 'CRMxUSD', 
+    'BACxUSD', 'BMNRxUSD', 'BTBTxUSD', 'BTGOxUSD', 'CMCSAxUSD', 'COINxUSD', 'COPXxUSD', 'CRCLxUSD', 'CRMxUSD', 
     'CRWDxUSD', 'CSCOxUSD', 'CVXxUSD', 'DFDVxUSD', 'DHRxUSD', 'GLDxUSD', 'GMExUSD', 'GOOGLxUSD', 'GSxUSD', 'HONxUSD', 
     'HOODxUSD', 'IBMxUSD', 'IEMGxUSD', 'IJRxUSD', 'INTCxUSD', 'IWMxUSD', 'JNJxUSD', 'JPMxUSD', 'KOxUSD', 'KRAQxUSD', 
     'LINxUSD', 'LLYxUSD', 'MCDxUSD', 'MDTxUSD', 'METAxUSD', 'MRKxUSD', 'MRVLxUSD', 'MSFTxUSD', 'MSTRxUSD', 'NFLXxUSD', 
@@ -33,10 +33,12 @@ def check_stocks():
 
         for pair_name, info in data.items():
             current_price = float(info["c"][0])
+            volume = float(info["v"][1])
             
             results.append({
-                "ticker": pair_name.replace("XUSD", "x"),
-                "price": current_price
+                "ticker": pair_name, #.replace("XUSD", "x"),
+                "price": current_price,
+                "volume24h": volume
             })
 
         return {"status": "success", "data": results}
