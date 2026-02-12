@@ -4,8 +4,6 @@ import requests
 
 router = APIRouter()
 
-@router.get("/check-stocks")
-
 xstocks_list = [
     'AAPLxUSD', 'ABBVxUSD', 'ABTxUSD', 'ACNxUSD', 'AMBRxUSD', 'AMDxUSD', 'AMZNxUSD', 'APPxUSD', 'AVGOxUSD', 'AZNxUSD',
     'BACxUSD', 'BMNRxUSD', 'BTBTxUSD', 'BTGOxUSD', 'CMCSAxUSD', 'COINxUSD', 'COPXxUSD', 'CRCLxUSD', 'CRMxUSD', 
@@ -17,6 +15,7 @@ xstocks_list = [
     'TSLAxUSD', 'UNHxUSD', 'VxUSD', 'VTIxUSD', 'VTxUSD', 'XOMxUSD'
 ]
 
+@router.get("/check-stocks")
 def check_stocks():
     url = "https://api.kraken.com/0/public/Ticker"    
     params = {"pair": ",".join(xstocks_list), 
