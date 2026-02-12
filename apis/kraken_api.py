@@ -6,25 +6,26 @@ router = APIRouter()
 
 @router.get("/check-stocks")
 
-xstocks = ['AAPLxUSD', 'AAPLxUSD', 'ABBVxUSD', 'ABBVxUSD', 'ABTxUSD', 'ABTxUSD', 'ACNxUSD', 'ACNxUSD', 'AMBRxUSD', 'AMBRxUSD', 
- 'AMDxUSD', 'AMDxUSD', 'AMZNxUSD', 'AMZNxUSD', 'APPxUSD', 'APPxUSD', 'AVGOxUSD', 'AVGOxUSD', 'AZNxUSD', 'AZNxUSD',
- 'BACxUSD', 'BACxUSD', 'BMNRxUSD', 'BMNRxUSD', 'BRK.BxUSD', 'BRK.BxUSD', 'BTBTxUSD', 'BTBTxUSD', 'BTGOxUSD', 'BTGOxUSD',
- 'CMCSAxUSD', 'CMCSAxUSD', 'COINxUSD', 'COINxUSD', 'COPXxUSD', 'COPXxUSD', 'CRCLxUSD', 'CRCLxUSD', 'CRMxUSD', 'CRMxUSD',
- 'CRWDxUSD', 'CRWDxUSD', 'CSCOxUSD', 'CSCOxUSD', 'CVXxUSD', 'CVXxUSD', 'DFDVxUSD', 'DFDVxUSD', 'DHRxUSD', 'DHRxUSD', 
- 'GLDxUSD', 'GLDxUSD', 'GMExUSD', 'GMExUSD', 'GOOGLxUSD', 'GOOGLxUSD', 'GSxUSD', 'GSxUSD', 'HONxUSD', 'HONxUSD', 
- 'HOODxUSD', 'HOODxUSD', 'IBMxUSD', 'IBMxUSD', 'IEMGxUSD', 'IEMGxUSD', 'IJRxUSD', 'IJRxUSD', 'INTCxUSD', 'INTCxUSD', 
- 'IWMxUSD', 'IWMxUSD', 'JNJxUSD', 'JNJxUSD', 'JPMxUSD', 'JPMxUSD', 'KOxUSD', 'KOxUSD', 'KRAQxUSD', 'KRAQxUSD', 
- 'LINxUSD', 'LINxUSD', 'LLYxUSD', 'LLYxUSD', 'MCDxUSD', 'MCDxUSD', 'MDTxUSD', 'MDTxUSD', 'METAxUSD', 'METAxUSD',
- 'MRKxUSD', 'MRKxUSD', 'MRVLxUSD', 'MRVLxUSD', 'MSFTxUSD', 'MSFTxUSD', 'MSTRxUSD', 'MSTRxUSD', 'NFLXxUSD', 'NFLXxUSD', 
- 'NVDAxUSD', 'NVDAxUSD', 'NVOxUSD', 'NVOxUSD', 'OPENxUSD', 'OPENxUSD', 'ORCLxUSD', 'ORCLxUSD', 'PALLxUSD', 'PALLxUSD', 
- 'PEPxUSD', 'PEPxUSD', 'PFExUSD', 'PFExUSD', 'PGxUSD', 'PGxUSD', 'PLTRxUSD', 'PLTRxUSD', 'PMxUSD', 'PMxUSD', 
- 'PPLTxUSD', 'PPLTxUSD', 'QQQxUSD', 'QQQxUSD', 'SCHFxUSD', 'SCHFxUSD', 'SLVxUSD', 'SLVxUSD', 'SPYxUSD', 'SPYxUSD', 
- 'STRCxUSD', 'STRCxUSD', 'TBLLxUSD', 'TBLLxUSD', 'TMOxUSD', 'TMOxUSD', 'TONXxUSD', 'TONXxUSD', 'TQQQxUSD', 'TQQQxUSD',
- 'TSLAxUSD', 'TSLAxUSD', 'UNHxUSD', 'UNHxUSD', 'VxUSD', 'VTIxUSD', 'VTIxUSD', 'VTxUSD', 'VTxUSD', 'VxUSD', 'XOMxUSD', 'XOMxUSD']
+xstocks_list = [
+    'AAPLxUSD', 'ABBVxUSD', 'ABTxUSD', 'ACNxUSD', 'AMBRxUSD', 'AMDxUSD', 
+    'AMZNxUSD', 'APPxUSD', 'AVGOxUSD', 'AZNxUSD', 'BACxUSD', 'BMNRxUSD', 
+    'BRKBxUSD', 'BTBTxUSD', 'BTGOxUSD', 'CMCSAxUSD', 'COINxUSD', 'COPXxUSD', 
+    'CRCLxUSD', 'CRMxUSD', 'CRWDxUSD', 'CSCOxUSD', 'CVXxUSD', 'DFDVxUSD', 
+    'DHRxUSD', 'GLDxUSD', 'GMExUSD', 'GOOGLxUSD', 'GSxUSD', 'HONxUSD', 
+    'HOODxUSD', 'IBMxUSD', 'IEMGxUSD', 'IJRxUSD', 'INTCxUSD', 'IWMxUSD', 
+    'JNJxUSD', 'JPMxUSD', 'KOxUSD', 'KRAQxUSD', 'LINxUSD', 'LLYxUSD', 
+    'MCDxUSD', 'MDTxUSD', 'METAxUSD', 'MRKxUSD', 'MRVLxUSD', 'MSFTxUSD', 
+    'MSTRxUSD', 'NFLXxUSD', 'NVDAxUSD', 'NVOxUSD', 'OPENxUSD', 'ORCLxUSD', 
+    'PALLxUSD', 'PEPxUSD', 'PFExUSD', 'PGxUSD', 'PLTRxUSD', 'PMxUSD', 
+    'PPLTxUSD', 'QQQxUSD', 'SCHFxUSD', 'SLVxUSD', 'SPYxUSD', 'STRCxUSD', 
+    'TBLLxUSD', 'TMOxUSD', 'TONXxUSD', 'TQQQxUSD', 'TSLAxUSD', 'UNHxUSD', 
+    'VxUSD', 'VTIxUSD', 'VTxUSD', 'XOMxUSD'
+]
 
 def check_stocks():
     url = "https://api.kraken.com/0/public/Ticker"    
-    params = {"pair": xstocks, "asset_class": "tokenized_asset" }
+    params = {"pair": ",".join(xstocks_list), 
+              "asset_class": "tokenized_asset" }
     
     try:
         response = requests.get(url, params=params).json()
