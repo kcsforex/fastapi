@@ -126,8 +126,10 @@ layout = dbc.Container([
 )
 def load_data_render(_):
 
-    with sql_engine.connect() as conn:
-        query = """
+    #with sql_engine.connect() as conn:
+    connection = sql.connect(server_hostname=DBX_HOST, http_path=DBX_HTTP_PATH, access_token=DBX_TOKEN)
+    cursor = connection.cursor()
+    cursor.execute( """
             CREATE OR REPLACE TABLE test_cat.test_db.lufthansa_dedup
             USING DELTA
             AS
