@@ -58,24 +58,28 @@ async def fetch_route(client, token, origin, dest, flight_date, sem):
             return None
 
 @router.get("/lh_flights/parquet")
+from fastapi import APIRouter
+from fastapi.responses import FileResponse
+from pathlib import Path
+import pandas as pd
+import tempfile
+
+@router.get("/lh_flights/parquet")
 async def get_flightroute_parquet():
     with sql_engine.connect() as conn:
         query = "SELECT * FROM lufthansa ORDER BY id DESC"
         df = pd.read_sql(query, conn)
     
-    # Save to static/public directory
-    static_dir = Path("/app/static")  # Must be served by your web server
-    static_dir.mkdir(exist_ok=True)
+    # Save to temp directory
+    temp_file = Path(tempfile.gettempdir()) / "lufthansa.parquet"
+    df.to_parquet(temp_file, index=False)
     
-    local_file = static_dir / "lufthansa.parquet"
-    df.to_parquet(local_file, index=False)  # Returns None - we don't use the return value
-    
-    # Return JSON with the URL where the file can be accessed
-    return {
-        "status": "success",
-        "file_url": "https://dash.petrosofteu.cloud/static/lufthansa.parquet",
-        "rows": len(df)
-    }
+    # Return the file directly - no static mounting needed
+    return FileResponse(
+        path=temp_file,
+        media_type="application/octet-stream",
+        filename="lufthansa.parquet"
+    )
 
 @router.get("/lh_flights/{flight_date}")
 async def get_flightroute_details(flight_date: str):
