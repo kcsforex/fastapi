@@ -1,4 +1,4 @@
-# 2026.02.08  18.00
+# 2026.02.13  18.00
 import os
 import httpx
 import asyncio
@@ -56,6 +56,15 @@ async def fetch_route(client, token, origin, dest, flight_date, sem):
             return df
         except Exception:
             return None
+
+@router.get("/lh_flights/parquet")
+async def post_flightroute_parquet(flight_date: str):
+    with sql_engine.connect() as conn:
+        query = "SELECT * FROM lufthansa ORDER BY id DESC"
+        df = pd.read_sql(query, conn)
+    
+    local_file = "lufthansa.parquet"
+    return df.to_parquet(local_file, index=False)
 
 @router.get("/lh_flights/{flight_date}")
 async def get_flightroute_details(flight_date: str):
