@@ -68,7 +68,8 @@ async def fetch_route(client, token, origin, dest, flight_date, sem):
 @router.get("/lh_flights/parquet")
 async def get_flightroute_parquet():
     with sql_engine.connect() as conn:
-        query = "SELECT * FROM lufthansa ORDER BY id DESC"
+        query = """SELECT id, route_key, departure_airport_code, departure_terminal_gate, departure_status_code, arrival_airport_code, 
+        arrival_terminal_gate, arrival_status_code, operatingcarrier_airlineid, operatingcarrier_flightnumber, equipment_aircraftcode FROM lufthansa ORDER BY id DESC"""
         df = pd.read_sql(query, conn)
     
     # Save to static/public directory
