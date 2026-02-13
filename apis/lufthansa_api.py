@@ -4,6 +4,8 @@ import httpx
 import asyncio
 import pandas as pd
 import requests
+from fastapi.responses import StreamingResponse
+import io
 from fastapi import APIRouter
 from sqlalchemy import create_engine
 
@@ -57,12 +59,6 @@ async def fetch_route(client, token, origin, dest, flight_date, sem):
         except Exception:
             return None
 
-@router.get("/lh_flights/parquet")
-from fastapi import APIRouter
-from fastapi.responses import FileResponse
-from pathlib import Path
-import pandas as pd
-import tempfile
 
 @router.get("/lh_flights/parquet")
 async def get_flightroute_parquet():
@@ -70,15 +66,18 @@ async def get_flightroute_parquet():
         query = "SELECT * FROM lufthansa ORDER BY id DESC"
         df = pd.read_sql(query, conn)
     
-    # Save to temp directory
-    temp_file = Path(tempfile.gettempdir()) / "lufthansa.parquet"
-    df.to_parquet(temp_file, index=False)
+    # Create parquet in memory
+    buffer = io.BytesIO()
+    df.to_parquet(buffer, index=False)
+    buffer.seek(0)
     
-    # Return the file directly - no static mounting needed
-    return FileResponse(
-        path=temp_file,
+    # Stream directly to client
+    return StreamingResponse(
+        buffer,
         media_type="application/octet-stream",
-        filename="lufthansa.parquet"
+        headers={
+            "Content-Disposition": "attachment; filename=lufthansa.parquet"
+        }
     )
 
 @router.get("/lh_flights/{flight_date}")
