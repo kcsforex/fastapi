@@ -8,6 +8,12 @@ from fastapi.responses import StreamingResponse
 import io
 from fastapi import APIRouter
 from sqlalchemy import create_engine
+from fastapi.responses import FileResponse
+from pathlib import Path
+import tempfile
+
+router = APIRouter()
+
 
 # ----- CONFIGURATION -----
 #DB_CONFIG = "postgresql+psycopg://sql_admin:sql_pass@72.62.151.169:5432/n8n"
@@ -59,25 +65,21 @@ async def fetch_route(client, token, origin, dest, flight_date, sem):
         except Exception:
             return None
 
-
 @router.get("/lh_flights/parquet")
 async def get_flightroute_parquet():
     with sql_engine.connect() as conn:
         query = "SELECT * FROM lufthansa ORDER BY id DESC"
         df = pd.read_sql(query, conn)
     
-    # Create parquet in memory
-    buffer = io.BytesIO()
-    df.to_parquet(buffer, index=False)
-    buffer.seek(0)
+    # Save to temp directory
+    temp_file = Path(tempfile.gettempdir()) / "lufthansa.parquet"
+    df.to_parquet(temp_file, index=False)
     
-    # Stream directly to client
-    return StreamingResponse(
-        buffer,
+    # Return the file directly - no static mounting needed
+    return FileResponse(
+        path=temp_file,
         media_type="application/octet-stream",
-        headers={
-            "Content-Disposition": "attachment; filename=lufthansa.parquet"
-        }
+        filename="lufthansa.parquet"
     )
 
 @router.get("/lh_flights/{flight_date}")
