@@ -128,6 +128,32 @@ def load_data_render(_):
 
     with sql_engine.connect() as conn:
         query = """
+            CREATE OR REPLACE TABLE test_cat.test_db.lufthansa_dedup
+            USING DELTA
+            AS
+            SELECT departure_scheduled_date,
+                   departure_scheduled_time,
+                   route_key,
+                   flight_number,
+                   departure_airport,
+                   arrival_airport,
+                   id
+            FROM (
+                SELECT *,
+                       ROW_NUMBER() OVER (
+                           PARTITION BY departure_scheduled_date,
+                                        departure_scheduled_time,
+                                        route_key
+                           ORDER BY id DESC
+                       ) AS rn
+                FROM test_cat.test_db.lufthansa
+            )
+            WHERE rn = 1
+            """)
+
+
+    with sql_engine.connect() as conn:
+        query = """
             SELECT DISTINCT ON (departure_scheduled_date, departure_scheduled_time, route_key) *
             FROM lufthansa
             ORDER BY departure_scheduled_date, departure_scheduled_time, route_key, id DESC
