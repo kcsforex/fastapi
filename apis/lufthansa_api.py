@@ -80,7 +80,7 @@ async def get_flightroute_parquet():
     static_dir = Path("/app/static_files")  # Must be served by your web server
     static_dir.mkdir(exist_ok=True)   
     local_file = static_dir / "lufthansa.parquet"
-    df.to_parquet(local_file, engine="pyarrow" index=False)  # Returns None - we don't use the return value    
+    df.to_parquet(local_file, engine="pyarrow", index=False)  # Returns None - we don't use the return value    
     return { "status": "success", "file_url": "https://dash.petrosofteu.cloud/static_files/lufthansa.parquet", "rows": len(df) }
 
 @router.get("/lh_flights/{flight_date}")
