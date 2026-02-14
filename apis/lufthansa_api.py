@@ -74,7 +74,7 @@ async def get_flightroute_parquet():
     # Save to temp directory
     local_file = "/tmp/lufthansa.parquet"
     df.to_parquet(local_file, engine="pyarrow", index=False)
-    return FileResponse(path=temp_file, media_type="application/octet-stream", filename="lufthansa.parquet")
+    return FileResponse(path=local_file, media_type="application/octet-stream", filename="lufthansa.parquet")
     
     # Save to static/public directory
     #static_dir = Path("/app/static_files")  # Must be served by your web server
