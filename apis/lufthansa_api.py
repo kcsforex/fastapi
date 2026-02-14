@@ -84,7 +84,7 @@ async def get_flightroute_parquet():
     # Return the file directly - no static mounting needed
     #return FileResponse(path=temp_file, media_type="application/octet-stream", filename="lufthansa.parquet")
 
-     local_file = "/tmp/lufthansa.parquet"
+    local_file = "/tmp/lufthansa.parquet"
     
     # Step 1: Write to file (ignore the None return value)
     df.to_parquet(local_file, index=False)
