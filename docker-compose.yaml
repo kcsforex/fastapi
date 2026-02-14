@@ -5,7 +5,7 @@ services:
     image: pgvector/pgvector:pg17
     container_name: n8n-postgres
     restart: unless-stopped
-    command: postgres -c max_connections=100 -c shared_buffers=256MB
+    command: postgres -c max_connections=200 -c shared_buffers=512MB -c effective_cache_size=1GB -c work_mem=16MB
 
     volumes:
       - postgresql-data:/var/lib/postgresql/data
@@ -21,6 +21,17 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+      start_period: 10s
+
+    # Resource limits to prevent OOM
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '1.0'
+        reservations:
+          memory: 512M
+          cpus: '0.5'
 
     networks:
       n8n-shared-net:
@@ -36,14 +47,15 @@ services:
       postgresql:
         condition: service_healthy
 
-    expose:
-      - "5678"
+    # Changed from expose to ports for Coolify reverse proxy
+    ports:
+      - "5678:5678"
 
     environment:
       # --- Core ---
-      # N8N_HOST: 0.0.0.0
       N8N_PORT: 5678
       N8N_PROTOCOL: https
+      N8N_LISTEN_ADDRESS: 0.0.0.0
 
       # --- Public URLs ---
       N8N_EDITOR_BASE_URL: https://${SERVICE_FQDN_N8N}
@@ -62,16 +74,49 @@ services:
       DB_POSTGRESDB_USER: ${SERVICE_USER_POSTGRES}
       DB_POSTGRESDB_PASSWORD: ${SERVICE_PASSWORD_POSTGRES}
 
+      # --- Execution ---
+      EXECUTIONS_MODE: regular
+      EXECUTIONS_TIMEOUT: 300
+      EXECUTIONS_TIMEOUT_MAX: 600
+      EXECUTIONS_DATA_SAVE_ON_ERROR: all
+      EXECUTIONS_DATA_SAVE_ON_SUCCESS: all
+      EXECUTIONS_DATA_SAVE_MANUAL_EXECUTIONS: true
+      EXECUTIONS_DATA_PRUNE: true
+      EXECUTIONS_DATA_MAX_AGE: 336
+
+      # --- Queue (for better performance) ---
+      QUEUE_BULL_REDIS_HOST: ${REDIS_HOST:-}
+      QUEUE_HEALTH_CHECK_ACTIVE: true
+
       # --- Security ---
       N8N_BLOCK_ENV_ACCESS_IN_NODE: ${N8N_BLOCK_ENV_ACCESS_IN_NODE:-true}
       N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS: ${N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS:-true}
       N8N_PROXY_HOPS: ${N8N_PROXY_HOPS:-1}
+
+      # --- Performance ---
+      N8N_PAYLOAD_SIZE_MAX: 16
+      N8N_METRICS: true
 
       # --- Disable Python runner warning ---
       N8N_TASK_RUNNERS_ENABLED: "false"
 
     volumes:
       - n8n-data:/home/node/.n8n
+
+    # Health check for n8n
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:5678/healthz || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: '2.0'
 
     networks:
       - n8n-shared-net
@@ -80,10 +125,11 @@ services:
     image: unclecode/crawl4ai:0.8.0
     container_name: crawl4ai
     restart: unless-stopped
-    shm_size: 1g
+    shm_size: 2g  # Increased from 1g for better browser performance
 
-    expose:
-      - "11235"
+    # Changed from expose to ports
+    ports:
+      - "11235:11235"
 
     environment:
       OPENAI_API_KEY: ${OPENAI_API_KEY:-}
@@ -93,10 +139,18 @@ services:
       LLM_BASE_URL: ${LLM_BASE_URL:-}
 
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:11235/"]
+      test: ["CMD", "curl", "-f", "http://localhost:11235/health"]
       interval: 30s
       timeout: 10s
       retries: 3
+      start_period: 30s
+
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '1.0'
 
     networks:
       - n8n-shared-net
@@ -112,9 +166,12 @@ services:
     depends_on:
       postgresql:
         condition: service_healthy
+      crawl4ai:
+        condition: service_healthy
 
-    expose:
-      - "8000"
+    # Changed from expose to ports
+    ports:
+      - "8000:8000"
 
     environment:
       DB_HOST: postgresql
@@ -127,20 +184,38 @@ services:
       TZ: ${TZ:-Europe/Berlin}
       CRAWL4AI_URL: http://crawl4ai:11235
 
+      # Uvicorn workers for better performance
+      UVICORN_WORKERS: ${UVICORN_WORKERS:-2}
+      UVICORN_TIMEOUT: 120
+
     healthcheck:
-      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:8000/health"]
+      test: ["CMD", "curl", "-fsS", "http://localhost:8000/health"]
       interval: 30s
-      timeout: 3s
-      start_period: 15s
+      timeout: 10s
+      start_period: 30s
       retries: 3
+
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '1.0'
+        reservations:
+          memory: 256M
+          cpus: '0.2'
 
     networks:
       - n8n-shared-net
 
 volumes:
   n8n-data:
+    driver: local
   postgresql-data:
+    driver: local
 
 networks:
   n8n-shared-net:
     driver: bridge
+    driver_opts:
+      com.docker.network.bridge.name: n8n-bridge
