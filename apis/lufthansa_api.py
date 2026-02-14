@@ -71,23 +71,25 @@ async def get_flightroute_parquet():
         arrival_terminal_gate, arrival_status_code, operatingcarrier_airlineid, operatingcarrier_flightnumber, equipment_aircraftcode FROM lufthansa ORDER BY id DESC"""
         df = pd.read_sql(query, conn)
 
-    # Save to temp directory
-    temp_file = Path(tempfile.gettempdir()) / "lufthansa.parquet"
-    df.to_parquet(temp_file, index=False)
+    # Convert to parquet in memory
+    parquet_buffer = io.BytesIO()
+    df.to_parquet(parquet_buffer, index=False)
+    parquet_buffer.seek(0)  # Reset to beginning
     
+    # Return as streaming response
+    return StreamingResponse(parquet_buffer, media_type="application/octet-stream", headers={"Content-Disposition": "attachment; filename=lufthansa.parquet"})
+
+    # Save to temp directory
+    #temp_file = Path(tempfile.gettempdir()) / "lufthansa.parquet"
+    #df.to_parquet(temp_file, index=False)
     # Return the file directly - no static mounting needed
-    return FileResponse(
-        path=temp_file,
-        media_type="application/octet-stream",
-        filename="lufthansa.parquet"
-    )
+    #return FileResponse(path=temp_file, media_type="application/octet-stream", filename="lufthansa.parquet")
     
     # Save to static/public directory
     #static_dir = Path("/app/static")  # Must be served by your web server
     #static_dir.mkdir(exist_ok=True)   
     #local_file = static_dir / "lufthansa.parquet"
-    #df.to_parquet(local_file, index=False)  # Returns None - we don't use the return value
-    
+    #df.to_parquet(local_file, index=False)  # Returns None - we don't use the return value    
     # Return JSON with the URL where the file can be accessed
     #return { "status": "success", "file_url": "https://dash.petrosofteu.cloud/static/lufthansa.parquet", "rows": len(df) }
 
