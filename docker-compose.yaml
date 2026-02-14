@@ -98,7 +98,10 @@ services:
       N8N_METRICS: true
 
       # --- Disable Python runner warning ---
-      N8N_TASK_RUNNERS_ENABLED: "false"
+
+      N8N_RUNNERS_ENABLED: "false"        
+      SKIP_STATISTICS_EVENTS: "true"       
+      NODE_NO_WARNINGS: "1"  
 
     volumes:
       - n8n-data:/home/node/.n8n
@@ -198,6 +201,9 @@ services:
         limits:
           memory: 1G
           cpus: '1.0'
+        reservations:
+          memory: 256M
+          cpus: '0.2'
 
     networks:
       - n8n-shared-net
