@@ -198,9 +198,6 @@ services:
         limits:
           memory: 1G
           cpus: '1.0'
-        reservations:
-          memory: 256M
-          cpus: '0.25'
 
     networks:
       - n8n-shared-net
