@@ -132,8 +132,6 @@ services:
       - "11235:11235"
 
     environment:
-      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
-      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
       LLM_PROVIDER: ${LLM_PROVIDER:-}
       LLM_TEMPERATURE: ${LLM_TEMPERATURE:-0.7}
       LLM_BASE_URL: ${LLM_BASE_URL:-}
