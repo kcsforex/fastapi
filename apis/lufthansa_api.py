@@ -72,17 +72,16 @@ async def get_flightroute_parquet():
         df = pd.read_sql(query, conn)
 
     # Save to temp directory
-    #temp_file = Path(tempfile.gettempdir()) / "lufthansa.parquet"
-    #df.to_parquet(temp_file, index=False)
-    # Return the file directly - no static mounting needed
-    #return FileResponse(path=temp_file, media_type="application/octet-stream", filename="lufthansa.parquet")
+    temp_file = Path(tempfile.gettempdir()) / "lufthansa.parquet"
+    df.to_parquet(temp_file, engine="pyarrow", index=False)
+    return FileResponse(path=temp_file, media_type="application/octet-stream", filename="lufthansa.parquet")
     
     # Save to static/public directory
-    static_dir = Path("/app/static_files")  # Must be served by your web server
-    static_dir.mkdir(exist_ok=True)   
-    local_file = static_dir / "lufthansa.parquet"
-    df.to_parquet(local_file, index=False)  # Returns None - we don't use the return value    
-    return { "status": "success", "file_url": "https://dash.petrosofteu.cloud/static_files/lufthansa.parquet", "rows": len(df) }
+    #static_dir = Path("/app/static_files")  # Must be served by your web server
+    #static_dir.mkdir(exist_ok=True)   
+    #local_file = static_dir / "lufthansa.parquet"
+    #df.to_parquet(local_file, index=False)  # Returns None - we don't use the return value    
+    #return { "status": "success", "file_url": "https://dash.petrosofteu.cloud/static_files/lufthansa.parquet", "rows": len(df) }
 
 @router.get("/lh_flights/{flight_date}")
 async def get_flightroute_details(flight_date: str):
