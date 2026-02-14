@@ -97,7 +97,7 @@ services:
       N8N_METRICS: true
 
       # --- Disable Python runner warning ---
-
+      N8N_LOG_LEVEL: "error"
       N8N_RUNNERS_ENABLED: "false"        
       SKIP_STATISTICS_EVENTS: "true"       
       NODE_NO_WARNINGS: "1"  
