@@ -31,7 +31,7 @@ services:
           cpus: '1.0'
         reservations:
           memory: 512M
-          cpus: '0.5'
+          cpus: '0.25'
 
     networks:
       n8n-shared-net:
@@ -47,9 +47,9 @@ services:
       postgresql:
         condition: service_healthy
 
-    # Changed from expose to ports for Coolify reverse proxy
-    ports:
-      - "5678:5678"
+    # Coolify manages port mapping - just expose internally
+    expose:
+      - "5678"
 
     environment:
       # --- Core ---
@@ -115,8 +115,8 @@ services:
     deploy:
       resources:
         limits:
-          memory: 2G
-          cpus: '2.0'
+          memory: 1G
+          cpus: '1.0'
 
     networks:
       - n8n-shared-net
@@ -125,13 +125,14 @@ services:
     image: unclecode/crawl4ai:0.8.0
     container_name: crawl4ai
     restart: unless-stopped
-    shm_size: 2g  # Increased from 1g for better browser performance
+    shm_size: 2g
 
-    # Changed from expose to ports
-    ports:
-      - "11235:11235"
+    expose:
+      - "11235"
 
     environment:
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
       LLM_PROVIDER: ${LLM_PROVIDER:-}
       LLM_TEMPERATURE: ${LLM_TEMPERATURE:-0.7}
       LLM_BASE_URL: ${LLM_BASE_URL:-}
@@ -147,8 +148,8 @@ services:
     deploy:
       resources:
         limits:
-          memory: 1G
-          cpus: '1.0'
+          memory: 2G
+          cpus: '2.0'
 
     networks:
       - n8n-shared-net
@@ -167,9 +168,9 @@ services:
       crawl4ai:
         condition: service_healthy
 
-    # Changed from expose to ports
-    ports:
-      - "8000:8000"
+    # Coolify manages port mapping
+    expose:
+      - "8000"
 
     environment:
       DB_HOST: postgresql
@@ -201,7 +202,7 @@ services:
           cpus: '1.0'
         reservations:
           memory: 256M
-          cpus: '0.2'
+          cpus: '0.25'
 
     networks:
       - n8n-shared-net
