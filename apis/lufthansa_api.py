@@ -72,6 +72,10 @@ async def get_flightroute_parquet():
         arrival_terminal_gate, arrival_status_code, operatingcarrier_airlineid, operatingcarrier_flightnumber, equipment_aircraftcode FROM lufthansa ORDER BY id DESC"""
         df = pd.read_sql(query, conn)
 
+    # Save to temp directory
+    temp_file = Path(tempfile.gettempdir()) / "lufthansa.parquet"
+    df.to_parquet(temp_file, index=False)
+    
     # Return the file directly - no static mounting needed
     return FileResponse(
         path=temp_file,
