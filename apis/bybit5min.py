@@ -5,7 +5,8 @@ from fastapi import FastAPI, HTTPException, Query
 from pydantic import BaseModel
 from typing import List, Optional
 
-app = FastAPI(title="Crypto Data Proxy")
+#app = FastAPI(title="Crypto Data Proxy")
+router = APIRouter()
 
 # --- CONFIGURATION ---
 SYMBOLS = ["BTC/USDT", "ETH/USDT", "SOL/USDT", "XRP/USDT"]
@@ -48,7 +49,7 @@ async def fetch_one_symbol(symbol: str, since: Optional[int] = None):
         print(f"Error fetching {symbol}: {e}")
         return []
 
-@app.get("/fetch-all", response_model=List[Candle])
+@router.get("/fetch-all", response_model=List[Candle])
 async def fetch_all_cryptos(since: Optional[int] = Query(None, description="Start timestamp in milliseconds")):
     """
     Parallel fetch for all symbols using the 'since' parameter.
@@ -65,6 +66,6 @@ async def fetch_all_cryptos(since: Optional[int] = Query(None, description="Star
         
     return flattened_results
 
-@app.on_event("shutdown")
+@router.on_event("shutdown")
 async def shutdown_event():
     await exchange.close()
