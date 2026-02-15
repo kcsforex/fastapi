@@ -1,7 +1,7 @@
 # 2026.02.15  18.00
 import asyncio
 import ccxt.async_support as ccxt
-from fastapi import FastAPI, HTTPException, Query
+from fastapi import FastAPI, APIRouter, HTTPException, Query
 from pydantic import BaseModel
 from typing import List, Optional
 
