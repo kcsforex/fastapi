@@ -8,6 +8,8 @@ from sklearn.ensemble import RandomForestRegressor, RandomForestClassifier
 from sklearn.ensemble import GradientBoostingRegressor, GradientBoostingClassifier
 from sklearn.ensemble import HistGradientBoostingRegressor, HistGradientBoostingClassifier
 from sklearn.model_selection import train_test_split
+from sklearn.pipeline import Pipeline
+from sklearn.impute import SimpleImputer
 from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error,  accuracy_score, precision_score, recall_score, f1_score
 
 # ---- Clean + feature engineering ----
@@ -39,27 +41,26 @@ def train_linear(df):
     df = df.dropna(subset=["arrival_delay"]).copy()
     X = df[["dep_delay", "dep_hour", "dep_dow"]].fillna(0)
     y = df["arrival_delay"].astype(float)
-    X = X.fillna({"dep_delay": 0.0, "dep_hour": X["dep_hour"].median(), "dep_dow": X["dep_dow"].median()})
     X_tr, X_te, y_tr, y_te = train_test_split(X, y, test_size=0.2, random_state=42)
-    model = LinearRegression().fit(X_tr, y_tr)
+    model = Pipeline([("imputer", SimpleImputer(strategy="median")), ("regressor", LinearRegression())]).fit(X_tr, y_tr)
     return model, reg_metrics(y_te, model.predict(X_te))
 
 def train_tree_linear(df, max_depth=None, random_state=42):
     d = df.dropna(subset=["arrival_delay"]).copy()
     X = d[["dep_delay", "dep_hour", "dep_dow"]].fillna(0)
     y = d["arrival_delay"].astype(float)
-    X = X.fillna({"dep_delay": 0.0, "dep_hour": X["dep_hour"].median(), "dep_dow": X["dep_dow"].median()})
     X_tr, X_te, y_tr, y_te = train_test_split(X, y, test_size=0.2, random_state=42)
-    model = DecisionTreeRegressor(max_depth=max_depth, random_state=random_state).fit(X_tr, y_tr)
+    model = Pipeline([("imputer", SimpleImputer(strategy="median")), \
+    ("regressor", DecisionTreeRegressor(max_depth=max_depth, random_state=random_state))]).fit(X_tr, y_tr)
     return model, reg_metrics(y_te, model.predict(X_te))
 
 def train_rf_linear(df, n_estimators=300, max_depth=None, random_state=42):
     d = df.dropna(subset=["arrival_delay"]).copy()
     X = d[["dep_delay", "dep_hour", "dep_dow"]].fillna(0)
     y = d["arrival_delay"].astype(float)
-    X = X.fillna({"dep_delay": 0.0, "dep_hour": X["dep_hour"].median(), "dep_dow": X["dep_dow"].median()})
     X_tr, X_te, y_tr, y_te = train_test_split(X, y, test_size=0.2, random_state=42)
-    model = RandomForestRegressor(n_estimators=n_estimators, max_depth=max_depth, random_state=random_state).fit(X_tr, y_tr)
+    model = Pipeline([("imputer", SimpleImputer(strategy="median")), \
+    ("regressor", RandomForestRegressor(n_estimators=n_estimators, max_depth=max_depth, random_state=random_state))]).fit(X_tr, y_tr)
     return model, reg_metrics(y_te, model.predict(X_te))
 
 def train_gbm_linear(df, n_estimators=300, learning_rate=0.06, max_depth=3, random_state=42, subsample=1.0):
@@ -155,6 +156,7 @@ def predict_latest_logistic(model, df: pd.DataFrame, n=12):
 
     cols = ["route_key", "dep_sched", "pred_prob_delay", "pred_flag_delay"]
     return latest[[c for c in cols if c in latest.columns]]
+
 
 
 
