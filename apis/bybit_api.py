@@ -3,8 +3,6 @@ import pandas as pd
 import ccxt
 import ccxt.async_support as ccxt_async
 import asyncio
-from crawl4ai import AsyncWebCrawler, BrowserConfig, CrawlerRunConfig, CacheMode
-from bs4 import BeautifulSoup
 from datetime import datetime
 from fastapi import APIRouter, HTTPException, Query
 import dash
@@ -13,14 +11,11 @@ import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output
 import plotly.express as px
 from sqlalchemy import create_engine
-import json
 from pydantic import BaseModel
 from typing import List, Optional
 
 # ----- 1. CONFIGURATION -----
-#DB_CONFIG = "postgresql+psycopg://sql_admin:sql_pass@72.62.151.169:5432/n8n"
 DB_CONFIG = "postgresql+psycopg://sql_admin:sql_pass@postgresql:5432/n8n"
-#sql_engine = create_engine(DB_CONFIG, pool_size=0, max_overflow=0, pool_pre_ping=True)
 sql_engine = create_engine(DB_CONFIG, pool_size=5, max_overflow=10, pool_pre_ping=True, pool_recycle=1800,      
     connect_args={'connect_timeout': 5, 'keepalives': 1, 'keepalives_idle': 30, 'keepalives_interval': 10, 'keepalives_count': 5})
 
@@ -44,16 +39,27 @@ class Candle(BaseModel):
     volume: float
 
 async def fetch_one_symbol(symbol: str, since: Optional[int] = None):
-    try:
-        
+    try:     
         ohlcv = await exchange.fetch_ohlcv(symbol, TIMEFRAME, since=since)        
-        return [{ "symbol": symbol.replace("/", "-"), "timestamp": c[0], "open": c[1], "high": c[2], "low": c[3], "close": c[4], "volume": c[5]} for c in ohlcv]
-        
+        return [{ "symbol": symbol.replace("/", "-"), "timestamp": c[0], "open": c[1], "high": c[2], "low": c[3], "close": c[4], "volume": c[5]} for c in ohlcv]        
     except Exception as e:
         print(f"Error fetching {symbol}: {e}")
         return []
 
+@router.get("/fetch-all", response_model=List[Candle])
+async def fetch_all_cryptos(since: Optional[int] = Query(None, description="Start timestamp in milliseconds")):
 
+    tasks = [fetch_one_symbol(s, since) for s in SYMBOLS]
+    results = await asyncio.gather(*tasks)    
+    flattened_results = [candle for symbol_list in results for candle in symbol_list]    
+    if not flattened_results:
+        return []
+        
+    return flattened_results
+
+@router.on_event("shutdown")
+async def shutdown_event():
+    await exchange.close()
 
 @router.get("/bybit")
 def bybit_data():
@@ -63,7 +69,7 @@ def bybit_data():
     
     for symbol in SYMBOLS:
         try:
-            ohlcv = bybit.fetch_ohlcv(symbol, timeframe, limit=limit)
+            ohlcv = bybit.fetch_ohlcv(symbol, TIMEFRAME, limit=limit)
             closes = [candle[4] for candle in ohlcv]        
             sma_100 = sum(closes[-100:]) / 100
             current_price = closes[-1]
