@@ -1,11 +1,12 @@
 # 2025.02.16  10.00
 import pandas as pd
 import ccxt
+import ccxt.async_support as ccxt_async
 import asyncio
 from crawl4ai import AsyncWebCrawler, BrowserConfig, CrawlerRunConfig, CacheMode
 from bs4 import BeautifulSoup
 from datetime import datetime
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException, Query
 import dash
 from dash import dcc, html, dash_table, callback
 import dash_bootstrap_components as dbc
@@ -13,46 +14,36 @@ from dash.dependencies import Input, Output
 import plotly.express as px
 from sqlalchemy import create_engine
 import json
+from pydantic import BaseModel
+from typing import List, Optional
 
 # ----- 1. CONFIGURATION -----
 #DB_CONFIG = "postgresql+psycopg://sql_admin:sql_pass@72.62.151.169:5432/n8n"
 DB_CONFIG = "postgresql+psycopg://sql_admin:sql_pass@postgresql:5432/n8n"
 #sql_engine = create_engine(DB_CONFIG, pool_size=0, max_overflow=0, pool_pre_ping=True)
 
-sql_engine = create_engine(
-    DB_CONFIG,
-    pool_size=5,              # Keep 5 connections alive
-    max_overflow=10,          # Allow up to 10 additional connections when needed
-    pool_pre_ping=True,       # Test connections before using (good!)
-    pool_recycle=1800,        # Recycle connections after 1 hour
-    connect_args={
-        'connect_timeout': 5,
-        'keepalives': 1,
-        'keepalives_idle': 30,
-        'keepalives_interval': 10,
-        'keepalives_count': 5
-    }
-)
-
-
+sql_engine = create_engine(DB_CONFIG, pool_size=5, max_overflow=10, pool_pre_ping=True, pool_recycle=1800,      
+    connect_args={'connect_timeout': 5, 'keepalives': 1, 'keepalives_idle': 30, 'keepalives_interval': 10, 'keepalives_count': 5})
 
 SYMBOLS = ["BTC/USDT", "ETH/USDT", "SOL/USDT", "XRP/USDT", "ZEN/USDT", "LTC/USDT", "AVAX/USDT", "LINK/USDT", "HYPE/USDT", "BCH/USDT", "BNB/USDT", "SUI/USDT"]
 
-# ----- 2. FASTAPI -----
+# ----- 2. FASTAPI/APIRouter -----
 router = APIRouter()
+
+bybit = ccxt.bybit() 
+bybit_asinc = ccxt.bybit({'enableRateLimit': True, 'options': {'defaultType': 'linear'}})
+TIMEFRAME = '5m' 
+limit = 101   
 
 @router.get("/bybit")
 def bybit_data():
 
-    exchange = ccxt.bybit()  
-    timeframe = '15m' 
-    limit = 101   
     results = []
     timestamp = exchange.milliseconds()
     
     for symbol in SYMBOLS:
         try:
-            ohlcv = exchange.fetch_ohlcv(symbol, timeframe, limit=limit)
+            ohlcv = bybit.fetch_ohlcv(symbol, timeframe, limit=limit)
             closes = [candle[4] for candle in ohlcv]        
             sma_100 = sum(closes[-100:]) / 100
             current_price = closes[-1]
