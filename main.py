@@ -1,4 +1,4 @@
-# 2026.02.04  18.00
+# 2026.02.16  11.00
 import dash
 from dash import html, dcc
 import dash_bootstrap_components as dbc
@@ -12,7 +12,6 @@ app = dash.Dash(__name__, use_pages=True, suppress_callback_exceptions=True,
 # ----- 2. NOW IMPORT YOUR PAGES -----
 from pages import home, bybit,  databricks, air_dataset, lufthansa
 import apis.bybit_api as bybit
-import apis.bybit5min as bybit5min
 import apis.kraken_api as kraken
 import apis.lufthansa_api as lufthansa
 
@@ -26,7 +25,6 @@ def health():
 
 # ----- 3.2. API ROUTERS -----
 server.include_router(bybit.router,        prefix="/api/bybit",      tags=["Bybit"])
-server.include_router(bybit5min.router,    prefix="/api/bybit5min",  tags=["Bybit5min"])
 server.include_router(kraken.router,       prefix="/api/kraken",     tags=["Kraken"])
 server.include_router(databricks.router,   prefix="/api/dbricks",    tags=["Machine Learning"])
 server.include_router(air_dataset.router,  prefix="/api/airdata",    tags=["Air Data"])
