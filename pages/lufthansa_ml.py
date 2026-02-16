@@ -93,45 +93,45 @@ def train_logistic(df):
     d = df.dropna(subset=["is_delayed"]).copy()
     X = d[["dep_delay", "dep_hour", "dep_dow"]].fillna(0)
     y = d["is_delayed"].astype(int)
-    X = X.fillna({"dep_delay": 0.0, "dep_hour": X["dep_hour"].median(), "dep_dow": X["dep_dow"].median()})   
     X_tr, X_te, y_tr, y_te = train_test_split(X, y, test_size=0.25, random_state=42, stratify=y)
-    model = LogisticRegression(max_iter=200, class_weight="balanced").fit(X_tr, y_tr)
+    model = Pipeline([("imputer", SimpleImputer(strategy="median")), \
+    ("classifier",  LogisticRegression(max_iter=200, class_weight="balanced"))]).fit(X_tr, y_tr)
     return model, clf_metrics(y_te, model.predict(X_te))
 
 def train_tree_logistic(df, max_depth=None, random_state=42):
     d = df.dropna(subset=["is_delayed"]).copy()
     X = d[["dep_delay", "dep_hour", "dep_dow"]].fillna(0)
     y = d["is_delayed"].astype(int)
-    X = X.fillna({"dep_delay": 0.0, "dep_hour": X["dep_hour"].median(), "dep_dow": X["dep_dow"].median()}) 
     X_tr, X_te, y_tr, y_te = train_test_split(X, y, test_size=0.25, random_state=42, stratify=y)
-    model = DecisionTreeClassifier(max_depth=max_depth, random_state=random_state).fit(X_tr, y_tr)
+    model = Pipeline([("imputer", SimpleImputer(strategy="median")), \
+    ("classifier",  DecisionTreeClassifier(max_depth=max_depth, random_state=random_state))]).fit(X_tr, y_tr)
     return model, clf_metrics(y_te, model.predict(X_te))
 
 def train_rf_logistic(df, n_estimators=300, max_depth=None, random_state=42):
     d = df.dropna(subset=["is_delayed"]).copy()
     X = d[["dep_delay", "dep_hour", "dep_dow"]].fillna(0)
-    y = d["is_delayed"].astype(int)
-    X = X.fillna({"dep_delay": 0.0, "dep_hour": X["dep_hour"].median(), "dep_dow": X["dep_dow"].median()})  
+    y = d["is_delayed"].astype(int) 
     X_tr, X_te, y_tr, y_te = train_test_split(X, y, test_size=0.25, random_state=42, stratify=y)
-    model = RandomForestClassifier(n_estimators=n_estimators,max_depth=max_depth,random_state=random_state,class_weight="balanced").fit(X_tr, y_tr)
+    model = Pipeline([("imputer", SimpleImputer(strategy="median")), \
+    ("classifier",  RandomForestClassifier(n_estimators=n_estimators,max_depth=max_depth,random_state=random_state,class_weight="balanced"))]).fit(X_tr, y_tr)
     return model, clf_metrics(y_te, model.predict(X_te))
 
 def train_gbm_logistic(df, n_estimators=300, learning_rate=0.06, max_depth=3, random_state=42, subsample=1.0):
     d = df.dropna(subset=["is_delayed"]).copy()  
     X = d[["dep_delay", "dep_hour", "dep_dow"]].fillna(0)
     y = d["is_delayed"].astype(int)
-    X = X.fillna({"dep_delay": 0.0, "dep_hour": X["dep_hour"].median(), "dep_dow": X["dep_dow"].median()})
     X_tr, X_te, y_tr, y_te = train_test_split(X, y, test_size=0.25, random_state=random_state, stratify=y)
-    model = GradientBoostingClassifier(n_estimators=n_estimators, learning_rate=learning_rate,max_depth=max_depth, subsample=subsample, random_state=random_state).fit(X_tr, y_tr)
+    model = Pipeline([("imputer", SimpleImputer(strategy="median")), \
+    ("classifier",  GradientBoostingClassifier(n_estimators=n_estimators, learning_rate=learning_rate,max_depth=max_depth, subsample=subsample, random_state=random_state))]).fit(X_tr, y_tr)
     return model, clf_metrics(y_te, model.predict(X_te))
 
 def train_hgb_logistic(df, learning_rate=0.06, max_depth=None, max_iter=300, random_state=42):
     d = df.dropna(subset=["is_delayed"]).copy()
     X = d[["dep_delay", "dep_hour", "dep_dow"]].fillna(0)
     y = d["is_delayed"].astype(int)
-    X = X.fillna({"dep_delay": 0.0, "dep_hour": X["dep_hour"].median(), "dep_dow": X["dep_dow"].median()})
     X_tr, X_te, y_tr, y_te = train_test_split(X, y, test_size=0.25, random_state=random_state, stratify=y)
-    model = HistGradientBoostingClassifier(learning_rate=learning_rate, max_depth=max_depth, max_iter=max_iter, random_state=random_state).fit(X_tr, y_tr)
+    model = Pipeline([("imputer", SimpleImputer(strategy="median")), \
+    ("classifier",  HistGradientBoostingClassifier(learning_rate=learning_rate, max_depth=max_depth, max_iter=max_iter, random_state=random_state))]).fit(X_tr, y_tr)
     return model, clf_metrics(y_te, model.predict(X_te))
 
 # ======================================================
@@ -156,6 +156,7 @@ def predict_latest_logistic(model, df: pd.DataFrame, n=12):
 
     cols = ["route_key", "dep_sched", "pred_prob_delay", "pred_flag_delay"]
     return latest[[c for c in cols if c in latest.columns]]
+
 
 
 
