@@ -35,6 +35,15 @@ bybit_asinc = ccxt.bybit({'enableRateLimit': True, 'options': {'defaultType': 'l
 TIMEFRAME = '5m' 
 limit = 101   
 
+class Candle(BaseModel):
+    symbol: str
+    timestamp: int
+    open: float
+    high: float
+    low: float
+    close: float
+    volume: float
+
 @router.get("/bybit")
 def bybit_data():
 
