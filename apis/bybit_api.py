@@ -1,4 +1,4 @@
-# 2025.02.09  15.00
+# 2025.02.16  10.00
 import pandas as pd
 import ccxt
 import asyncio
@@ -36,7 +36,7 @@ sql_engine = create_engine(
 
 
 
-SYMBOLS = ["BTC/USDT", "ETH/USDT", "SOL/USDT", "XRP/USDT", "ZEN/USDT", "LTC/USDT", "AVAX/USDT", "LINK/USDT", "HYPE/USDT", "BCH/USDT", "BNB/USDT", "AAVE/USDT"]
+SYMBOLS = ["BTC/USDT", "ETH/USDT", "SOL/USDT", "XRP/USDT", "ZEN/USDT", "LTC/USDT", "AVAX/USDT", "LINK/USDT", "HYPE/USDT", "BCH/USDT", "BNB/USDT", "SUI/USDT"]
 
 # ----- 2. FASTAPI -----
 router = APIRouter()
