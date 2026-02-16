@@ -41,7 +41,7 @@ class Candle(BaseModel):
 async def fetch_one_symbol(symbol: str, since: Optional[int] = None):
     try:     
         ohlcv = await bybit_async.fetch_ohlcv(symbol, TIMEFRAME, since=since)        
-        return [{ "symbol": symbol.replace("/", "-"), "timestamp": c[0], "open": c[1], "high": c[2], "low": c[3], "close": c[4], "volume": c[5]} for c in ohlcv]        
+        return [{ "symbol": symbol.replace("/", "-"), "timestamp": c[0]/1000, "open": c[1], "high": c[2], "low": c[3], "close": c[4], "volume": c[5]} for c in ohlcv]        
     except Exception as e:
         print(f"Error fetching {symbol}: {e}")
         return []
