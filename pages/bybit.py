@@ -56,7 +56,7 @@ def update_dashboard(n_intervals):
         df = pd.read_sql("SELECT * FROM bybit_crypto ORDER BY timestamp DESC LIMIT 120", conn)
 
     if df.empty:
-        return html.Div("No data found", className="text-light fst-italic")
+        return [html.Div("No data found", className="text-light fst-italic"),  None, None, None]
         #return dash.no_update, "No data found", {}, "No Data"    
 
     #df["timestamp"] = pd.to_datetime(df["timestamp"])
