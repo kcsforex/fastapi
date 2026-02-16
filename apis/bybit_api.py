@@ -1,4 +1,4 @@
-# 2025.02.16  10.00
+# 2025.02.16  11.00
 import pandas as pd
 import ccxt
 import ccxt.async_support as ccxt_async
@@ -65,7 +65,7 @@ async def shutdown_event():
 def bybit_data():
 
     results = []
-    timestamp = exchange.milliseconds()
+    timestamp = bybit.milliseconds()
     
     for symbol in SYMBOLS:
         try:
