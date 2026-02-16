@@ -21,7 +21,6 @@ from typing import List, Optional
 #DB_CONFIG = "postgresql+psycopg://sql_admin:sql_pass@72.62.151.169:5432/n8n"
 DB_CONFIG = "postgresql+psycopg://sql_admin:sql_pass@postgresql:5432/n8n"
 #sql_engine = create_engine(DB_CONFIG, pool_size=0, max_overflow=0, pool_pre_ping=True)
-
 sql_engine = create_engine(DB_CONFIG, pool_size=5, max_overflow=10, pool_pre_ping=True, pool_recycle=1800,      
     connect_args={'connect_timeout': 5, 'keepalives': 1, 'keepalives_idle': 30, 'keepalives_interval': 10, 'keepalives_count': 5})
 
@@ -31,7 +30,7 @@ SYMBOLS = ["BTC/USDT", "ETH/USDT", "SOL/USDT", "XRP/USDT", "ZEN/USDT", "LTC/USDT
 router = APIRouter()
 
 bybit = ccxt.bybit() 
-bybit_asinc = ccxt.bybit({'enableRateLimit': True, 'options': {'defaultType': 'linear'}})
+bybit_async = ccxt_async.bybit({'enableRateLimit': True, 'options': {'defaultType': 'linear'}})
 TIMEFRAME = '5m' 
 limit = 101   
 
@@ -43,6 +42,18 @@ class Candle(BaseModel):
     low: float
     close: float
     volume: float
+
+async def fetch_one_symbol(symbol: str, since: Optional[int] = None):
+    try:
+        
+        ohlcv = await exchange.fetch_ohlcv(symbol, TIMEFRAME, since=since)        
+        return [{ "symbol": symbol.replace("/", "-"), "timestamp": c[0], "open": c[1], "high": c[2], "low": c[3], "close": c[4], "volume": c[5]} for c in ohlcv]
+        
+    except Exception as e:
+        print(f"Error fetching {symbol}: {e}")
+        return []
+
+
 
 @router.get("/bybit")
 def bybit_data():
