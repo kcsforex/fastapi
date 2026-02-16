@@ -59,7 +59,7 @@ async def fetch_all_cryptos(since: Optional[int] = Query(None, description="Star
 
 @router.on_event("shutdown")
 async def shutdown_event():
-    await exchange.close()
+    await bybit_async.close()
 
 @router.get("/bybit")
 def bybit_data():
