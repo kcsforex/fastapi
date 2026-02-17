@@ -1,4 +1,4 @@
-# 2026.01.25  11.00
+# 2026.02.17  10.00
 import dash
 from dash import html, callback, Output, Input
 import dash_bootstrap_components as dbc
@@ -16,7 +16,7 @@ CARD_STYLE = {
 
 TABLE_STYLE = { "backgroundColor": "transparent", "--bs-table-bg": "transparent", "--bs-table-accent-bg": "transparent", "color": "white",}
 
-PACKAGES = ["fastapi", "psycopg", "dash", "selenium", "ccxt", "pandas", "numpy", "SQLAlchemy", "scikit-learn", "databricks-sql-connector"]
+PACKAGES = ["fastapi", "psycopg", "dash", "pyarrow", "ccxt", "pandas", "numpy", "SQLAlchemy", "scikit-learn", "databricks-sql-connector"]
 
 def get_runtime_info():
     info_header = [("Python Version", sys.version.split()[0]), ("OS Platform", platform.platform()[:11])]
