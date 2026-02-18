@@ -1,4 +1,4 @@
-# 2025.02.18  10.00
+# 2025.02.18  11.00
 import pandas as pd
 import ccxt
 import ccxt.async_support as ccxt_async
@@ -37,26 +37,25 @@ class Candle(BaseModel):
     low: float
     close: float
     volume: float
+    sma_cross: str
 
 async def fetch_one_symbol(symbol: str, since: Optional[int] = None):
     try:     
         ohlcv = await bybit_async.fetch_ohlcv(symbol, TIMEFRAME, since=since)  
         closes = [candle[4] for candle in ohlcv] 
         sma_100 = sum(closes[-100:]) / 100
-        curr_price = closes[-1]
+        curr_close = closes[-1]
         prev_close = closes[-2]
-        prev_sma = sum(closes[-101:-1]) / 100  # SMA100 for previous candle
+        sma = sum(closes[-101:-1]) / 100  # SMA100 for previous candle
 
-        prev_status = "ABOVE" if prev_close > prev_sma else "BELOW"
-            
-        if prev_status == "BELOW" and curr_status == "ABOVE":
+        if curr_close > sma and prev_close <= sma:
             price_cross = "BULL-CROSS"
-        elif prev_status == "ABOVE" and curr_status == "BELOW":
+        if curr_close < sma and prev_close >= sma:
             price_cross = "BEAR-CROSS"
         else:
             price_cross = "NON-CROSS"
         
-        return [{ "symbol": symbol.replace("/", "-"), "timestamp": c[0], "open": c[1], "high": c[2], "low": c[3], "close": c[4], "volume": c[5]} for c in ohlcv]        
+        return [{ "symbol": symbol.replace("/", "-"), "timestamp": c[0], "open": c[1], "high": c[2], "low": c[3], "close": c[4], "volume": c[5], "sma_cross": price_cross} for c in ohlcv]        
     except Exception as e:
         print(f"Error fetching {symbol}: {e}")
         return []
