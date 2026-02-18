@@ -20,28 +20,28 @@ sql_engine = create_engine(DB_CONFIG, pool_size=5, max_overflow=10, pool_pre_pin
     connect_args={'connect_timeout': 5, 'keepalives': 1, 'keepalives_idle': 30, 'keepalives_interval': 10, 'keepalives_count': 5})
 
 SYMBOLS = ["BTC/USDT", "ETH/USDT", "SOL/USDT", "XRP/USDT", "ZEN/USDT", "AVAX/USDT", "LINK/USDT", "HYPE/USDT", "BCH/USDT", "SUI/USDT",
-    "AAPL.s",
-    "NVDA.s",
-    "TSLA.s",
-    "AMZNUSDT",
-    "MSFTUSDT",
-    "METAUSDT",
-    "GOOGLUSDT",
-    "NFLXUSDT",
-    "AMDUSDT",
-    "BABAUSDT",
-    "COINUSDT",
-    "MSTRUSDT",
-    "PLTRUSDT",
-    "TSMUSDT",
-    "MUUSDT"
+    "AAPLUSDT.s",
+    "NVDAUSDT.s",
+    "TSLAUSDT.s",
+    "AMZNUSDT.s",
+    "MSFTUSDT.s",
+    "METAUSDT.s",
+    "GOOGLUSDT.s",
+    "NFLXUSDT.s",
+    "AMDUSDT.s",
+    "BABAUSDT.s",
+    "COINUSDT.s",
+    "MSTRUSDT.s",
+    "PLTRUSDT.s",
+    "TSMUSDT.s",
+    "MUUSDT.s"
 ]
 
 # ----- 2. FASTAPI/APIRouter -----
 router = APIRouter()
 
 bybit = ccxt.bybit() 
-bybit_async = ccxt_async.bybit({'enableRateLimit': True, 'options': {'defaultType': 'linear'}})
+bybit_async = ccxt_async.bybit({'enableRateLimit': True})
 TIMEFRAME = '5m' 
 limit = 101   
 
@@ -57,8 +57,9 @@ class Candle(BaseModel):
     ema_signal: str
 
 async def fetch_one_symbol(symbol: str, since: Optional[int] = None):
+    cat = 'spot' if '.s' in symbol else 'linear'
     try:     
-        ohlcv = await bybit_async.fetch_ohlcv(symbol, TIMEFRAME, limit=110)     
+        ohlcv = await bybit_async.fetch_ohlcv(symbol, TIMEFRAME, limit=110, params={'category': cat})     
         if len(ohlcv) < 101: 
             return []
     
