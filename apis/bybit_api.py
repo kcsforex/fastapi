@@ -59,7 +59,7 @@ class Candle(BaseModel):
 
 async def fetch_one_symbol(symbol: str):
     try:     
-        ohlcv = await bybit_async.fetch_ohlcv(symbol, TIMEFRAME, limit=110     
+        ohlcv = await bybit_async.fetch_ohlcv(symbol, TIMEFRAME, limit=110)     
         if len(ohlcv) < 101: 
             return []
     
