@@ -37,6 +37,7 @@ class Candle(BaseModel):
     low: float
     close: float
     volume: float
+    sma100: float
     signal: str
 
 async def fetch_one_symbol(symbol: str, since: Optional[int] = None):
