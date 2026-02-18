@@ -37,25 +37,25 @@ class Candle(BaseModel):
     low: float
     close: float
     volume: float
-    sma_cross: str
+    signal: str
 
 async def fetch_one_symbol(symbol: str, since: Optional[int] = None):
     try:     
-        ohlcv = await bybit_async.fetch_ohlcv(symbol, TIMEFRAME, since=since)  
-        closes = [candle[4] for candle in ohlcv] 
-        sma_100 = sum(closes[-100:]) / 100
-        curr_close = closes[-1]
-        prev_close = closes[-2]
-        sma = sum(closes[-101:-1]) / 100  # SMA100 for previous candle
-
-        if curr_close > sma and prev_close <= sma:
-            price_cross = "BULL-CROSS"
-        if curr_close < sma and prev_close >= sma:
-            price_cross = "BEAR-CROSS"
-        else:
-            price_cross = "NON-CROSS"
+        ohlcv = await bybit_async.fetch_ohlcv(symbol, TIMEFRAME, limit=110)  
+        if len(ohlcv) < 101: return None
+    
+        df = pd.DataFrame(ohlcv, columns=['ts', 'o', 'h', 'l', 'c', 'v'])
+        df['sma100'] = df['c'].rolling(window=100).mean()
         
-        return [{ "symbol": symbol.replace("/", "-"), "timestamp": c[0], "open": c[1], "high": c[2], "low": c[3], "close": c[4], "volume": c[5], "sma_cross": price_cross} for c in ohlcv]        
+        curr, prev = df.iloc[-1], df.iloc[-2]
+        
+        signal = "NON-CROSS"
+        if prev['c'] <= prev['sma100'] and curr['c'] > curr['sma100']:
+            signal = "BULL-CROSS"
+        elif prev['c'] >= prev['sma100'] and curr['c'] < curr['sma100']:
+            signal = "BEAR-CROSS"
+        
+        return [{ "symbol": symbol.replace("/", "-"), "timestamp": c[0], "open": c[1], "high": c[2], "low": c[3], "close": c[4], "volume": c[5], "sma_signal": signal} for c in ohlcv]        
     except Exception as e:
         print(f"Error fetching {symbol}: {e}")
         return []
