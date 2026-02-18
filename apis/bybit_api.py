@@ -61,7 +61,7 @@ async def fetch_one_symbol(symbol: str):
     is_stock = "/" not in symbol
     cat = 'spot' if is_stock else 'linear'
     try:     
-        ohlcv = await bybit_async.fetch_ohlcv(symbol, TIMEFRAME, limit=110, params={'category': 'linear')     
+        ohlcv = await bybit_async.fetch_ohlcv(symbol, TIMEFRAME, limit=110, params={'category': 'linear'})     
         if len(ohlcv) < 101: 
             return []
     
