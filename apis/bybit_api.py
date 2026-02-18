@@ -81,7 +81,7 @@ async def fetch_one_symbol(symbol: str):
         # Payload Reduction: Only return the latest candle with the signal
         # Returning all 110 candles for 50 assets will crash n8n's memory
         return [{
-            "symbol": symbol.replace("/", "-"),
+            "symbol": symbol, #.replace("/", "-"),
             "timestamp": int(curr['ts']),
             "open": float(curr['o']),
             "high": float(curr['h']),
