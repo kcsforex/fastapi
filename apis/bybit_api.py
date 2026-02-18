@@ -41,13 +41,15 @@ class Candle(BaseModel):
 
 async def fetch_one_symbol(symbol: str, since: Optional[int] = None):
     try:     
-        ohlcv = await bybit_async.fetch_ohlcv(symbol, TIMEFRAME, limit=110)  
-        if len(ohlcv) < 101: return None
+        ohlcv = await bybit_async.fetch_ohlcv(symbol, TIMEFRAME, limit=110)     
+        if len(ohlcv) < 101: 
+            return []
     
         df = pd.DataFrame(ohlcv, columns=['ts', 'o', 'h', 'l', 'c', 'v'])
         df['sma100'] = df['c'].rolling(window=100).mean()
         
-        curr, prev = df.iloc[-1], df.iloc[-2]
+        curr = df.iloc[-1]
+        prev = df.iloc[-2]
         
         signal = "NON-CROSS"
         if prev['c'] <= prev['sma100'] and curr['c'] > curr['sma100']:
@@ -55,7 +57,20 @@ async def fetch_one_symbol(symbol: str, since: Optional[int] = None):
         elif prev['c'] >= prev['sma100'] and curr['c'] < curr['sma100']:
             signal = "BEAR-CROSS"
         
-        return [{ "symbol": symbol.replace("/", "-"), "timestamp": c[0], "open": c[1], "high": c[2], "low": c[3], "close": c[4], "volume": c[5], "sma_signal": signal} for c in ohlcv]        
+        # Payload Reduction: Only return the latest candle with the signal
+        # Returning all 110 candles for 50 assets will crash n8n's memory
+        return [{
+            "symbol": symbol.replace("/", "-"),
+            "timestamp": int(curr['ts']),
+            "open": float(curr['o']),
+            "high": float(curr['h']),
+            "low": float(curr['l']),
+            "close": float(curr['c']),
+            "volume": float(curr['v']),
+            "sma_100": float(curr['sma100']),
+            "sma_signal": signal
+        }]
+
     except Exception as e:
         print(f"Error fetching {symbol}: {e}")
         return []
