@@ -97,7 +97,7 @@ async def fetch_one_symbol(symbol: str):
         return []
 
 @router.get("/fetch-all", response_model=List[Candle])
-async def fetch_all_cryptos()):
+async def fetch_all_cryptos():
 
     tasks = [fetch_one_symbol(s) for s in SYMBOLS]
     results = await asyncio.gather(*tasks)    
