@@ -41,7 +41,7 @@ SYMBOLS = ["BTC/USDT", "ETH/USDT", "SOL/USDT", "XRP/USDT", "ZEN/USDT", "AVAX/USD
 router = APIRouter()
 
 bybit = ccxt.bybit() 
-bybit_async = ccxt_async.bybit({'enableRateLimit': True, 'options': {'defaultType': 'trade'}})
+bybit_async = ccxt_async.bybit({'enableRateLimit': True, 'options': {'defaultType': 'linear'}})
 TIMEFRAME = '5m' 
 limit = 101   
 
