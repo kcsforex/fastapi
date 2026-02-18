@@ -21,17 +21,17 @@ sql_engine = create_engine(DB_CONFIG, pool_size=5, max_overflow=10, pool_pre_pin
 
 SYMBOLS = ["BTC/USDT", "ETH/USDT", "SOL/USDT", "XRP/USDT", "ZEN/USDT", "AVAX/USDT", "LINK/USDT", "HYPE/USDT", "BCH/USDT", "SUI/USDT",
     "AAPLUSDT.s",
-    "NVDAUSDT",
+    "NVDA/USDT",
     "TSLAUSDT",
-    "AMZNUSDT",
-    "MSFTUSDT",
+    "AMZN/USDT",
+    "MSFT/USDT",
     "META/USDT.s",
     "GOOGL/USDT.s",
     "NFLXUSDT.s",
-    "AMDUSDT",
-    "BABAUSDT",
-    "COINUSDT",
-    "MSTRUSDT",
+    "AMD/USDT",
+    "BABA/USDT",
+    "COIN/USDT",
+    "MSTR/USDT",
     "PLTR",
     "TSMUSDT.s",
     "MUUSDT.s"
@@ -61,7 +61,7 @@ async def fetch_one_symbol(symbol: str):
     is_stock = "/" not in symbol
     cat = 'spot' if is_stock else 'linear'
     try:     
-        ohlcv = await bybit_async.fetch_ohlcv(symbol, TIMEFRAME, limit=110, params={'category': cat})     
+        ohlcv = await bybit_async.fetch_ohlcv(symbol, TIMEFRAME, limit=110, params={'category': 'linear')     
         if len(ohlcv) < 101: 
             return []
     
