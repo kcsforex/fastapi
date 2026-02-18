@@ -57,7 +57,9 @@ class Candle(BaseModel):
     ema_signal: str
 
 async def fetch_one_symbol(symbol: str, since: Optional[int] = None):
-    cat = 'spot' if '.s' in symbol else 'linear'
+    #cat = 'spot' if '.s' in symbol else 'linear'
+    is_stock = "/" not in symbol
+    cat = 'spot' if is_stock else 'linear'
     try:     
         ohlcv = await bybit_async.fetch_ohlcv(symbol, TIMEFRAME, limit=110, params={'category': cat})     
         if len(ohlcv) < 101: 
