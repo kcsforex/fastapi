@@ -19,13 +19,29 @@ DB_CONFIG = "postgresql+psycopg://sql_admin:sql_pass@postgresql:5432/n8n"
 sql_engine = create_engine(DB_CONFIG, pool_size=5, max_overflow=10, pool_pre_ping=True, pool_recycle=1800,      
     connect_args={'connect_timeout': 5, 'keepalives': 1, 'keepalives_idle': 30, 'keepalives_interval': 10, 'keepalives_count': 5})
 
-SYMBOLS = ["BTC/USDT", "ETH/USDT", "SOL/USDT", "XRP/USDT", "ZEN/USDT", "LTC/USDT", "AVAX/USDT", "LINK/USDT", "HYPE/USDT", "BCH/USDT", "BNB/USDT", "SUI/USDT"]
+SYMBOLS = ["BTC/USDT", "ETH/USDT", "SOL/USDT", "XRP/USDT", "ZEN/USDT", "AVAX/USDT", "LINK/USDT", "HYPE/USDT", "BCH/USDT", "SUI/USDT",
+    "AAPLUSDT",
+    "NVDAUSDT",
+    "TSLAUSDT",
+    "AMZNUSDT",
+    "MSFTUSDT",
+    "METAUSDT",
+    "GOOGLUSDT",
+    "NFLXUSDT",
+    "AMDUSDT",
+    "BABAUSDT",
+    "COINUSDT",
+    "MSTRUSDT",
+    "PLTRUSDT",
+    "TSMUSDT",
+    "MUUSDT"
+]
 
 # ----- 2. FASTAPI/APIRouter -----
 router = APIRouter()
 
 bybit = ccxt.bybit() 
-bybit_async = ccxt_async.bybit({'enableRateLimit': True, 'options': {'defaultType': 'linear'}})
+bybit_async = ccxt_async.bybit({'enableRateLimit': True, 'options': {'defaultType': 'trade'}})
 TIMEFRAME = '5m' 
 limit = 101   
 
@@ -37,8 +53,8 @@ class Candle(BaseModel):
     low: float
     close: float
     volume: float
-    sma_100: float
-    sma_signal: str
+    ema_100: float
+    ema_signal: str
 
 async def fetch_one_symbol(symbol: str, since: Optional[int] = None):
     try:     
@@ -47,15 +63,16 @@ async def fetch_one_symbol(symbol: str, since: Optional[int] = None):
             return []
     
         df = pd.DataFrame(ohlcv, columns=['ts', 'o', 'h', 'l', 'c', 'v'])
-        df['sma100'] = df['c'].rolling(window=100).mean()
+        #df['sma100'] = df['c'].rolling(window=100).mean()
+        df['ema100'] = df['c'].ewm(span=100, adjust=False).mean()
         
         curr = df.iloc[-1]
         prev = df.iloc[-2]
         
         signal = "NON-CROSS"
-        if prev['c'] <= prev['sma100'] and curr['c'] > curr['sma100']:
+        if prev['c'] <= prev['ema100'] and curr['c'] > curr['ema100']:
             signal = "BULL-CROSS"
-        elif prev['c'] >= prev['sma100'] and curr['c'] < curr['sma100']:
+        elif prev['c'] >= prev['ema100'] and curr['c'] < curr['ema100']:
             signal = "BEAR-CROSS"
         
         # Payload Reduction: Only return the latest candle with the signal
@@ -68,8 +85,8 @@ async def fetch_one_symbol(symbol: str, since: Optional[int] = None):
             "low": float(curr['l']),
             "close": float(curr['c']),
             "volume": float(curr['v']),
-            "sma_100": float(curr['sma100']),
-            "sma_signal": signal
+            "ema_100": float(curr['ema100']),
+            "ema_signal": signal
         }]
 
     except Exception as e:
@@ -91,6 +108,7 @@ async def fetch_all_cryptos(since: Optional[int] = Query(None, description="Star
 async def shutdown_event():
     await bybit_async.close()
 
+# ------------------------------------------------------------------------------------------------
 @router.get("/bybit")
 def bybit_data():
 
