@@ -20,9 +20,9 @@ sql_engine = create_engine(DB_CONFIG, pool_size=5, max_overflow=10, pool_pre_pin
     connect_args={'connect_timeout': 5, 'keepalives': 1, 'keepalives_idle': 30, 'keepalives_interval': 10, 'keepalives_count': 5})
 
 SYMBOLS = ["BTC/USDT", "ETH/USDT", "SOL/USDT", "XRP/USDT", "ZEN/USDT", "AVAX/USDT", "LINK/USDT", "HYPE/USDT", "BCH/USDT", "SUI/USDT",
-    "AAPLUSDT",
-    "NVDAUSDT",
-    "TSLAUSDT",
+    "AAPL.s",
+    "NVDA.s",
+    "TSLA.s",
     "AMZNUSDT",
     "MSFTUSDT",
     "METAUSDT",
