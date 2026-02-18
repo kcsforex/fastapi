@@ -28,20 +28,21 @@ SYMBOLS = ["BTC/USDT", "ETH/USDT", "SOL/USDT", "XRP/USDT", "ZEN/USDT", "AVAX/USD
     "METAX/USDT",
     "GOOGLX/USDT",
     "NFLX/USDT",
-    "AMD/USDT",
-    "BABA/USDT",
-    "COIN/USDT",
-    "MSTR/USDT",
-    "PLTR/USDT",
-    "TSM/USDT",
-    "MU/USDT"
+    "AMDX/USDT",
+    "BABAX/USDT",
+    "COINX/USDT",
+    "MSTRX/USDT",
+    "PLTRX/USDT",
+    "TSMX/USDT",
+    "MUX/USDT"
 ]
 
 # ----- 2. FASTAPI/APIRouter -----
 router = APIRouter()
 
 bybit = ccxt.bybit() 
-bybit_async = ccxt_async.bybit({'enableRateLimit': True})
+bybit_async = ccxt_async.bybit({'enableRateLimit': True, 'options': { 'defaultType': 'linear'}})
+
 TIMEFRAME = '5m' 
 limit = 101   
 
@@ -57,11 +58,8 @@ class Candle(BaseModel):
     ema_signal: str
 
 async def fetch_one_symbol(symbol: str):
-    #cat = 'spot' if '.s' in symbol else 'linear'
-    is_stock = "/" not in symbol
-    cat = 'spot' if is_stock else 'linear'
     try:     
-        ohlcv = await bybit_async.fetch_ohlcv(symbol, TIMEFRAME, limit=110, params={'category': 'linear'})     
+        ohlcv = await bybit_async.fetch_ohlcv(symbol, TIMEFRAME, limit=110     
         if len(ohlcv) < 101: 
             return []
     
