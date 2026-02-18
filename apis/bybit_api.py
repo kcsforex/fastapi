@@ -56,7 +56,7 @@ class Candle(BaseModel):
     ema_100: float
     ema_signal: str
 
-async def fetch_one_symbol(symbol: str, since: Optional[int] = None):
+async def fetch_one_symbol(symbol: str):
     #cat = 'spot' if '.s' in symbol else 'linear'
     is_stock = "/" not in symbol
     cat = 'spot' if is_stock else 'linear'
@@ -99,7 +99,7 @@ async def fetch_one_symbol(symbol: str, since: Optional[int] = None):
 @router.get("/fetch-all", response_model=List[Candle])
 async def fetch_all_cryptos(since: Optional[int] = Query(None, description="Start timestamp in milliseconds")):
 
-    tasks = [fetch_one_symbol(s, since) for s in SYMBOLS]
+    tasks = [fetch_one_symbol(s) for s in SYMBOLS]
     results = await asyncio.gather(*tasks)    
     flattened_results = [candle for symbol_list in results for candle in symbol_list]    
     if not flattened_results:
