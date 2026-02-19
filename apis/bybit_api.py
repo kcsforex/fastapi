@@ -31,7 +31,7 @@ SYMBOLS = ["BTC/USDT", "ETH/USDT", "SOL/USDT", "XRP/USDT", "ZEN/USDT", "AVAX/USD
 router = APIRouter()
 
 bybit = ccxt.bybit() 
-bybit_async = ccxt_async.bybit({'enableRateLimit': True, 'options': { 'defaultType': 'linear'}})
+bybit_async = ccxt_async.bybit({'enableRateLimit': True})
 
 TIMEFRAME = '5m' 
 limit = 101   
@@ -49,7 +49,7 @@ class Candle(BaseModel):
 
 async def fetch_one_symbol(symbol: str):
     try:     
-        ohlcv = await bybit_async.fetch_ohlcv(symbol, TIMEFRAME, limit=110)     
+        ohlcv = await bybit_async.fetch_ohlcv(symbol, TIMEFRAME, limit=110, params={'category': 'linear'})     
         if len(ohlcv) < 101: 
             return []
     
