@@ -21,10 +21,10 @@ sql_engine = create_engine(DB_CONFIG, pool_size=5, max_overflow=10, pool_pre_pin
 
 SYMBOLS = ["BTC/USDT", "ETH/USDT", "SOL/USDT", "XRP/USDT", "ZEN/USDT", "AVAX/USDT", "LINK/USDT", "HYPE/USDT", "BCH/USDT", "SUI/USDT",
 
-    "AAPL/USDT", "NVDAX/USDT", "TSLAX/USDT", "MSFTX/USDT", "AMZNX/USDT", "METAX/USDT", "GOOGX/USDT", "NFLXX/USDT", "AMDX/USDT", "AVGOX/USDT",
+    "AAPLX/USDT", "NVDAX/USDT", "TSLAX/USDT", "MSFTX/USDT", "AMZNX/USDT", "METAX/USDT", "GOOGX/USDT", "NFLXX/USDT", "AMDX/USDT", "AVGOX/USDT",
     "INTCX/USDT", "SMCIX/USDT", "ORCLX/USDT", "CRMX/USDT", "ADBEX/USDT", "TSMX/USDT", "ASMLX/USDT", "MUX/USDT", "QCOMX/USDT", "AMATX/USDT",
-    "COINX/USDT", "MSTRX/USDT", "PLTRX/USDT", "MARA/USDT", "RIOT/USDT", "CLSK/USDT", "PYPL/USDT", "SQ/USDT", "HOOD/USDT",
-    "BABA/USDT", "PDD/USDT", "JD/USDT", "MELI/USDT", "SHOP/USDT", "UBER/USDT", "ABNB/USDT", "DIS/USDT", "SBUX/USDT", "V/USDT"
+    "COINX/USDT", "MSTRX/USDT", "PLTRX/USDT", "MARAX/USDT", "RIOTX/USDT", "CLSKX/USDT", "PYPLX/USDT", "SQX/USDT", "HOODX/USDT",
+    "BABAX/USDT", "PDDX/USDT", "JDX/USDT", "MELIX/USDT", "SHOPX/USDT", "UBERX/USDT", "ABNBX/USDT", "DISX/USDT", "SBUXX/USDT", "VX/USDT"
 ]
 
 # ----- 2. FASTAPI/APIRouter -----
@@ -49,7 +49,7 @@ class Candle(BaseModel):
 
 async def fetch_one_symbol(symbol: str):
     try:     
-        ohlcv = await bybit_async.fetch_ohlcv(symbol, TIMEFRAME, limit=110, params={'category': 'linear'})     
+        ohlcv = await bybit_async.fetch_ohlcv(symbol, TIMEFRAME, limit=110)     
         if len(ohlcv) < 101: 
             return []
     
