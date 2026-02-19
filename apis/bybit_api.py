@@ -20,21 +20,22 @@ sql_engine = create_engine(DB_CONFIG, pool_size=5, max_overflow=10, pool_pre_pin
     connect_args={'connect_timeout': 5, 'keepalives': 1, 'keepalives_idle': 30, 'keepalives_interval': 10, 'keepalives_count': 5})
 
 SYMBOLS = ["BTC/USDT", "ETH/USDT", "SOL/USDT", "XRP/USDT", "ZEN/USDT", "AVAX/USDT", "LINK/USDT", "HYPE/USDT", "BCH/USDT", "SUI/USDT",
-    "AAPLX/USDT",
-    "NVDAX/USDT",
-    "TSLAX/USDT",
-    "AMZNX/USDT",
-    "MSFTX/USDT",
-    "METAX/USDT",
-    "GOOGLX/USDT",
-    "NFLX/USDT",
-    "AMDX/USDT",
-    "BABAX/USDT",
-    "COINX/USDT",
-    "MSTRX/USDT",
-    "PLTRX/USDT",
-    "TSMX/USDT",
-    "MUX/USDT"
+STOCK_SYMBOLS = [
+    # --- Top Tech & AI ---
+    "AAPL/USDT", "NVDA/USDT", "TSLA/USDT", "MSFT/USDT", "AMZN/USDT",
+    "META/USDT", "GOOG/USDT", "NFLX/USDT", "AMD/USDT", "AVGO/USDT",
+    "INTC/USDT", "SMCI/USDT", "ORCL/USDT", "CRM/USDT", "ADBE/USDT",
+    
+    # --- Semiconductors & Hardware ---
+    "TSM/USDT", "ASML/USDT", "MU/USDT", "QCOM/USDT", "AMAT/USDT",
+    
+    # --- Crypto-Adjacent & Fintech ---
+    "COIN/USDT", "MSTR/USDT", "PLTR/USDT", "MARA/USDT", "RIOT/USDT",
+    "CLSK/USDT", "PYPL/USDT", "SQ/USDT", "HOOD/USDT",
+    
+    # --- Retail, Growth & E-commerce ---
+    "BABA/USDT", "PDD/USDT", "JD/USDT", "MELI/USDT", "SHOP/USDT",
+    "UBER/USDT", "ABNB/USDT", "DIS/USDT", "SBUX/USDT", "V/USDT"
 ]
 
 # ----- 2. FASTAPI/APIRouter -----
