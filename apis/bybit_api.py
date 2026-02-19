@@ -108,7 +108,7 @@ def bybit_data():
     
     for symbol in SYMBOLS:
         try:
-            ohlcv = bybit.fetch_ohlcv(symbol, TIMEFRAME, limit=limit)
+            ohlcv = bybit.fetch_ohlcv(symbol, TIMEFRAME, limit=limit, params={'category': 'linear'})
             closes = [candle[4] for candle in ohlcv]        
             sma_100 = sum(closes[-100:]) / 100
             current_price = closes[-1]
