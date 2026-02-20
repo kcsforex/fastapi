@@ -1,4 +1,4 @@
-# 2025.02.19  16.00
+# 2025.02.20  15.00
 import pandas as pd
 import ccxt
 import ccxt.async_support as ccxt_async
@@ -76,7 +76,7 @@ async def fetch_one_symbol(symbol: str):
             "low": float(curr['l']),
             "close": float(curr['c']),
             "volume": float(curr['v']),
-            "ema_100": float(curr['ema100']),
+            "ema_100": f"{curr['ema100']:.2f}",
             "ema_signal": signal
         }]
 
