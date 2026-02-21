@@ -19,17 +19,10 @@ sql_engine = create_engine(DB_CONFIG, pool_size=5, max_overflow=10, pool_pre_pin
 # =========================
 def get_persistence(symbol, conn):
     query = text("""
-        SELECT COUNT(*) FROM (
-            SELECT symbol
-            FROM signals
-            WHERE symbol = :symbol
-            ORDER BY timestamp DESC
-            LIMIT 3
-        ) sub
+        SELECT COUNT(*) FROM (SELECT symbol FROM signals WHERE symbol = :symbol ORDER BY timestamp DESC LIMIT 3) sub
     """)
     result = conn.execute(query, {"symbol": symbol}).scalar()
     return result if result else 0
-
 
 def insert_signal(conn, data):
     query = text("""
@@ -45,7 +38,6 @@ def insert_signal(conn, data):
         "score": data["score"]
     })
 
-
 # =========================
 # SCORING FUNCTIONS
 # =========================
@@ -58,7 +50,6 @@ def momentum_score(change_pct):
         return 70
     else:
         return 40
-
 
 def volume_score(volume, avg_volume):
     if avg_volume == 0:
@@ -74,7 +65,6 @@ def volume_score(volume, avg_volume):
         return 100
     else:
         return 80
-
 
 def volatility_score(high, low, price):
     if not high or not low or not price:
@@ -103,11 +93,7 @@ def persistence_score(appearances):
 
 
 def leverage_score(market):
-    max_lev = (
-        market.get("limits", {})
-        .get("leverage", {})
-        .get("max", 0)
-    )
+    max_lev = (market.get("limits", {}).get("leverage", {}).get("max", 0))
 
     if max_lev >= 50:
         return 100
@@ -141,21 +127,13 @@ def final_score(data, avg_volume, appearances, market):
 # CORE ENGINE
 # =========================
 def generate_signals(min_score=70, limit=50):
-    exchange = ccxt.bybit({
-        'enableRateLimit': True,
-        'options': {'defaultType': 'linear'}
-    })
+    exchange = ccxt.bybit({'enableRateLimit': True, 'options': {'defaultType': 'linear'}})
 
     markets = exchange.load_markets()
     tickers = exchange.fetch_tickers(params={'category': 'linear'})
 
-    volumes = [
-        t.get("quoteVolume", 0)
-        for t in tickers.values()
-        if t.get("quoteVolume")
-    ]
+    volumes = [t.get("quoteVolume", 0) for t in tickers.values() if t.get("quoteVolume")]
     avg_volume = np.mean(volumes) if volumes else 0
-
     results = []
 
     # ONE transaction for everything (important)
@@ -197,7 +175,7 @@ def generate_signals(min_score=70, limit=50):
 
 # ---------------------------------- SIGNALS ENDPOINT ----------------------------------
 @router.get("/signals")
-def get_signals(min_score: int = Query(70),  limit: int = Query(20)):
+def get_signals(min_score: int=Query(70, ge=0, le=100), limit: int=Query(20, ge=1, le=100)):
     
     results = generate_signals(min_score=min_score, limit=limit)
 
