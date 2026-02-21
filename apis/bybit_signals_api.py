@@ -1,3 +1,4 @@
+# 2025.02.21  11.00
 import ccxt
 import psycopg2
 import numpy as np
