@@ -1,69 +1,52 @@
-# 2025.02.21  11.00
+# 2026.02.21  18.00
 import ccxt
-import psycopg
-from sqlalchemy import create_engine
 import numpy as np
-from fastapi import FastAPI, APIRouter, HTTPException, Query
+from fastapi import APIRouter, FastAPI, Query
 from datetime import datetime
+from sqlalchemy import create_engine, text
 
-#app = FastAPI(title="Crypto Signal API")
+#app = FastAPI(title="Crypto Signal API (SQLAlchemy)")
 router = APIRouter()
-
 
 # =========================
 # CONFIG
 # =========================
-DB_CONFIG = {
-    "host": "postgresql:5432",
-    "database": "n8n",
-    "user": "sql_admin",
-    "password": "sql_pass"
-} # psycopg.connect(**DB_CONFIG)
-
-DB_CONFIG0 = "postgresql+psycopg://sql_admin:sql_pass@postgresql:5432/n8n"
+#DATABASE_URL = "postgresql+psycopg2://postgres:password@localhost/crypto"
+DB_CONFIG = "postgresql+psycopg://sql_admin:sql_pass@postgresql:5432/n8n"
 sql_engine = create_engine(DB_CONFIG, pool_size=5, max_overflow=10, pool_pre_ping=True, pool_recycle=1800,      
     connect_args={'connect_timeout': 5, 'keepalives': 1, 'keepalives_idle': 30, 'keepalives_interval': 10, 'keepalives_count': 5})
-
+ 
 SCORE_THRESHOLD = 70
-
-
 # =========================
 # DB HELPERS
 # =========================
-def get_connection():
-    return psycopg.connect(**DB_CONFIG)
-
-
 def get_persistence(symbol, conn):
-    #with sql_engine.connect() as conn:
-    with conn.cursor() as cur:
-        cur.execute("""
-            SELECT COUNT(*) FROM (
-                SELECT symbol
-                FROM signals
-                WHERE symbol = %s
-                ORDER BY timestamp DESC
-                LIMIT 3
-            ) sub;
-        """, (symbol,))
-        result = cur.fetchone()
-        return result[0] if result else 0
+    query = text("""
+        SELECT COUNT(*) FROM (
+            SELECT symbol
+            FROM signals
+            WHERE symbol = :symbol
+            ORDER BY timestamp DESC
+            LIMIT 3
+        ) sub
+    """)
+    result = conn.execute(query, {"symbol": symbol}).scalar()
+    return result if result else 0
 
 
 def insert_signal(conn, data):
-    with conn.cursor() as cur:
-        cur.execute("""
-            INSERT INTO signals (symbol, timestamp, change_pct, volume, price, score)
-            VALUES (%s, %s, %s, %s, %s, %s)
-        """, (
-            data["symbol"],
-            datetime.utcnow(),
-            data["change_pct"],
-            data["volume"],
-            data["price"],
-            data["score"]
-        ))
-    conn.commit()
+    query = text("""
+        INSERT INTO signals (symbol, timestamp, change_pct, volume, price, score)
+        VALUES (:symbol, :timestamp, :change_pct, :volume, :price, :score)
+    """)
+    conn.execute(query, {
+        "symbol": data["symbol"],
+        "timestamp": datetime.utcnow(),
+        "change_pct": data["change_pct"],
+        "volume": data["volume"],
+        "price": data["price"],
+        "score": data["score"]
+    })
 
 
 # =========================
@@ -160,7 +143,7 @@ def final_score(data, avg_volume, appearances, market):
 # =========================
 # CORE ENGINE
 # =========================
-def generate_signals():
+def generate_signals(min_score=70, limit=50):
     exchange = ccxt.bybit({
         'enableRateLimit': True,
         'options': {'defaultType': 'linear'}
@@ -176,47 +159,63 @@ def generate_signals():
     ]
     avg_volume = np.mean(volumes) if volumes else 0
 
-    conn = get_connection()
     results = []
 
-    for symbol, ticker in tickers.items():
-        if "/USDT" not in symbol:
-            continue
+    # ONE transaction for everything (important)
+    with sql_engine.begin() as conn:
 
-        data = {
-            "symbol": symbol,
-            "price": ticker.get("last"),
-            "change_pct": ticker.get("percentage", 0),
-            "volume": ticker.get("quoteVolume", 0),
-            "high": ticker.get("high"),
-            "low": ticker.get("low"),
-        }
+        for symbol, ticker in tickers.items():
+            if "/USDT" not in symbol:
+                continue
 
-        if not data["price"] or not data["volume"]:
-            continue
+            data = {
+                "symbol": symbol,
+                "price": ticker.get("last"),
+                "change_pct": ticker.get("percentage", 0),
+                "volume": ticker.get("quoteVolume", 0),
+                "high": ticker.get("high"),
+                "low": ticker.get("low"),
+            }
 
-        appearances = get_persistence(symbol, conn)
-        market = markets.get(symbol, {})
+            if not data["price"] or not data["volume"]:
+                continue
 
-        score = final_score(data, avg_volume, appearances, market)
-        data["score"] = score
+            appearances = get_persistence(symbol, conn)
+            market = markets.get(symbol, {})
 
-        insert_signal(conn, data)
+            score = final_score(data, avg_volume, appearances, market)
+            data["score"] = score
 
-        if score >= SCORE_THRESHOLD:
-            results.append(data)
+            # store history
+            insert_signal(conn, data)
 
-    conn.close()
+            # filter high-quality
+            if score >= min_score:
+                results.append(data)
 
+    # sort results
     results = sorted(results, key=lambda x: x["score"], reverse=True)
 
-    return results
+    return results[:limit]
+
+
+# =========================
+# API ENDPOINTS
+# =========================
+@router.get("/")
+def root():
+    return {"status": "running"}
+
 
 @router.get("/signals")
-def get_signals():
-    results = generate_signals()
+def get_signals(
+    min_score: int = Query(70, description="Minimum score filter"),
+    limit: int = Query(20, description="Max number of results")
+):
+    results = generate_signals(min_score=min_score, limit=limit)
+
     return {
         "timestamp": datetime.utcnow(),
         "count": len(results),
         "signals": results
-    }
+    }}
