@@ -18,7 +18,7 @@ DB_CONFIG0 = {
     "database": "crypto",
     "user": "postgres",
     "password": "password"
-}
+} # psycopg.connect(**DB_CONFIG)
 
 DB_CONFIG = "postgresql+psycopg://sql_admin:sql_pass@postgresql:5432/n8n"
 sql_engine = create_engine(DB_CONFIG, pool_size=5, max_overflow=10, pool_pre_ping=True, pool_recycle=1800,      
@@ -31,7 +31,7 @@ SCORE_THRESHOLD = 70
 # DB HELPERS
 # =========================
 def get_connection():
-    return psycopg.connect(**DB_CONFIG)
+    return psycopg.connect(DB_CONFIG)
 
 
 def get_persistence(symbol, conn):
