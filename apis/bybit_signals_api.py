@@ -2,10 +2,11 @@
 import ccxt
 import psycopg2
 import numpy as np
-from fastapi import FastAPI
+from fastapi import FastAPI, APIRouter, HTTPException, Query
 from datetime import datetime
 
-app = FastAPI(title="Crypto Signal API")
+#app = FastAPI(title="Crypto Signal API")
+router = APIRouter()
 
 
 # =========================
@@ -205,16 +206,7 @@ def generate_signals():
 
     return results
 
-
-# =========================
-# API ENDPOINTS
-# =========================
-@app.get("/")
-def root():
-    return {"status": "running"}
-
-
-@app.get("/signals")
+@router.get("/signals")
 def get_signals():
     results = generate_signals()
     return {
