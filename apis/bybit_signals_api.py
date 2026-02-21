@@ -26,7 +26,7 @@ SCORE_THRESHOLD = 70
 # DB HELPERS
 # =========================
 def get_connection():
-    return psycopg2.connect(**DB_CONFIG)
+    return psycopg.connect(**DB_CONFIG)
 
 
 def get_persistence(symbol, conn):
