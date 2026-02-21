@@ -35,7 +35,8 @@ def get_connection():
 
 
 def get_persistence(symbol, conn):
-    with conn.cursor() as cur:
+    with sql_engine.connect() as conn:
+    #with conn.cursor() as cur:
         cur.execute("""
             SELECT COUNT(*) FROM (
                 SELECT symbol
