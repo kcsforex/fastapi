@@ -1,4 +1,4 @@
-# 2026.02.16  11.00
+# 2026.02.21  12.00
 import dash
 from dash import html, dcc
 import dash_bootstrap_components as dbc
@@ -12,6 +12,7 @@ app = dash.Dash(__name__, use_pages=True, suppress_callback_exceptions=True,
 # ----- 2. NOW IMPORT YOUR PAGES -----
 from pages import home, bybit,  databricks, air_dataset, lufthansa
 import apis.bybit_api as bybit
+import apis.bybit_signals_api as bybit_signals
 import apis.kraken_api as kraken
 import apis.lufthansa_api as lufthansa
 
@@ -24,11 +25,12 @@ def health():
     return {"status": "ok"}
 
 # ----- 3.2. API ROUTERS -----
-server.include_router(bybit.router,        prefix="/api/bybit",      tags=["Bybit"])
-server.include_router(kraken.router,       prefix="/api/kraken",     tags=["Kraken"])
-server.include_router(databricks.router,   prefix="/api/dbricks",    tags=["Machine Learning"])
-server.include_router(air_dataset.router,  prefix="/api/airdata",    tags=["Air Data"])
-server.include_router(lufthansa.router,    prefix="/api/lufthansa",  tags=["Lufthansa"])
+server.include_router(bybit.router,         prefix="/api/bybit",         tags=["Bybit"])
+server.include_router(bybit_signals.router, prefix="/api/bybit_signals", tags=["Bybit Signals"])
+server.include_router(kraken.router,        prefix="/api/kraken",        tags=["Kraken"])
+server.include_router(databricks.router,    prefix="/api/dbricks",       tags=["Machine Learning"])
+server.include_router(air_dataset.router,   prefix="/api/airdata",       tags=["Air Data"])
+server.include_router(lufthansa.router,     prefix="/api/lufthansa",     tags=["Lufthansa"])
 
 # ----- 4. Mount Dash to FastAPI -----
 server.mount("/", WSGIMiddleware(app.server))
