@@ -1,6 +1,7 @@
 # 2025.02.21  11.00
 import ccxt
 import psycopg
+from sqlalchemy import create_engine
 import numpy as np
 from fastapi import FastAPI, APIRouter, HTTPException, Query
 from datetime import datetime
@@ -12,12 +13,16 @@ router = APIRouter()
 # =========================
 # CONFIG
 # =========================
-DB_CONFIG = {
+DB_CONFIG0 = {
     "host": "localhost",
     "database": "crypto",
     "user": "postgres",
     "password": "password"
 }
+
+DB_CONFIG = "postgresql+psycopg://sql_admin:sql_pass@postgresql:5432/n8n"
+sql_engine = create_engine(DB_CONFIG, pool_size=5, max_overflow=10, pool_pre_ping=True, pool_recycle=1800,      
+    connect_args={'connect_timeout': 5, 'keepalives': 1, 'keepalives_idle': 30, 'keepalives_interval': 10, 'keepalives_count': 5})
 
 SCORE_THRESHOLD = 70
 
