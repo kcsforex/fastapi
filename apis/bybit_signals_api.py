@@ -197,7 +197,7 @@ def generate_signals(min_score=70, limit=50):
 
 # ---------------------------------- SIGNALS ENDPOINT ----------------------------------
 @router.get("/signals")
-def get_signals(min_score: int = Query(None),  limit: int = Query(20)):
+def get_signals(min_score: int = Query(70),  limit: int = Query(20)):
     
     if min_score is None:
         min_score = SCORE_THRESHOLD
