@@ -144,7 +144,7 @@ def generate_signals(min_score=70, limit=50):
                 continue
 
             data = {
-                "symbol": symbol,
+                "symbol": symbol[:-5],
                 "price": ticker.get("last"),
                 "change_pct": ticker.get("percentage", 0),
                 "volume": ticker.get("quoteVolume", 0),
