@@ -1,6 +1,6 @@
 # 2025.02.21  11.00
 import ccxt
-import psycopg2
+import psycopg
 import numpy as np
 from fastapi import FastAPI, APIRouter, HTTPException, Query
 from datetime import datetime
