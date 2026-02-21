@@ -5,18 +5,15 @@ from fastapi import APIRouter, FastAPI, Query
 from datetime import datetime
 from sqlalchemy import create_engine, text
 
-#app = FastAPI(title="Crypto Signal API (SQLAlchemy)")
 router = APIRouter()
 
 # =========================
 # CONFIG
 # =========================
-#DATABASE_URL = "postgresql+psycopg2://postgres:password@localhost/crypto"
 DB_CONFIG = "postgresql+psycopg://sql_admin:sql_pass@postgresql:5432/n8n"
 sql_engine = create_engine(DB_CONFIG, pool_size=5, max_overflow=10, pool_pre_ping=True, pool_recycle=1800,      
     connect_args={'connect_timeout': 5, 'keepalives': 1, 'keepalives_idle': 30, 'keepalives_interval': 10, 'keepalives_count': 5})
  
-SCORE_THRESHOLD = 70
 # =========================
 # DB HELPERS
 # =========================
@@ -198,24 +195,19 @@ def generate_signals(min_score=70, limit=50):
 
     return results[:limit]
 
-
-# =========================
-# API ENDPOINTS
-# =========================
-@router.get("/")
-def root():
-    return {"status": "running"}
-
-
+# ---------------------------------- SIGNALS ENDPOINT ----------------------------------
 @router.get("/signals")
-def get_signals(
-    min_score: int = Query(70, description="Minimum score filter"),
-    limit: int = Query(20, description="Max number of results")
-):
+def get_signals(min_score: int = Query(None),  limit: int = Query(20)):
+    
+    if min_score is None:
+        min_score = SCORE_THRESHOLD
+
     results = generate_signals(min_score=min_score, limit=limit)
 
     return {
         "timestamp": datetime.utcnow(),
+        "min_score": min_score,
+        "limit": limit,
         "count": len(results),
         "signals": results
     }
