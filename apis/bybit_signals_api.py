@@ -13,14 +13,14 @@ router = APIRouter()
 # =========================
 # CONFIG
 # =========================
-DB_CONFIG0 = {
-    "host": "localhost",
-    "database": "crypto",
-    "user": "postgres",
-    "password": "password"
+DB_CONFIG = {
+    "host": "postgresql:5432",
+    "database": "n8n",
+    "user": "sql_admin",
+    "password": "sql_pass"
 } # psycopg.connect(**DB_CONFIG)
 
-DB_CONFIG = "postgresql+psycopg://sql_admin:sql_pass@postgresql:5432/n8n"
+DB_CONFIG0 = "postgresql+psycopg://sql_admin:sql_pass@postgresql:5432/n8n"
 sql_engine = create_engine(DB_CONFIG, pool_size=5, max_overflow=10, pool_pre_ping=True, pool_recycle=1800,      
     connect_args={'connect_timeout': 5, 'keepalives': 1, 'keepalives_idle': 30, 'keepalives_interval': 10, 'keepalives_count': 5})
 
@@ -31,12 +31,12 @@ SCORE_THRESHOLD = 70
 # DB HELPERS
 # =========================
 def get_connection():
-    return psycopg.connect(DB_CONFIG)
+    return psycopg.connect(**DB_CONFIG)
 
 
 def get_persistence(symbol, conn):
-    with sql_engine.connect() as conn:
-    #with conn.cursor() as cur:
+    #with sql_engine.connect() as conn:
+    with conn.cursor() as cur:
         cur.execute("""
             SELECT COUNT(*) FROM (
                 SELECT symbol
