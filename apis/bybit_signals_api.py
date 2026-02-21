@@ -218,4 +218,4 @@ def get_signals(
         "timestamp": datetime.utcnow(),
         "count": len(results),
         "signals": results
-    }}
+    }
