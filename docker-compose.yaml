@@ -148,8 +148,8 @@ services:
     deploy:
       resources:
         limits:
-          memory: 2G
-          cpus: '2.0'
+          memory: 0.5G
+          cpus: '0.5'
 
     networks:
       - n8n-shared-net
@@ -198,11 +198,11 @@ services:
     deploy:
       resources:
         limits:
-          memory: 1G
+          memory: 1.5G
           cpus: '1.0'
         reservations:
           memory: 256M
-          cpus: '0.2'
+          cpus: '0.25'
 
     networks:
       - n8n-shared-net
