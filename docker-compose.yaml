@@ -30,7 +30,7 @@ services:
           memory: 1G
           cpus: '1.0'
         reservations:
-          memory: 512M
+          memory: 256M
           cpus: '0.25'
 
     networks:
