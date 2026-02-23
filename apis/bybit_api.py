@@ -82,7 +82,7 @@ async def fetch_all_cryptos():
         all_tickers = await bybit_async.fetch_tickers(params={'category': 'linear'})
 
         tasks = []
-        for s in SYMBOLS[:-10]:
+        for s in SYMBOLS[:-7]:
             ccxt_symbol = f"{s}:USDT"
             ticker_info = all_tickers.get(ccxt_symbol, {}).get('info', {})        
             tasks.append(fetch_one_symbol(s, ticker_info))
