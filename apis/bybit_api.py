@@ -14,7 +14,7 @@ from sqlalchemy import create_engine
 
 # ----- 1. CONFIGURATION -----
 DB_CONFIG = "postgresql+psycopg://sql_admin:sql_pass@postgresql:5432/n8n"
-sql_engine = create_engine(DB_CONFIG, pool_size=5, max_overflow=10, pool_pre_ping=True, pool_recycle=1800,      
+sql_engine = create_engine(DB_CONFIG, pool_size=5, max_overflow=10, pool_pre_ping=True, pool_recycle=1000,      
     connect_args={'connect_timeout': 5, 'keepalives': 1, 'keepalives_idle': 30, 'keepalives_interval': 10, 'keepalives_count': 5})
 
 SYMBOLS = ["BTC/USDT", "ETH/USDT", "SOL/USDT", "XRP/USDT", "ZEN/USDT", "AVAX/USDT", "LINK/USDT", "HYPE/USDT", "BCH/USDT", "SUI/USDT",
@@ -80,11 +80,10 @@ async def fetch_one_symbol(symbol: str, ticker_data: dict):
 async def fetch_all_cryptos():
     try:
         all_tickers = await bybit_async.fetch_tickers(params={'category': 'linear'})
-
         tasks = []
+        
         for s in SYMBOLS[:-7]:
-            ccxt_symbol = f"{s}:USDT"
-            ticker_info = all_tickers.get(ccxt_symbol, {}).get('info', {})        
+            ticker_info = all_tickers.get(f"{s}:USDT", {}).get('info', {})        
             tasks.append(fetch_one_symbol(s, ticker_info))
 
         results = await asyncio.gather(*tasks)    
