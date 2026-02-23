@@ -1,6 +1,7 @@
-# 2026.02.12  18.00
+# 2026.02.23  14.00
 from fastapi import APIRouter
 import requests
+from functools import lru_cache
 
 xstocks_list = [
     'AAPLxUSD', 'ABBVxUSD', 'ABTxUSD', 'ACNxUSD', 'AMBRxUSD', 'AMDxUSD', 'AMZNxUSD', 'APPxUSD', 'AVGOxUSD', 'AZNxUSD',
@@ -15,8 +16,14 @@ xstocks_list = [
 
 router = APIRouter()
 
-@router.get("/check-stocks")
-def check_stocks():
+# TTL helper (cache refresh every X seconds)
+def ttl_hash(seconds=60):
+    return round(time.time() / seconds)
+
+# Cached internal function
+@lru_cache(maxsize=32)
+def fetch_stocks_cached(ttl=None):
+    
     url = "https://api.kraken.com/0/public/Ticker"    
     params = {"pair": ",".join(xstocks_list), 
               "asset_class": "tokenized_asset" }
@@ -45,4 +52,8 @@ def check_stocks():
         return results
         
     except Exception as e:
-        return str(e)
+        return {"status": "error", "message": str(e)}
+
+@router.get("/check-stocks")
+def check_stocks():
+    return fetch_stocks_cached(ttl=ttl_hash(30))  # cache refresh every 30 sec
