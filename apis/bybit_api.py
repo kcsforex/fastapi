@@ -87,7 +87,7 @@ async def fetch_one_symbol(symbol: str):
 async def fetch_all_cryptos():
 
     try:
-        tasks = [fetch_one_symbol(s) for s in SYMBOLS[:-10]
+        tasks = [fetch_one_symbol(s) for s in SYMBOLS[:-10]]
         results = await asyncio.gather(*tasks)    
         flattened_results = [candle for symbol_list in results for candle in symbol_list]    
         if not flattened_results:
