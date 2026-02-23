@@ -22,7 +22,7 @@ def check_stocks():
               "asset_class": "tokenized_asset" }
     
     try:
-        response = requests.get(url, params=params).json()
+        response = requests.get(url, params=params, timeout=10).json()
         
         if response.get("error"):
             return {"status": "error", "message": response["error"]}
