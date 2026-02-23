@@ -1,4 +1,4 @@
-# 2026.02.14  10.00
+# 2026.02.23  12.00
 # syntax=docker/dockerfile:1.7-labs
 FROM python:3.12.2-slim
 
@@ -44,14 +44,6 @@ COPY pages/ pages/
 COPY apis/ apis/
 
 # -------------------------
-# Create non-root user for security
-# -------------------------
-RUN useradd -m -u 1000 appuser && \
-    chown -R appuser:appuser /app
-
-USER appuser
-
-# -------------------------
 # Runtime
 # -------------------------
 EXPOSE 8000
@@ -62,4 +54,6 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
 
 # Use multiple workers for better performance
 # Workers can be overridden via UVICORN_WORKERS env var
-CMD ["sh", "-c", "uvicorn main:server --host 0.0.0.0 --port 8000 --workers ${UVICORN_WORKERS:-2} --timeout-keep-alive 120 --access-log"]
+#CMD ["sh", "-c", "uvicorn main:server --host 0.0.0.0 --port 8000 --workers ${UVICORN_WORKERS:-2} --timeout-keep-alive 120 --access-log"]
+
+CMD ["sh", "-c", "gunicorn main:server -k uvicorn.workers.UvicornWorker -w 4 -b 0.0.0.0:8000 --timeout 30 --keep-alive 5 --max-requests 1000 --max-requests-jitter 50"]
