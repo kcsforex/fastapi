@@ -50,7 +50,7 @@ async def fetch_route(client, token, origin, dest, flight_date, sem):
     headers = {"Authorization": f"Bearer {token}", "Accept": "application/json"}
     async with sem:
         try:
-            resp = await client.get(url, headers=headers)
+            resp = await client.get(url, headers=headers, timeout=10)
             await asyncio.sleep(0.5)
             if resp.status_code != 200: return None
             
