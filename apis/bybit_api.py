@@ -11,8 +11,6 @@ import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output
 import plotly.express as px
 from sqlalchemy import create_engine
-from pydantic import BaseModel
-from typing import List, Optional
 
 # ----- 1. CONFIGURATION -----
 DB_CONFIG = "postgresql+psycopg://sql_admin:sql_pass@postgresql:5432/n8n"
@@ -31,18 +29,13 @@ bybit_async = ccxt_async.bybit({'enableRateLimit': True, 'options': { 'defaultTy
 TIMEFRAME = '5m' 
 limit = 101   
 
-class Candle(BaseModel):
-    symbol: str
-    timestamp: int
-    open: float
-    high: float
-    low: float
-    close: float
-    volume: float
-    ema_100: float
-    ema_signal: str
+@router.on_event("startup")
+async def startup_event():
+    # Optional: You could verify the connection here
+    pass
 
- try:     
+async def fetch_one_symbol(symbol: str):
+    try:     
         ohlcv = await bybit_async.fetch_ohlcv(symbol, TIMEFRAME, limit=110)     
         if len(ohlcv) < 101: 
             return []
@@ -90,7 +83,7 @@ class Candle(BaseModel):
         print(f"Error fetching {symbol}: {e}")
         return []
 
-@router.get("/fetch-all", response_model=List[Candle])
+@router.get("/fetch-all")
 async def fetch_all_cryptos():
 
     try:
