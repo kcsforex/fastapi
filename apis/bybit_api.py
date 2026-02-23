@@ -1,4 +1,4 @@
-# 2025.02.22  15.00
+# 2025.02.23  18.00
 import pandas as pd
 import ccxt
 import ccxt.async_support as ccxt_async
@@ -20,11 +20,7 @@ sql_engine = create_engine(DB_CONFIG, pool_size=5, max_overflow=10, pool_pre_pin
     connect_args={'connect_timeout': 5, 'keepalives': 1, 'keepalives_idle': 30, 'keepalives_interval': 10, 'keepalives_count': 5})
 
 SYMBOLS = ["BTC/USDT", "ETH/USDT", "SOL/USDT", "XRP/USDT", "ZEN/USDT", "AVAX/USDT", "LINK/USDT", "HYPE/USDT", "BCH/USDT", "SUI/USDT",
-    "AAPLX/USDT", "NVDAX/USDT", "TSLAX/USDT", "MSFTX/USDT", "AMZNX/USDT", "METAX/USDT", "GOOGX/USDT", "NFLXX/USDT", "AMDX/USDT", "AVGOX/USDT",
-    "INTCX/USDT", "SMCIX/USDT", "ORCLX/USDT", "CRMX/USDT", "ADBEX/USDT", "TSMX/USDT", "ASMLX/USDT", "MUX/USDT", "QCOMX/USDT", "AMATX/USDT",
-    "COINX/USDT", "MSTRX/USDT", "PLTRX/USDT", "MARAX/USDT", "RIOTX/USDT", "CLSKX/USDT", "PYPLX/USDT", "SQX/USDT", "HOODX/USDT",
-    "BABAX/USDT", "PDDX/USDT", "JDX/USDT", "MELIX/USDT", "SHOPX/USDT", "UBERX/USDT", "ABNBX/USDT", "DISX/USDT", "SBUXX/USDT", "VX/USDT"
-]
+    "AAPLX/USDT", "NVDAX/USDT", "TSLAX/USDT",  "AMZNX/USDT", "METAX/USDT", "COINX/USDT",  "HOODX/USDT"]
 
 # ----- 2. FASTAPI/APIRouter -----
 router = APIRouter()
@@ -46,14 +42,12 @@ class Candle(BaseModel):
     ema_100: float
     ema_signal: str
 
-async def fetch_one_symbol(symbol: str):
-    try:     
+ try:     
         ohlcv = await bybit_async.fetch_ohlcv(symbol, TIMEFRAME, limit=110)     
         if len(ohlcv) < 101: 
             return []
-    
+
         df = pd.DataFrame(ohlcv, columns=['ts', 'o', 'h', 'l', 'c', 'v'])
-        #df['sma100'] = df['c'].rolling(window=100).mean()
         df['ema100'] = df['c'].ewm(span=100, adjust=False).mean()
         
         curr = df.iloc[-1]
@@ -64,11 +58,16 @@ async def fetch_one_symbol(symbol: str):
             signal = "BULL-CROSS"
         elif prev['c'] >= prev['ema100'] and curr['c'] < curr['ema100']:
             signal = "BEAR-CROSS"
+
+        # Fetch ticker for this specific symbol
+        tickers = await bybit_async.fetch_tickers(symbols=[f"{symbol}:USDT"], params={'category': 'linear'})  
         
-        # Payload Reduction: Only return the latest candle with the signal
-        # Returning all 110 candles for 50 assets will crash n8n's memory
+        # Use next(iter(...)) to get the first ticker object safely
+        ticker_data = next(iter(tickers.values()))['info']
+
+        # Combine everything into one dictionary for n8n
         return [{
-            "symbol": symbol, #.replace("/", "-"),
+            "symbol": symbol.split(':')[0], # Cleaner than [:-5]
             "timestamp": int(curr['ts']),
             "open": float(curr['o']),
             "high": float(curr['h']),
@@ -76,7 +75,15 @@ async def fetch_one_symbol(symbol: str):
             "close": float(curr['c']),
             "volume": float(curr['v']),
             "ema_100": f"{curr['ema100']:.2f}",
-            "ema_signal": signal
+            "ema_signal": signal,
+            "price24hPcnt": ticker_data.get('price24hPcnt'),
+            "prevPrice24h": ticker_data.get('prevPrice24h'),
+            "prevPrice1h": ticker_data.get('prevPrice1h'),
+            "turnover24h": ticker_data.get('turnover24h'),
+            "volume24h": ticker_data.get('volume24h'),
+            "fundingRate": ticker_data.get('fundingRate'), 
+            "openInterest": ticker_data.get('openInterest'),
+            "openInterestValue": ticker_data.get('openInterestValue')
         }]
 
     except Exception as e:
@@ -86,13 +93,13 @@ async def fetch_one_symbol(symbol: str):
 @router.get("/fetch-all", response_model=List[Candle])
 async def fetch_all_cryptos():
 
-    tasks = [fetch_one_symbol(s) for s in SYMBOLS]
-    results = await asyncio.gather(*tasks)    
-    flattened_results = [candle for symbol_list in results for candle in symbol_list]    
-    if not flattened_results:
-        return []
-        
-    return flattened_results
+    try:
+        tasks = [fetch_one_symbol(s) for s in SYMBOLS[:-10]
+        results = await asyncio.gather(*tasks)    
+        flattened_results = [candle for symbol_list in results for candle in symbol_list]    
+        if not flattened_results:
+            return []        
+        return flattened_results
 
 @router.on_event("shutdown")
 async def shutdown_event():
