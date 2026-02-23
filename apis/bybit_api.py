@@ -1,4 +1,4 @@
-# 2025.02.20  15.00
+# 2025.02.22  15.00
 import pandas as pd
 import ccxt
 import ccxt.async_support as ccxt_async
@@ -20,7 +20,6 @@ sql_engine = create_engine(DB_CONFIG, pool_size=5, max_overflow=10, pool_pre_pin
     connect_args={'connect_timeout': 5, 'keepalives': 1, 'keepalives_idle': 30, 'keepalives_interval': 10, 'keepalives_count': 5})
 
 SYMBOLS = ["BTC/USDT", "ETH/USDT", "SOL/USDT", "XRP/USDT", "ZEN/USDT", "AVAX/USDT", "LINK/USDT", "HYPE/USDT", "BCH/USDT", "SUI/USDT",
-
     "AAPLX/USDT", "NVDAX/USDT", "TSLAX/USDT", "MSFTX/USDT", "AMZNX/USDT", "METAX/USDT", "GOOGX/USDT", "NFLXX/USDT", "AMDX/USDT", "AVGOX/USDT",
     "INTCX/USDT", "SMCIX/USDT", "ORCLX/USDT", "CRMX/USDT", "ADBEX/USDT", "TSMX/USDT", "ASMLX/USDT", "MUX/USDT", "QCOMX/USDT", "AMATX/USDT",
     "COINX/USDT", "MSTRX/USDT", "PLTRX/USDT", "MARAX/USDT", "RIOTX/USDT", "CLSKX/USDT", "PYPLX/USDT", "SQX/USDT", "HOODX/USDT",
