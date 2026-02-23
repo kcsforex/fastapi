@@ -160,7 +160,7 @@ services:
       dockerfile: Dockerfile
 
     container_name: python-dash-app
-    restart: unless-stopped
+    restart: always #unless-stopped
 
     depends_on:
       postgresql:
