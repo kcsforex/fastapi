@@ -34,7 +34,7 @@ async def startup_event():
     # Optional: You could verify the connection here
     pass
 
-async def fetch_one_symbol(symbol: str):
+async def fetch_one_symbol(symbol: str, ticker_data: dict):
     try:     
         ohlcv = await bybit_async.fetch_ohlcv(symbol, TIMEFRAME, limit=110)     
         if len(ohlcv) < 101: 
@@ -51,16 +51,9 @@ async def fetch_one_symbol(symbol: str):
             signal = "BULL-CROSS"
         elif prev['c'] >= prev['ema100'] and curr['c'] < curr['ema100']:
             signal = "BEAR-CROSS"
-
-        # Fetch ticker for this specific symbol
-        tickers = await bybit_async.fetch_tickers(symbols=[f"{symbol}:USDT"], params={'category': 'linear'})  
         
-        # Use next(iter(...)) to get the first ticker object safely
-        ticker_data = next(iter(tickers.values()))['info']
-
-        # Combine everything into one dictionary for n8n
         return [{
-            "symbol": symbol.split(':')[0], # Cleaner than [:-5]
+            "symbol": symbol.split(':')[0],
             "timestamp": int(curr['ts']),
             "open": float(curr['o']),
             "high": float(curr['h']),
@@ -80,19 +73,28 @@ async def fetch_one_symbol(symbol: str):
         }]
 
     except Exception as e:
-        print(f"Error fetching {symbol}: {e}")
+        print(f"Error processing {symbol}: {e}")
         return []
 
 @router.get("/fetch-all")
 async def fetch_all_cryptos():
-
     try:
-        tasks = [fetch_one_symbol(s) for s in SYMBOLS[:-10]]
+        all_tickers = await bybit_async.fetch_tickers(params={'category': 'linear'})
+
+        tasks = []
+        for s in SYMBOLS[:-10]:
+            ccxt_symbol = f"{s}:USDT"
+            ticker_info = all_tickers.get(ccxt_symbol, {}).get('info', {})        
+            tasks.append(fetch_one_symbol(s, ticker_info))
+
         results = await asyncio.gather(*tasks)    
-        flattened_results = [candle for symbol_list in results for candle in symbol_list]    
-        if not flattened_results:
-            return []        
+        flattened_results = [item for sublist in results for item in sublist]    
+        
         return flattened_results
+
+    except Exception as e:
+        print(f"Global fetch error: {e}")
+        return []
 
 @router.on_event("shutdown")
 async def shutdown_event():
