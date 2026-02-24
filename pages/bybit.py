@@ -68,25 +68,20 @@ def update_dashboard(n_intervals):
 
     # 0. Update Timestamp
     metrics_update = f"Updated -> {latest["timestamp"].iloc[0]}"
+
+    filtered = latest.loc[latest['pair'] == s]
+
+    price = filtered['price'].iloc[0] if not filtered.empty else 0
+    status = filtered['price_status'].iloc[0] if not filtered.empty else "N/A"
              
     # 1. Create Top Metrics (Quick visual check)
     metric_cols = [
     dbc.Col(
         html.Div([
-        html.Small(s, className="text-muted"),
-
-        filtered = latest.loc[latest['pair'] == s]
-        if not filtered.empty:
-            price = filtered['price'].values[0]
-            status = filtered['price_status'].values[0]
-        else:
-            price = 0
-            status = "N/A"
-        
+        html.Small(s, className="text-muted"),       
         html.H5(f"${price:.2f}", className="text-warning"),
         html.Small("SIGNAL", className="text-muted"),
         html.H6(status, className="text-success" if status == "ABOVE" else "text-danger")
-   
         ]), width=2)
     for s in SYMBOLS[:6]
     ]
