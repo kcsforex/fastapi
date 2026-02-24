@@ -1,7 +1,7 @@
 fastapi
 uvicorn
 gunicorn
-dash==3.4.0
+dash
 dash-bootstrap-components
 pandas
 ccxt
