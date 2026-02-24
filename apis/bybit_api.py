@@ -1,4 +1,4 @@
-# 2025.02.23  18.00
+# 2025.02.24  12.00
 import pandas as pd
 import ccxt
 import ccxt.async_support as ccxt_async
@@ -106,7 +106,7 @@ def bybit_data():
     results = []
     timestamp = bybit.milliseconds()
     
-    for symbol in SYMBOLS:
+    for symbol in SYMBOLS[:-7]:
         try:
             ohlcv = bybit.fetch_ohlcv(symbol, TIMEFRAME, limit=limit, params={'category': 'linear'})
             closes = [candle[4] for candle in ohlcv]        
