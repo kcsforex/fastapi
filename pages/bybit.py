@@ -73,10 +73,20 @@ def update_dashboard(n_intervals):
     metric_cols = [
     dbc.Col(
         html.Div([
-            html.Small(s, className="text-muted"),
-            html.H5(f"${latest.loc[latest['pair'] == s, 'price'].values[0]:.2f}", className="text-warning"),
-            html.Small("SIGNAL", className="text-muted"),
-            html.H6(latest.loc[latest['pair'] == s, 'price_status'].values[0], className=("text-success" if latest.loc[latest['pair'] == s, 'price_status'].values[0] == "ABOVE" else "text-danger"))     
+        html.Small(s, className="text-muted"),
+
+        filtered = latest.loc[latest['pair'] == s]
+        if not filtered.empty:
+            price = filtered['price'].values[0]
+            status = filtered['price_status'].values[0]
+        else:
+            price = 0
+            status = "N/A"
+        
+        html.H5(f"${price:.2f}", className="text-warning"),
+        html.Small("SIGNAL", className="text-muted"),
+        html.H6(status, className="text-success" if status == "ABOVE" else "text-danger")
+   
         ]), width=2)
     for s in SYMBOLS[:6]
     ]
