@@ -1,7 +1,6 @@
 # 2026.02.27  18.00
 from fastapi import APIRouter
 import requests
-from functools import lru_cache
 
 xstocks_list = [
     'AAPLxUSD', 'ABBVxUSD', 'ABTxUSD', 'ACNxUSD', 'AMBRxUSD', 'AMDxUSD', 'AMZNxUSD', 'APPxUSD', 'AVGOxUSD', 'AZNxUSD',
