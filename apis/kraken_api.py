@@ -1,4 +1,4 @@
-# 2026.02.24  18.00
+# 2026.02.27  18.00
 from fastapi import APIRouter
 import requests
 from functools import lru_cache
@@ -11,7 +11,7 @@ xstocks_list = [
     'LINxUSD', 'LLYxUSD', 'MCDxUSD', 'MDTxUSD', 'METAxUSD', 'MRKxUSD', 'MRVLxUSD', 'MSFTxUSD', 'MSTRxUSD', 'NFLXxUSD', 
     'NVDAxUSD', 'NVOxUSD', 'OPENxUSD', 'ORCLxUSD', 'PALLxUSD', 'PEPxUSD', 'PFExUSD', 'PGxUSD', 'PLTRxUSD', 'PMxUSD', 
     'PPLTxUSD', 'QQQxUSD', 'SCHFxUSD', 'SLVxUSD', 'SPYxUSD', 'STRCxUSD', 'TBLLxUSD', 'TMOxUSD', 'TONXxUSD', 'TQQQxUSD',
-    'TSLAxUSD', 'UNHxUSD', 'VxUSD', 'VTIxUSD', 'VTxUSD', 'XOMxUSD'
+    'TSLAxUSD', 'UNHxUSD', 'VxUSD', 'VTIxUSD', 'VTxUSD', 'XOMxUSD','GLDxUSD', 'SLVxUSD', 'PALLxUSD', 'PPLTxUSD', 'COPXxUSD'
 ]
 
 router = APIRouter()
